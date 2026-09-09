@@ -1,5 +1,5 @@
 import pandas as pd
-from src.data_loader import load_raw_data
+from src.synthetic_dataset.data_loader import load_raw_data
 from pathlib import Path
 
 def preprocess_employee_task(df: pd.DataFrame) -> pd.DataFrame:    
@@ -60,6 +60,12 @@ def preprocess_employee_task(df: pd.DataFrame) -> pd.DataFrame:
     df["given_month"] = df["task_given_date"].dt.month
     df["given_year"] = df["task_given_date"].dt.year
 
+    # Convert task_given_date to datetime and add days_to_deadline to create the deadline column
+    df["task_given_date"] = pd.to_datetime(df["task_given_date"])
+    df["deadline"] = df["task_given_date"] + pd.to_timedelta(
+    df["days_to_deadline"], unit="D"
+    )
+
     print("\nFinal missing values:")
     print(df.isna().sum())
    
@@ -74,7 +80,7 @@ if __name__ == "__main__":
 
     # Save preprocessed data to intermediate directory
     output_path = (
-        Path(__file__).resolve().parents[1]
+        Path(__file__).resolve().parents[2]
         / "data"
         / "intermediate"
         / "employee_task_intermediate.csv"

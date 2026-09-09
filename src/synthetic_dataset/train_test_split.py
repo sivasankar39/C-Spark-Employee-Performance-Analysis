@@ -2,8 +2,8 @@ import pandas as pd
 
 from sklearn.model_selection import train_test_split
 
-from src.data_loader import load_raw_data
-from src.preprocessing import preprocess_employee_task
+from src.synthetic_dataset.data_loader import load_raw_data
+from src.synthetic_dataset.preprocessing import preprocess_employee_task
 
 
 def split_employee_tasks(
@@ -20,8 +20,7 @@ def split_employee_tasks(
     Split each employee's tasks separately into training and testing sets.
 
     Each employee's tasks are split according to the specified test_size.
-    Stratification can be used to preserve the target-class distribution
-    for each employee.
+    Stratification preserves the target-class distribution for each employee.
 
     Parameters
     ----------
@@ -58,11 +57,16 @@ def split_employee_tasks(
 
     employee_splits = {}
 
+    # --------------------------------------------------
     # Check that required columns exist
-    required_columns = [employee_column, target_column] + feature_columns
+    # --------------------------------------------------
+    required_columns = (
+        [employee_column, target_column] + feature_columns
+    )
 
     missing_columns = [
-        column for column in required_columns
+        column
+        for column in required_columns
         if column not in df.columns
     ]
 
@@ -71,7 +75,9 @@ def split_employee_tasks(
             f"Missing columns in dataframe: {missing_columns}"
         )
 
+    # --------------------------------------------------
     # Process each employee separately
+    # --------------------------------------------------
     for employee_id in df[employee_column].unique():
 
         employee_df = df[
@@ -87,18 +93,36 @@ def split_employee_tasks(
         if len(employee_df) < min_samples:
             continue
 
-        # Stratification requires at least two target classes
-        if stratify_data and employee_df[target_column].nunique() < 2:
-            continue
+        # --------------------------------------------------
+        # Check target classes for stratification
+        # --------------------------------------------------
+        if stratify_data:
 
+            class_counts = employee_df[target_column].value_counts()
+
+            # Need at least two classes
+            if len(class_counts) < 2:
+                continue
+
+            # Each class should have at least 2 samples
+            # so stratified train-test split is possible
+            if class_counts.min() < 2:
+                continue
+
+        # --------------------------------------------------
         # Separate features and target
+        # --------------------------------------------------
         X = employee_df[feature_columns]
         y = employee_df[target_column]
 
+        # --------------------------------------------------
         # Stratification
+        # --------------------------------------------------
         stratify = y if stratify_data else None
 
-        # 80:20 split for this employee
+        # --------------------------------------------------
+        # 80:20 train-test split for this employee
+        # --------------------------------------------------
         X_train, X_test, y_train, y_test = train_test_split(
             X,
             y,
@@ -107,7 +131,9 @@ def split_employee_tasks(
             stratify=stratify
         )
 
-        # Store the split
+        # --------------------------------------------------
+        # Store split
+        # --------------------------------------------------
         employee_splits[employee_id] = {
             "X_train": X_train,
             "X_test": X_test,
@@ -131,22 +157,18 @@ if __name__ == "__main__":
     df = preprocess_employee_task(df)
 
     # --------------------------------------------------
-    # Features used by the model
+    # Stage 1 classification features
     # --------------------------------------------------
     feature_columns = [
         "task_type",
-        "days_to_deadline",
         "priority",
-        "perceived_difficulty",
-        "primary_skill_matching",
-        "secondary_skill_matching",
-        "ternary_skill_matching",
         "volume_metric",
         "dependency_score",
         "error_risk",
         "given_day_of_week",
         "given_month",
-        "given_year"
+        "given_year",
+        "days_to_deadline"
     ]
 
     # --------------------------------------------------
