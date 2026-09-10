@@ -15,6 +15,9 @@ from sklearn.metrics import (
 from sklearn.model_selection import GridSearchCV, StratifiedKFold
 from sklearn.tree import DecisionTreeClassifier
 
+import os
+import pickle
+
 
 warnings.filterwarnings("ignore")
 
@@ -231,6 +234,24 @@ def train_classification_models(
             "best_f1_score": best_f1,
         }
 
+        # Save the best classification model and preprocessing objects
+        os.makedirs("models/classification", exist_ok=True)
+
+        classification_model_data = {
+            "model": best_model,
+            "model_name": best_model_name,
+            "scaler": data["scaler"],
+            "task_encoder": data["task_encoder"],
+        }
+
+        model_path = (
+            f"models/classification/{employee_id}.pkl"
+        )
+
+        with open(model_path, "wb") as file:
+            pickle.dump(classification_model_data, file)
+
+        
         print("\n" + "-" * 60)
         print(f"BEST MODEL: {best_model_name}")
         print(f"BEST F1   : {best_f1:.4f}")

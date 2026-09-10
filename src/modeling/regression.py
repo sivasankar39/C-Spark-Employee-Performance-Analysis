@@ -8,6 +8,9 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
+import os
+import pickle
+
 warnings.filterwarnings("ignore")
 
 
@@ -229,6 +232,22 @@ def train_regression_models(
             "y_train": y_train,
             "y_test": y_test,
         }
+
+        # Save the Random Forest regression model
+        os.makedirs("models/regression", exist_ok=True)
+
+        regression_model_data = {
+            "model": random_forest_model,
+            "scaler": scaler,
+            "task_encoder": task_encoder,
+        }
+
+        model_path = (
+            f"models/regression/{employee_id}.pkl"
+        )
+
+        with open(model_path, "wb") as file:
+            pickle.dump(regression_model_data, file)
 
     return regression_results
 
