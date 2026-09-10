@@ -1,0 +1,3 @@
+task_id,task_type,priority,days_to_deadline,volume_metric,perceived_difficulty,perceived_difficulty_numeric,error_risk,dependency_score,task_date
+TSK-0002,Bug Fix,Medium,6.0,0.0,Medium,3.0,3.0,0.13,2026-09-10
+TSK-0003,Bug Fix,Medium,6.0,0.06,Medium,3.0,3.0,0.05,2026-09-30

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SYNQ — Login</title>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 50% 0%,
+                    rgba(126, 34, 206, 0.12),
+                    transparent 35%),
+                #050505;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* =========================
+           LOGIN PAGE
+        ========================== */
+
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            position: relative;
+        }
+
+        .login-page::before {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(124, 58, 237, 0.06);
+            filter: blur(100px);
+            top: -250px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 430px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* =========================
+           LOGO
+        ========================== */
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 28px;
+        }
+
+        .synq-logo {
+            width: 210px;
+            height: auto;
+            display: block;
+            object-fit: contain;
+        }
+
+        /* =========================
+           LOGIN CARD
+        ========================== */
+
+        .login-card {
+            width: 100%;
+            background: rgba(12, 12, 12, 0.96);
+            border: 1px solid #242424;
+            border-radius: 18px;
+            padding: 36px;
+            box-shadow:
+                0 25px 70px rgba(0, 0, 0, 0.55),
+                0 0 50px rgba(124, 58, 237, 0.04);
+        }
+
+        .login-heading {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-heading h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .login-heading p {
+            color: #777;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           FORM
+        ========================== */
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: #aaa;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+            border-radius: 9px;
+            border: 1px solid #292929;
+            background: #090909;
+            color: #ffffff;
+            outline: none;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .form-input::placeholder {
+            color: #4f4f4f;
+        }
+
+        .form-input:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.10);
+        }
+
+        /* Password input */
+
+        .password-input {
+            padding-right: 48px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #666;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+        }
+
+        .password-toggle:hover {
+            color: #a855f7;
+        }
+
+        /* =========================
+           ERROR MESSAGE
+        ========================== */
+
+        .error-message {
+            display: none;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #f87171;
+            border-radius: 8px;
+            padding: 11px 13px;
+            margin-bottom: 18px;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        /* =========================
+           LOGIN BUTTON
+        ========================== */
+
+        .login-button {
+            width: 100%;
+            height: 48px;
+            border: none;
+            border-radius: 9px;
+            background: linear-gradient(135deg,
+                    #7c3aed,
+                    #9333ea);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow:
+                0 8px 25px rgba(124, 58, 237, 0.18);
+        }
+
+        .login-button:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 12px 30px rgba(124, 58, 237, 0.28);
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* =========================
+           REGISTER
+        ========================== */
+
+        .register-section {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 23px;
+            border-top: 1px solid #1e1e1e;
+        }
+
+        .register-section p {
+            color: #666;
+            font-size: 12px;
+        }
+
+        .register-link {
+            color: #a855f7;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 4px;
+        }
+
+        .register-link:hover {
+            color: #c084fc;
+        }
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        .login-footer {
+            text-align: center;
+            margin-top: 22px;
+        }
+
+        .login-footer span {
+            color: #444;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        .loading-text {
+            display: none;
+        }
+
+        .login-button.loading .button-text {
+            display: none;
+        }
+
+        .login-button.loading .loading-text {
+            display: inline;
+        }
+
+        /* =========================
+           MOBILE
+        ========================== */
+
+        @media (max-width: 520px) {
+
+            .login-page {
+                padding: 20px 15px;
+            }
+
+            .login-card {
+                padding: 28px 22px;
+                border-radius: 15px;
+            }
+
+            .synq-logo {
+                width: 180px;
+            }
+
+            .login-heading h1 {
+                font-size: 21px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-page">
+
+        <div class="login-container">
+
+            <!-- =========================
+                 SYNQ LOGO
+            ========================== -->
+
+            <div class="logo-area">
+
+                <img src="{{ url_for('static', filename='css/images/synq-logo.png') }}" alt="SYNQ" class="synq-logo">
+
+            </div>
+
+
+            <!-- =========================
+                 LOGIN CARD
+            ========================== -->
+
+            <div class="login-card">
+
+                <div class="login-heading">
+
+                    <h1>Welcome Back</h1>
+
+                    <p>
+                        Sign in to access the SYNQ intelligence dashboard
+                    </p>
+
+                </div>
+
+
+                <!-- ERROR -->
+
+                <div id="errorMessage" class="error-message">
+                </div>
+
+
+                <!-- LOGIN FORM -->
+
+                <form id="loginForm">
+
+                    <!-- Username -->
+
+                    <div class="form-group">
+
+                        <label for="username" class="form-label">
+                            Username
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input type="text" id="username" name="username" class="form-input"
+                                placeholder="Enter your username" autocomplete="username" required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Password -->
+
+                    <div class="form-group">
+
+                        <label for="password" class="form-label">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input type="password" id="password" name="password" class="form-input password-input"
+                                placeholder="Enter your password" autocomplete="current-password" required>
+
+                            <button type="button" id="passwordToggle" class="password-toggle"
+                                aria-label="Show password">
+                                ◉
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Login Button -->
+
+                    <button type="submit" id="loginButton" class="login-button">
+
+                        <span class="button-text">
+                            Sign In
+                        </span>
+
+                        <span class="loading-text">
+                            Signing in...
+                        </span>
+
+                    </button>
+
+                </form>
+
+
+                <!-- Register -->
+
+                <div class="register-section">
+
+                    <p>
+                        Don't have an account?
+
+                        <a href="/register" class="register-link"></a>
+                        Create account
+                        </a>
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Footer -->
+
+            <div class="login-footer">
+
+                <span>
+                    SYNQ • INTELLIGENT WORKFORCE ANALYTICS
+                </span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script>
+
+        const loginForm =
+            document.getElementById("loginForm");
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+        const errorMessage =
+            document.getElementById("errorMessage");
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const passwordToggle =
+            document.getElementById("passwordToggle");
+
+
+        /* =========================
+           PASSWORD SHOW / HIDE
+        ========================== */
+
+        passwordToggle.addEventListener(
+            "click",
+            function () {
+
+                if (passwordInput.type === "password") {
+
+                    passwordInput.type = "text";
+
+                    passwordToggle.textContent = "◉";
+
+                    passwordToggle.setAttribute(
+                        "aria-label",
+                        "Hide password"
+                    );
+
+                } else {
+
+                    passwordInput.type = "password";
+
+                    passwordToggle.textContent = "◉";
+
+                    passwordToggle.setAttribute(
+                        "aria-label",
+                        "Show password"
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* =========================
+           SHOW ERROR
+        ========================== */
+
+        function showError(message) {
+
+            errorMessage.textContent = message;
+
+            errorMessage.classList.add("show");
+
+        }
+
+
+        /* =========================
+           HIDE ERROR
+        ========================== */
+
+        function hideError() {
+
+            errorMessage.textContent = "";
+
+            errorMessage.classList.remove("show");
+
+        }
+
+
+        /* =========================
+           LOGIN
+        ========================== */
+
+        loginForm.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+                hideError();
+
+                const username =
+                    document
+                        .getElementById("username")
+                        .value
+                        .trim();
+
+                const password =
+                    document
+                        .getElementById("password")
+                        .value;
+
+
+                if (!username || !password) {
+
+                    showError(
+                        "Please enter username and password."
+                    );
+
+                    return;
+                }
+
+
+                loginButton.disabled = true;
+
+                loginButton.classList.add("loading");
+
+
+                try {
+
+                    const response =
+                        await fetch("/api/login", {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body: JSON.stringify({
+                                username: username,
+                                password: password
+                            })
+
+                        });
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.message ||
+                            data.error ||
+                            "Invalid username or password."
+                        );
+
+                    }
+
+
+                    /* =========================
+                       SAVE JWT TOKEN
+                    ========================== */
+
+                    if (data.access_token) {
+
+                        localStorage.setItem(
+                            "synq_token",
+                            data.access_token
+                        );
+
+                    }
+
+
+                    /* =========================
+                       REDIRECT
+                    ========================== */
+
+                    window.location.href =
+                        "/dashboard";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Login error:",
+                        error
+                    );
+
+                    showError(
+                        error.message ||
+                        "Login failed. Please try again."
+                    );
+
+                    loginButton.disabled = false;
+
+                    loginButton.classList.remove(
+                        "loading"
+                    );
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

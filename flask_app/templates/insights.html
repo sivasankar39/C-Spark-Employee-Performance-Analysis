@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SYNQ | AI Insights</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #080808;
+            color: #f5f5f5;
+            font-family: Inter, Arial, sans-serif;
+        }
+
+        .insights-page {
+            min-height: 100vh;
+            padding: 34px 38px 50px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            gap: 20px;
+        }
+
+        .eyebrow {
+            color: #a855f7;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            margin: 8px 0 0;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .refresh-btn {
+            padding: 10px 16px;
+            background: #7c3aed;
+            border: 1px solid #7c3aed;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .refresh-btn:hover {
+            background: #8b5cf6;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 11px;
+            color: #666;
+            font-size: 10px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #666;
+        }
+
+        .status-dot.online {
+            background: #22c55e;
+        }
+
+        .status-dot.error {
+            background: #ef4444;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: #101010;
+            border: 1px solid #202020;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .summary-label {
+            color: #666;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .summary-value {
+            margin-top: 11px;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .summary-description {
+            color: #555;
+            font-size: 10px;
+            margin-top: 6px;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .card {
+            background: #101010;
+            border: 1px solid #202020;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid #1c1c1c;
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .card-description {
+            margin: 5px 0 0;
+            color: #5d5d5d;
+            font-size: 10px;
+        }
+
+        .insight-list {
+            padding: 5px 20px;
+        }
+
+        .insight-item {
+            display: flex;
+            gap: 14px;
+            padding: 18px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .insight-item:last-child {
+            border-bottom: none;
+        }
+
+        .insight-icon {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            border-radius: 8px;
+            background: #181818;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a855f7;
+            font-size: 14px;
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-title {
+            color: #ddd;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .insight-text {
+            color: #707070;
+            font-size: 10px;
+            line-height: 1.6;
+        }
+
+        .priority-list {
+            padding: 10px 20px 18px;
+        }
+
+        .priority-row {
+            padding: 14px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .priority-row:last-child {
+            border-bottom: none;
+        }
+
+        .priority-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .priority-name {
+            color: #aaa;
+            font-size: 11px;
+        }
+
+        .priority-value {
+            color: #eee;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .progress {
+            width: 100%;
+            height: 5px;
+            border-radius: 5px;
+            background: #1b1b1b;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 5px;
+            background: #7c3aed;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .risk-box {
+            background: #151515;
+            border: 1px solid #202020;
+            border-radius: 8px;
+            padding: 15px 10px;
+            text-align: center;
+        }
+
+        .risk-number {
+            font-size: 19px;
+            font-weight: 700;
+        }
+
+        .risk-name {
+            margin-top: 5px;
+            color: #666;
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+        }
+
+        .employee-list {
+            padding: 5px 20px 15px;
+        }
+
+        .employee-row {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            padding: 14px 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+
+        .employee-row:last-child {
+            border-bottom: none;
+        }
+
+        .employee-rank {
+            width: 25px;
+            color: #555;
+            font-size: 10px;
+        }
+
+        .employee-info {
+            flex: 1;
+        }
+
+        .employee-id {
+            color: #ddd;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .employee-category {
+            color: #666;
+            font-size: 9px;
+            margin-top: 3px;
+        }
+
+        .employee-rating {
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .empty {
+            padding: 35px 20px;
+            text-align: center;
+            color: #555;
+            font-size: 11px;
+        }
+
+        .error-box {
+            display: none;
+            padding: 13px 15px;
+            margin-bottom: 18px;
+            background: rgba(239, 68, 68, 0.06);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            border-radius: 9px;
+            color: #f87171;
+            font-size: 11px;
+        }
+
+        @media (max-width: 1100px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .risk-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .insights-page {
+                padding: 25px 17px;
+            }
+
+            .page-header {
+                flex-direction: column;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .risk-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'partials/sidebar.html' %}
+
+    <main class="main-content">
+
+        <div class="insights-page">
+
+            <!-- HEADER -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <div class="eyebrow">
+                        SYNQ Intelligence
+                    </div>
+
+                    <h1 class="page-title">
+                        AI Insights
+                    </h1>
+
+                    <p class="page-subtitle">
+                        Intelligent performance insights generated from your employee data.
+                    </p>
+
+                    <div class="status">
+
+                        <span id="statusDot" class="status-dot"></span>
+
+                        <span id="statusText">
+                            Connecting to analytics...
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button class="refresh-btn" onclick="loadInsights()">
+
+                    ↻ Refresh
+
+                </button>
+
+            </div>
+
+            <div id="errorBox" class="error-box">
+            </div>
+
+            <!-- SUMMARY -->
+
+            <section class="summary-grid">
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Average Rating
+                    </div>
+
+                    <div id="avgRating" class="summary-value">
+                        —
+                    </div>
+
+                    <div class="summary-description">
+                        Overall performance score
+                    </div>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Completion Rate
+                    </div>
+
+                    <div id="completionRate" class="summary-value">
+                        —
+                    </div>
+
+                    <div class="summary-description">
+                        Completed tasks percentage
+                    </div>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Error Risk
+                    </div>
+
+                    <div id="avgRisk" class="summary-value">
+                        —
+                    </div>
+
+                    <div class="summary-description">
+                        Average risk score
+                    </div>
+
+                </div>
+
+                <div class="summary-card">
+
+                    <div class="summary-label">
+                        Employees
+                    </div>
+
+                    <div id="totalEmployees" class="summary-value">
+                        —
+                    </div>
+
+                    <div class="summary-description">
+                        Employees analyzed
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- MAIN -->
+
+            <section class="main-grid">
+
+                <!-- AI INSIGHTS -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h3 class="card-title">
+                            Generated Insights
+                        </h3>
+
+                        <p class="card-description">
+                            Findings calculated from the current CSV dataset
+                        </p>
+
+                    </div>
+
+                    <div id="insightList" class="insight-list">
+
+                        <div class="empty">
+                            Loading insights...
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- PRIORITY -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <h3 class="card-title">
+                            Task Priority Analysis
+                        </h3>
+
+                        <p class="card-description">
+                            Distribution of current task priorities
+                        </p>
+
+                    </div>
+
+                    <div id="priorityList" class="priority-list">
+
+                        <div class="empty">
+                            Loading priority data...
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- RISK -->
+
+            <section class="card" style="margin-bottom:18px;">
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+                        Risk Overview
+                    </h3>
+
+                    <p class="card-description">
+                        Number of tasks in each error-risk level
+                    </p>
+
+                </div>
+
+                <div id="riskGrid" class="risk-grid">
+
+                </div>
+
+            </section>
+
+            <!-- TOP EMPLOYEES -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h3 class="card-title">
+                        Top Performing Employees
+                    </h3>
+
+                    <p class="card-description">
+                        Employees ranked using average rating
+                    </p>
+
+                </div>
+
+                <div id="employeeList" class="employee-list">
+
+                    <div class="empty">
+                        Loading employee performance...
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+    <script>
+
+        let analyticsData = null;
+
+        // =====================================================
+        // LOAD API
+        // =====================================================
+
+        async function loadInsights() {
+
+            hideError();
+
+            setStatus(
+                false,
+                "Loading real CSV insights..."
+            );
+
+            try {
+
+                const response =
+                    await fetch("/api/analytics", {
+                        method: "GET",
+                        headers: {
+                            "Accept": "application/json"
+                        },
+                        cache: "no-store"
+                    });
+
+                const data =
+                    await response.json();
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.error ||
+                        "Analytics API failed."
+                    );
+                }
+
+                analyticsData = data;
+
+                renderSummary(data);
+
+                renderInsights(data);
+
+                renderPriorities(data);
+
+                renderRisk(data);
+
+                renderEmployees(data);
+
+                setStatus(
+                    true,
+                    "Connected • Live CSV analytics"
+                );
+
+            } catch (error) {
+
+                console.error(error);
+
+                setStatus(
+                    false,
+                    "Analytics connection failed"
+                );
+
+                showError(
+                    error.message ||
+                    "Unable to load analytics."
+                );
+            }
+        }
+
+
+        // =====================================================
+        // SUMMARY
+        // =====================================================
+
+        function renderSummary(data) {
+
+            const stats =
+                data.stats || {};
+
+            document.getElementById(
+                "avgRating"
+            ).textContent =
+                formatNumber(
+                    stats.avg_rating,
+                    2
+                );
+
+            document.getElementById(
+                "completionRate"
+            ).textContent =
+                formatNumber(
+                    stats.completion_rate,
+                    1
+                ) + "%";
+
+            document.getElementById(
+                "avgRisk"
+            ).textContent =
+                formatNumber(
+                    stats.avg_error_risk,
+                    2
+                );
+
+            document.getElementById(
+                "totalEmployees"
+            ).textContent =
+                formatNumber(
+                    stats.total_employees
+                );
+        }
+
+
+        // =====================================================
+        // INSIGHTS
+        // =====================================================
+
+        function renderInsights(data) {
+
+            const container =
+                document.getElementById(
+                    "insightList"
+                );
+
+            const stats =
+                data.stats || {};
+
+            const distribution =
+                data.performance_distribution || {};
+
+            const employees =
+                Array.isArray(data.employees)
+                    ? data.employees
+                    : [];
+
+            const risk =
+                data.risk_distribution || {};
+
+            const labels =
+                distribution.labels || [];
+
+            const values =
+                distribution.values || [];
+
+            const avgRating =
+                Number(stats.avg_rating) || 0;
+
+            const completionRate =
+                Number(stats.completion_rate) || 0;
+
+            const avgRisk =
+                Number(stats.avg_error_risk) || 0;
+
+            const totalTasks =
+                Number(stats.total_tasks) || 0;
+
+            const highIndex =
+                labels.indexOf(
+                    "High Performer"
+                );
+
+            const goodIndex =
+                labels.indexOf(
+                    "Good Performer"
+                );
+
+            const highPerformers =
+                highIndex >= 0
+                    ? Number(values[highIndex] || 0)
+                    : 0;
+
+            const goodPerformers =
+                goodIndex >= 0
+                    ? Number(values[goodIndex] || 0)
+                    : 0;
+
+            const riskValues =
+                risk.values || [];
+
+            const highRisk =
+                Number(riskValues[4] || 0);
+
+            const criticalRisk =
+                Number(riskValues[5] || 0);
+
+            const insightData = [];
+
+
+            // PERFORMANCE
+
+            if (avgRating >= 8) {
+
+                insightData.push({
+                    icon: "★",
+                    title: "Excellent performance",
+                    text:
+                        `The overall average rating is ` +
+                        `${formatNumber(avgRating, 2)} / 10, ` +
+                        `indicating a strong performance level.`
+                });
+
+            } else if (avgRating >= 6) {
+
+                insightData.push({
+                    icon: "★",
+                    title: "Good performance",
+                    text:
+                        `The overall average rating is ` +
+                        `${formatNumber(avgRating, 2)} / 10. ` +
+                        `There is a solid performance base across the dataset.`
+                });
+
+            } else {
+
+                insightData.push({
+                    icon: "!",
+                    title: "Performance improvement opportunity",
+                    text:
+                        `The overall average rating is ` +
+                        `${formatNumber(avgRating, 2)} / 10. ` +
+                        `Performance improvement should be a key focus area.`
+                });
+            }
+
+
+            // COMPLETION
+
+            if (completionRate >= 90) {
+
+                insightData.push({
+                    icon: "✓",
+                    title: "Strong completion rate",
+                    text:
+                        `Task completion is at ` +
+                        `${formatNumber(completionRate, 1)}%, ` +
+                        `showing strong task execution.`
+                });
+
+            } else if (completionRate >= 70) {
+
+                insightData.push({
+                    icon: "↗",
+                    title: "Healthy task completion",
+                    text:
+                        `The completion rate is ` +
+                        `${formatNumber(completionRate, 1)}%. ` +
+                        `There is still room to improve consistency.`
+                });
+
+            } else {
+
+                insightData.push({
+                    icon: "!",
+                    title: "Completion needs attention",
+                    text:
+                        `Only ` +
+                        `${formatNumber(completionRate, 1)}% ` +
+                        `of tasks are marked completed. `
+                        + `Deadline and workload management may need attention.`
+                });
+            }
+
+
+            // PERFORMERS
+
+            insightData.push({
+                icon: "◆",
+                title: "High-performing workforce",
+                text:
+                    `${formatNumber(highPerformers)} records are classified ` +
+                    `as High Performer and ` +
+                    `${formatNumber(goodPerformers)} as Good Performer.`
+            });
+
+
+            // RISK
+
+            if (avgRisk >= 4) {
+
+                insightData.push({
+                    icon: "!",
+                    title: "High average risk",
+                    text:
+                        `The average error risk is ` +
+                        `${formatNumber(avgRisk, 2)} / 5. ` +
+                        `Risk reduction should be prioritized.`
+                });
+
+            } else if (avgRisk >= 2) {
+
+                insightData.push({
+                    icon: "!",
+                    title: "Moderate risk exposure",
+                    text:
+                        `The average error risk is ` +
+                        `${formatNumber(avgRisk, 2)} / 5. ` +
+                        `Monitoring high-risk tasks can improve reliability.`
+                });
+
+            } else {
+
+                insightData.push({
+                    icon: "✓",
+                    title: "Low overall risk",
+                    text:
+                        `The average error risk is ` +
+                        `${formatNumber(avgRisk, 2)} / 5, ` +
+                        `indicating relatively low risk exposure.`
+                });
+            }
+
+
+            // HIGH RISK TASKS
+
+            insightData.push({
+                icon: "⚠",
+                title: "High-risk workload",
+                text:
+                    `${formatNumber(highRisk + criticalRisk)} ` +
+                    `tasks are currently classified in the ` +
+                    `High or Critical risk ranges.`
+            });
+
+
+            // DATASET
+
+            insightData.push({
+                icon: "◈",
+                title: "Dataset coverage",
+                text:
+                    `SYNQ analyzed ` +
+                    `${formatNumber(totalTasks)} tasks ` +
+                    `across ` +
+                    `${formatNumber(stats.total_employees)} employees.`
+            });
+
+
+            container.innerHTML = "";
+
+
+            insightData.forEach(item => {
+
+                const element =
+                    document.createElement("div");
+
+                element.className =
+                    "insight-item";
+
+                element.innerHTML = `
+
+                <div class="insight-icon">
+                    ${item.icon}
+                </div>
+
+                <div class="insight-content">
+
+                    <div class="insight-title">
+                        ${escapeHtml(item.title)}
+                    </div>
+
+                    <div class="insight-text">
+                        ${escapeHtml(item.text)}
+                    </div>
+
+                </div>
+            `;
+
+                container.appendChild(element);
+            });
+        }
+
+
+        // =====================================================
+        // PRIORITIES
+        // =====================================================
+
+        function renderPriorities(data) {
+
+            const container =
+                document.getElementById(
+                    "priorityList"
+                );
+
+            const distribution =
+                data.priority_distribution || {};
+
+            const labels =
+                distribution.labels || [];
+
+            const values =
+                distribution.values || [];
+
+            if (!labels.length) {
+
+                container.innerHTML =
+                    `<div class="empty">
+                    No priority data available.
+                 </div>`;
+
+                return;
+            }
+
+            const total =
+                values.reduce(
+                    (sum, value) =>
+                        sum + Number(value || 0),
+                    0
+                );
+
+            container.innerHTML = "";
+
+            labels.forEach((label, index) => {
+
+                const value =
+                    Number(values[index] || 0);
+
+                const percentage =
+                    total > 0
+                        ? (value / total) * 100
+                        : 0;
+
+                const row =
+                    document.createElement("div");
+
+                row.className =
+                    "priority-row";
+
+                row.innerHTML = `
+
+                <div class="priority-top">
+
+                    <span class="priority-name">
+                        ${escapeHtml(label)}
+                    </span>
+
+                    <span class="priority-value">
+                        ${formatNumber(value)}
+                    </span>
+
+                </div>
+
+                <div class="progress">
+
+                    <div class="progress-bar"
+                         style="width:${percentage}%">
+                    </div>
+
+                </div>
+            `;
+
+                container.appendChild(row);
+            });
+        }
+
+
+        // =====================================================
+        // RISK
+        // =====================================================
+
+        function renderRisk(data) {
+
+            const container =
+                document.getElementById(
+                    "riskGrid"
+                );
+
+            const distribution =
+                data.risk_distribution || {};
+
+            const labels =
+                distribution.labels || [];
+
+            const values =
+                distribution.values || [];
+
+            container.innerHTML = "";
+
+            if (!labels.length) {
+
+                container.innerHTML =
+                    `<div class="empty">
+                    No risk data available.
+                 </div>`;
+
+                return;
+            }
+
+            labels.forEach((label, index) => {
+
+                const value =
+                    Number(values[index] || 0);
+
+                const box =
+                    document.createElement("div");
+
+                box.className =
+                    "risk-box";
+
+                box.innerHTML = `
+
+                <div class="risk-number">
+                    ${formatNumber(value)}
+                </div>
+
+                <div class="risk-name">
+                    ${escapeHtml(label)}
+                </div>
+            `;
+
+                container.appendChild(box);
+            });
+        }
+
+
+        // =====================================================
+        // EMPLOYEES
+        // =====================================================
+
+        function renderEmployees(data) {
+
+            const container =
+                document.getElementById(
+                    "employeeList"
+                );
+
+            const employees =
+                Array.isArray(data.employees)
+                    ? data.employees
+                    : [];
+
+            container.innerHTML = "";
+
+            if (!employees.length) {
+
+                container.innerHTML =
+                    `<div class="empty">
+                    No employee performance data available.
+                 </div>`;
+
+                return;
+            }
+
+            employees.forEach(
+                (employee, index) => {
+
+                    const row =
+                        document.createElement(
+                            "div"
+                        );
+
+                    row.className =
+                        "employee-row";
+
+                    row.innerHTML = `
+
+                    <div class="employee-rank">
+                        #${index + 1}
+                    </div>
+
+                    <div class="employee-info">
+
+                        <div class="employee-id">
+                            ${escapeHtml(
+                        employee.employee_id
+                    )}
+                        </div>
+
+                        <div class="employee-category">
+                            ${escapeHtml(
+                        employee.category ||
+                        "Unknown"
+                    )}
+                        </div>
+
+                    </div>
+
+                    <div class="employee-rating">
+                        ${formatNumber(
+                        employee.avg_rating,
+                        2
+                    )}
+                    </div>
+                `;
+
+                    container.appendChild(row);
+                }
+            );
+        }
+
+
+        // =====================================================
+        // STATUS
+        // =====================================================
+
+        function setStatus(
+            success,
+            message
+        ) {
+
+            const dot =
+                document.getElementById(
+                    "statusDot"
+                );
+
+            const text =
+                document.getElementById(
+                    "statusText"
+                );
+
+            dot.classList.remove(
+                "online",
+                "error"
+            );
+
+            dot.classList.add(
+                success
+                    ? "online"
+                    : "error"
+            );
+
+            text.textContent =
+                message;
+        }
+
+
+        // =====================================================
+        // ERROR
+        // =====================================================
+
+        function showError(message) {
+
+            const box =
+                document.getElementById(
+                    "errorBox"
+                );
+
+            box.textContent =
+                message;
+
+            box.style.display =
+                "block";
+        }
+
+
+        function hideError() {
+
+            const box =
+                document.getElementById(
+                    "errorBox"
+                );
+
+            box.textContent = "";
+
+            box.style.display =
+                "none";
+        }
+
+
+        // =====================================================
+        // HELPERS
+        // =====================================================
+
+        function formatNumber(
+            value,
+            decimals = 0
+        ) {
+
+            const number =
+                Number(value);
+
+            if (!Number.isFinite(number)) {
+                return "0";
+            }
+
+            return number.toLocaleString(
+                "en-IN",
+                {
+                    minimumFractionDigits:
+                        decimals,
+
+                    maximumFractionDigits:
+                        decimals
+                }
+            );
+        }
+
+
+        function escapeHtml(value) {
+
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
+        // =====================================================
+        // START
+        // =====================================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+                loadInsights();
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>

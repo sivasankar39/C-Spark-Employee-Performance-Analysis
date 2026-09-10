@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SYNQ | Analytics</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #f5f5f5;
+            font-family: Inter, Arial, sans-serif;
+        }
+
+        .analytics-page {
+            padding: 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* ================= HEADER ================= */
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .page-subtitle {
+            margin-top: 8px;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-btn {
+            padding: 10px 16px;
+            border: 1px solid #292929;
+            border-radius: 8px;
+            background: #111;
+            color: #aaa;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.2s;
+        }
+
+        .header-btn:hover {
+            color: #fff;
+            border-color: #444;
+            background: #171717;
+        }
+
+        /* ================= STAT CARDS ================= */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #0d0d0d;
+            border: 1px solid #202020;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 125px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            right: -30px;
+            bottom: -30px;
+            background: rgba(168, 85, 247, 0.08);
+            border-radius: 50%;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            margin-top: 12px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .stat-change {
+            margin-top: 7px;
+            color: #777;
+            font-size: 11px;
+        }
+
+        .positive {
+            color: #4ade80;
+        }
+
+        .warning {
+            color: #facc15;
+        }
+
+        .danger {
+            color: #f87171;
+        }
+
+        .purple {
+            color: #c084fc;
+        }
+
+        /* ================= GRID ================= */
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .analytics-grid.equal {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .chart-card {
+            background: #0b0b0b;
+            border: 1px solid #202020;
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 350px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ddd;
+        }
+
+        .chart-description {
+            color: #555;
+            font-size: 10px;
+            margin-top: 5px;
+        }
+
+        .chart-select {
+            background: #111;
+            border: 1px solid #292929;
+            color: #aaa;
+            border-radius: 7px;
+            padding: 7px 10px;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 270px;
+        }
+
+        /* ================= PERFORMANCE ================= */
+
+        .performance-card {
+            background: #0b0b0b;
+            border: 1px solid #202020;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 18px;
+        }
+
+        .performance-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .performance-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .view-all {
+            color: #a855f7;
+            text-decoration: none;
+            font-size: 11px;
+        }
+
+        .view-all:hover {
+            color: #c084fc;
+        }
+
+        .employee-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .employee-table th {
+            text-align: left;
+            color: #555;
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+            padding: 11px 12px;
+            border-bottom: 1px solid #202020;
+        }
+
+        .employee-table td {
+            padding: 13px 12px;
+            font-size: 12px;
+            color: #aaa;
+            border-bottom: 1px solid #171717;
+        }
+
+        .employee-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .employee-table tr:hover td {
+            background: #101010;
+        }
+
+        .employee-name {
+            color: #ddd;
+            font-weight: 600;
+        }
+
+        .employee-id {
+            color: #555;
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .rating {
+            color: #f5f5f5;
+            font-weight: 600;
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 5px 8px;
+            border-radius: 5px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+
+        .badge-high {
+            background: rgba(74, 222, 128, 0.08);
+            color: #4ade80;
+        }
+
+        .badge-good {
+            background: rgba(96, 165, 250, 0.08);
+            color: #60a5fa;
+        }
+
+        .badge-average {
+            background: rgba(250, 204, 21, 0.08);
+            color: #facc15;
+        }
+
+        .badge-low {
+            background: rgba(248, 113, 113, 0.08);
+            color: #f87171;
+        }
+
+        /* ================= PROGRESS ================= */
+
+        .progress-wrapper {
+            width: 120px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 5px;
+            background: #1d1d1d;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #a855f7;
+            border-radius: 5px;
+        }
+
+        .progress-text {
+            margin-top: 5px;
+            color: #555;
+            font-size: 9px;
+        }
+
+        /* ================= INSIGHTS ================= */
+
+        .insights-card {
+            background: #0b0b0b;
+            border: 1px solid #202020;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .insight {
+            display: flex;
+            gap: 13px;
+            padding: 14px 0;
+            border-bottom: 1px solid #191919;
+        }
+
+        .insight:last-child {
+            border-bottom: none;
+        }
+
+        .insight-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #151515;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-title {
+            font-size: 12px;
+            color: #ddd;
+            font-weight: 600;
+        }
+
+        .insight-text {
+            margin-top: 5px;
+            color: #666;
+            font-size: 10px;
+            line-height: 1.5;
+        }
+
+        /* ================= RISK ================= */
+
+        .risk-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .risk-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .risk-label {
+            width: 75px;
+            color: #999;
+            font-size: 11px;
+        }
+
+        .risk-bar-container {
+            flex: 1;
+            height: 7px;
+            background: #1b1b1b;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .risk-bar {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .risk-count {
+            width: 35px;
+            text-align: right;
+            color: #aaa;
+            font-size: 11px;
+        }
+
+        .risk-minimal {
+            background: #4ade80;
+        }
+
+        .risk-low {
+            background: #60a5fa;
+        }
+
+        .risk-moderate {
+            background: #facc15;
+        }
+
+        .risk-high {
+            background: #fb923c;
+        }
+
+        .risk-critical {
+            background: #f87171;
+        }
+
+        /* ================= EMPTY / LOADING ================= */
+
+        .loading {
+            text-align: center;
+            color: #555;
+            padding: 40px;
+            font-size: 12px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .analytics-grid,
+            .analytics-grid.equal {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .analytics-page {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .header-btn {
+                flex: 1;
+            }
+
+            .employee-table {
+                min-width: 750px;
+            }
+
+            .performance-card {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    {% include 'partials/sidebar.html' %}
+
+    <main class="main-content">
+
+        <div class="analytics-page">
+
+            <!-- ================= HEADER ================= -->
+
+            <div class="page-header">
+
+                <div>
+                    <h1 class="page-title">Analytics</h1>
+
+                    <div class="page-subtitle">
+                        Performance insights and workforce analytics
+                    </div>
+                </div>
+
+                <div class="header-actions">
+
+                    <button class="header-btn" onclick="refreshAnalytics()">
+                        ↻ Refresh
+                    </button>
+
+                    <button class="header-btn" onclick="exportAnalytics()">
+                        ↓ Export
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= STAT CARDS ================= -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Total Employees
+                    </div>
+
+                    <div class="stat-value" id="totalEmployees">
+                        20
+                    </div>
+
+                    <div class="stat-change">
+                        Active workforce
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Total Tasks
+                    </div>
+
+                    <div class="stat-value" id="totalTasks">
+                        200,000
+                    </div>
+
+                    <div class="stat-change positive">
+                        Task dataset
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Average Rating
+                    </div>
+
+                    <div class="stat-value purple" id="avgRating">
+                        4.57
+                    </div>
+
+                    <div class="stat-change">
+                        Overall performance
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        Error Risk
+                    </div>
+
+                    <div class="stat-value warning" id="avgRisk">
+                        1.84
+                    </div>
+
+                    <div class="stat-change">
+                        Average risk score
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= CHART ROW 1 ================= -->
+
+            <div class="analytics-grid">
+
+                <!-- Performance Trend -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <div class="chart-title">
+                                Performance Overview
+                            </div>
+
+                            <div class="chart-description">
+                                Average employee rating
+                            </div>
+                        </div>
+
+                        <select class="chart-select" id="trendPeriod" onchange="updateTrendChart()">
+
+                            <option value="monthly">Monthly</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="yearly">Yearly</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Performance Distribution -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <div class="chart-title">
+                                Performance Distribution
+                            </div>
+
+                            <div class="chart-description">
+                                Employees by performance category
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= CHART ROW 2 ================= -->
+
+            <div class="analytics-grid equal">
+
+                <!-- Task Type -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <div class="chart-title">
+                                Task Type Analysis
+                            </div>
+
+                            <div class="chart-description">
+                                Distribution across task categories
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="taskTypeChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Priority -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <div class="chart-title">
+                                Priority Distribution
+                            </div>
+
+                            <div class="chart-description">
+                                Tasks by priority level
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="chart-container">
+                        <canvas id="priorityChart"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= EMPLOYEE PERFORMANCE ================= -->
+
+            <div class="performance-card">
+
+                <div class="performance-header">
+
+                    <div>
+                        <div class="performance-title">
+                            Employee Performance
+                        </div>
+
+                        <div class="chart-description">
+                            Top performing employees based on historical data
+                        </div>
+                    </div>
+
+                    <a href="{{ url_for('employee_data') }}" class="view-all">
+                        View all →
+                    </a>
+
+                </div>
+
+
+                <table class="employee-table">
+
+                    <thead>
+
+                        <tr>
+                            <th>Employee</th>
+                            <th>Rating</th>
+                            <th>Performance</th>
+                            <th>Completion</th>
+                            <th>Risk</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="employeeTableBody">
+
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    Employee 001
+                                </div>
+                                <div class="employee-id">
+                                    EMP-001
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="rating">8.92</span>
+                            </td>
+
+                            <td>
+                                <span class="badge badge-high">
+                                    High Performer
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <div class="progress-wrapper">
+
+                                    <div class="progress-track">
+                                        <div class="progress-bar" style="width: 94%;">
+                                        </div>
+                                    </div>
+
+                                    <div class="progress-text">
+                                        94%
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                <span class="positive">
+                                    Low
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    Employee 002
+                                </div>
+                                <div class="employee-id">
+                                    EMP-002
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="rating">8.47</span>
+                            </td>
+
+                            <td>
+                                <span class="badge badge-high">
+                                    High Performer
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <div class="progress-wrapper">
+
+                                    <div class="progress-track">
+                                        <div class="progress-bar" style="width: 91%;">
+                                        </div>
+                                    </div>
+
+                                    <div class="progress-text">
+                                        91%
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                <span class="positive">
+                                    Low
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    Employee 003
+                                </div>
+                                <div class="employee-id">
+                                    EMP-003
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="rating">7.84</span>
+                            </td>
+
+                            <td>
+                                <span class="badge badge-good">
+                                    Good Performer
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <div class="progress-wrapper">
+
+                                    <div class="progress-track">
+                                        <div class="progress-bar" style="width: 87%;">
+                                        </div>
+                                    </div>
+
+                                    <div class="progress-text">
+                                        87%
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                <span class="positive">
+                                    Low
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    Employee 004
+                                </div>
+                                <div class="employee-id">
+                                    EMP-004
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="rating">7.32</span>
+                            </td>
+
+                            <td>
+                                <span class="badge badge-good">
+                                    Good Performer
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <div class="progress-wrapper">
+
+                                    <div class="progress-track">
+                                        <div class="progress-bar" style="width: 82%;">
+                                        </div>
+                                    </div>
+
+                                    <div class="progress-text">
+                                        82%
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                <span class="warning">
+                                    Moderate
+                                </span>
+                            </td>
+
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <div class="employee-name">
+                                    Employee 005
+                                </div>
+                                <div class="employee-id">
+                                    EMP-005
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="rating">6.91</span>
+                            </td>
+
+                            <td>
+                                <span class="badge badge-good">
+                                    Good Performer
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <div class="progress-wrapper">
+
+                                    <div class="progress-track">
+                                        <div class="progress-bar" style="width: 79%;">
+                                        </div>
+                                    </div>
+
+                                    <div class="progress-text">
+                                        79%
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+                            <td>
+                                <span class="warning">
+                                    Moderate
+                                </span>
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- ================= RISK + INSIGHTS ================= -->
+
+            <div class="analytics-grid equal">
+
+                <!-- Risk Analysis -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <div class="chart-title">
+                                Error Risk Analysis
+                            </div>
+
+                            <div class="chart-description">
+                                Distribution of task error risk
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="risk-list">
+
+                        <div class="risk-row">
+
+                            <div class="risk-label">
+                                Minimal
+                            </div>
+
+                            <div class="risk-bar-container">
+                                <div class="risk-bar risk-minimal" style="width: 76%;">
+                                </div>
+                            </div>
+
+                            <div class="risk-count">
+                                76%
+                            </div>
+
+                        </div>
+
+
+                        <div class="risk-row">
+
+                            <div class="risk-label">
+                                Low
+                            </div>
+
+                            <div class="risk-bar-container">
+                                <div class="risk-bar risk-low" style="width: 14%;">
+                                </div>
+                            </div>
+
+                            <div class="risk-count">
+                                14%
+                            </div>
+
+                        </div>
+
+
+                        <div class="risk-row">
+
+                            <div class="risk-label">
+                                Moderate
+                            </div>
+
+                            <div class="risk-bar-container">
+                                <div class="risk-bar risk-moderate" style="width: 6%;">
+                                </div>
+                            </div>
+
+                            <div class="risk-count">
+                                6%
+                            </div>
+
+                        </div>
+
+
+                        <div class="risk-row">
+
+                            <div class="risk-label">
+                                High
+                            </div>
+
+                            <div class="risk-bar-container">
+                                <div class="risk-bar risk-high" style="width: 3%;">
+                                </div>
+                            </div>
+
+                            <div class="risk-count">
+                                3%
+                            </div>
+
+                        </div>
+
+
+                        <div class="risk-row">
+
+                            <div class="risk-label">
+                                Critical
+                            </div>
+
+                            <div class="risk-bar-container">
+                                <div class="risk-bar risk-critical" style="width: 1%;">
+                                </div>
+                            </div>
+
+                            <div class="risk-count">
+                                1%
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- AI Insights -->
+
+                <div class="insights-card">
+
+                    <div class="chart-header">
+
+                        <div>
+                            <div class="chart-title">
+                                AI Insights
+                            </div>
+
+                            <div class="chart-description">
+                                Automated performance observations
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="insight">
+
+                        <div class="insight-icon">
+                            ✦
+                        </div>
+
+                        <div class="insight-content">
+
+                            <div class="insight-title">
+                                Strong overall performance
+                            </div>
+
+                            <div class="insight-text">
+                                The current workforce shows a healthy average
+                                performance rating across recorded tasks.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="insight">
+
+                        <div class="insight-icon">
+                            ⚡
+                        </div>
+
+                        <div class="insight-content">
+
+                            <div class="insight-title">
+                                Monitor high-risk tasks
+                            </div>
+
+                            <div class="insight-text">
+                                Tasks with elevated error risk should receive
+                                additional review before deadlines.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="insight">
+
+                        <div class="insight-icon">
+                            ✓
+                        </div>
+
+                        <div class="insight-content">
+
+                            <div class="insight-title">
+                                Completion performance is stable
+                            </div>
+
+                            <div class="insight-text">
+                                Most employees are maintaining consistent
+                                task completion performance.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="insight">
+
+                        <div class="insight-icon">
+                            ◈
+                        </div>
+
+                        <div class="insight-content">
+
+                            <div class="insight-title">
+                                Skill matching matters
+                            </div>
+
+                            <div class="insight-text">
+                                Better alignment between task requirements and
+                                employee skills can improve task outcomes.
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        /* =========================================================
+           CHART DEFAULT CONFIG
+        ========================================================= */
+
+        Chart.defaults.color = "#666";
+
+        Chart.defaults.borderColor = "#1d1d1d";
+
+        Chart.defaults.font.family =
+            "Inter, Arial, sans-serif";
+
+
+        /* =========================================================
+           PERFORMANCE TREND
+        ========================================================= */
+
+        let performanceChart;
+
+        function createPerformanceChart() {
+
+            const ctx =
+                document.getElementById("performanceChart");
+
+            performanceChart = new Chart(ctx, {
+
+                type: "line",
+
+                data: {
+
+                    labels: [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "Apr",
+                        "May",
+                        "Jun",
+                        "Jul",
+                        "Aug",
+                        "Sep"
+                    ],
+
+                    datasets: [
+
+                        {
+                            label: "Average Rating",
+
+                            data: [
+                                4.21,
+                                4.28,
+                                4.34,
+                                4.41,
+                                4.46,
+                                4.51,
+                                4.54,
+                                4.56,
+                                4.57
+                            ],
+
+                            borderColor: "#a855f7",
+
+                            backgroundColor:
+                                "rgba(168,85,247,0.08)",
+
+                            fill: true,
+
+                            tension: 0.4,
+
+                            pointRadius: 3,
+
+                            pointHoverRadius: 5
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+
+                        y: {
+
+                            min: 3,
+
+                            max: 5,
+
+                            ticks: {
+                                stepSize: 0.5
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+        }
+
+
+        /* =========================================================
+           PERFORMANCE DISTRIBUTION
+        ========================================================= */
+
+        function createDistributionChart() {
+
+            const ctx =
+                document.getElementById("distributionChart");
+
+            new Chart(ctx, {
+
+                type: "doughnut",
+
+                data: {
+
+                    labels: [
+                        "High Performer",
+                        "Good Performer",
+                        "Average Performer",
+                        "Needs Improvement"
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            data: [
+                                6,
+                                9,
+                                4,
+                                1
+                            ],
+
+                            backgroundColor: [
+                                "#4ade80",
+                                "#60a5fa",
+                                "#facc15",
+                                "#f87171"
+                            ],
+
+                            borderColor: "#0b0b0b",
+
+                            borderWidth: 3
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    cutout: "68%",
+
+                    plugins: {
+
+                        legend: {
+
+                            position: "bottom",
+
+                            labels: {
+
+                                color: "#777",
+
+                                boxWidth: 10,
+
+                                padding: 15,
+
+                                font: {
+                                    size: 10
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+        }
+
+
+        /* =========================================================
+           TASK TYPE CHART
+        ========================================================= */
+
+        function createTaskTypeChart() {
+
+            const ctx =
+                document.getElementById("taskTypeChart");
+
+            new Chart(ctx, {
+
+                type: "bar",
+
+                data: {
+
+                    labels: [
+                        "Development",
+                        "Bug Fix",
+                        "Testing",
+                        "Documentation",
+                        "Design"
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            label: "Tasks",
+
+                            data: [
+                                52000,
+                                41000,
+                                36000,
+                                28000,
+                                19000
+                            ],
+
+                            backgroundColor:
+                                "#a855f7",
+
+                            borderRadius: 5,
+
+                            barThickness: 24
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            grid: {
+                                color: "#181818"
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+        }
+
+
+        /* =========================================================
+           PRIORITY CHART
+        ========================================================= */
+
+        function createPriorityChart() {
+
+            const ctx =
+                document.getElementById("priorityChart");
+
+            new Chart(ctx, {
+
+                type: "bar",
+
+                data: {
+
+                    labels: [
+                        "Low",
+                        "Medium",
+                        "High",
+                        "Critical"
+                    ],
+
+                    datasets: [
+
+                        {
+
+                            label: "Tasks",
+
+                            data: [
+                                43000,
+                                96000,
+                                47000,
+                                14000
+                            ],
+
+                            backgroundColor:
+                                "#7c3aed",
+
+                            borderRadius: 5,
+
+                            barThickness: 28
+
+                        }
+
+                    ]
+
+                },
+
+                options: {
+
+                    responsive: true,
+
+                    maintainAspectRatio: false,
+
+                    plugins: {
+
+                        legend: {
+                            display: false
+                        }
+
+                    },
+
+                    scales: {
+
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            grid: {
+                                color: "#181818"
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            });
+
+        }
+
+
+        /* =========================================================
+           PERIOD CHANGE
+        ========================================================= */
+
+        function updateTrendChart() {
+
+            const period =
+                document.getElementById("trendPeriod").value;
+
+            let labels;
+            let values;
+
+            if (period === "weekly") {
+
+                labels = [
+                    "Mon",
+                    "Tue",
+                    "Wed",
+                    "Thu",
+                    "Fri",
+                    "Sat",
+                    "Sun"
+                ];
+
+                values = [
+                    4.43,
+                    4.48,
+                    4.51,
+                    4.49,
+                    4.56,
+                    4.58,
+                    4.57
+                ];
+
+            } else if (period === "yearly") {
+
+                labels = [
+                    "2022",
+                    "2023",
+                    "2024",
+                    "2025",
+                    "2026"
+                ];
+
+                values = [
+                    4.02,
+                    4.18,
+                    4.31,
+                    4.46,
+                    4.57
+                ];
+
+            } else {
+
+                labels = [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul",
+                    "Aug",
+                    "Sep"
+                ];
+
+                values = [
+                    4.21,
+                    4.28,
+                    4.34,
+                    4.41,
+                    4.46,
+                    4.51,
+                    4.54,
+                    4.56,
+                    4.57
+                ];
+
+            }
+
+            performanceChart.data.labels = labels;
+
+            performanceChart.data.datasets[0].data = values;
+
+            performanceChart.update();
+
+        }
+
+
+        /* =========================================================
+           REFRESH
+        ========================================================= */
+
+        function refreshAnalytics() {
+
+            const button =
+                document.querySelector(".header-btn");
+
+            button.innerHTML = "↻ Refreshing...";
+
+            setTimeout(() => {
+
+                button.innerHTML = "↻ Refresh";
+
+                alert("Analytics refreshed successfully.");
+
+            }, 800);
+
+        }
+
+
+        /* =========================================================
+           EXPORT
+        ========================================================= */
+
+        function exportAnalytics() {
+
+            const data = {
+
+                totalEmployees:
+                    document.getElementById("totalEmployees").innerText,
+
+                totalTasks:
+                    document.getElementById("totalTasks").innerText,
+
+                averageRating:
+                    document.getElementById("avgRating").innerText,
+
+                averageRisk:
+                    document.getElementById("avgRisk").innerText
+
+            };
+
+            const csv =
+                "Metric,Value\n" +
+                "Total Employees," +
+                data.totalEmployees + "\n" +
+                "Total Tasks," +
+                data.totalTasks + "\n" +
+                "Average Rating," +
+                data.averageRating + "\n" +
+                "Average Risk," +
+                data.averageRisk + "\n";
+
+            const blob =
+                new Blob([csv], {
+                    type: "text/csv"
+                });
+
+            const url =
+                URL.createObjectURL(blob);
+
+            const link =
+                document.createElement("a");
+
+            link.href = url;
+
+            link.download =
+                "synq_analytics.csv";
+
+            link.click();
+
+            URL.revokeObjectURL(url);
+
+        }
+
+
+        /* =========================================================
+           INITIALIZE
+        ========================================================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                createPerformanceChart();
+
+                createDistributionChart();
+
+                createTaskTypeChart();
+
+                createPriorityChart();
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>
