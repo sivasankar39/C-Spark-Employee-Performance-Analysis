@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SYNQ - Create Task</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            width: calc(100% - 260px);
+        }
+
+        .page-container {
+            padding: 28px 38px 50px;
+        }
+
+        /* =========================================
+           TOPBAR
+        ========================================== */
+
+        .topbar {
+            height: 70px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            padding: 0 38px;
+        }
+
+        .topbar-title {
+            font-size: 13px;
+            color: #777;
+            letter-spacing: 1px;
+        }
+
+        .topbar-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .topbar-date {
+            color: #777;
+            font-size: 13px;
+        }
+
+        /* =========================================
+           HERO
+        ========================================== */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+
+            padding: 36px 38px;
+
+            border: 1px solid #422060;
+            border-radius: 20px;
+
+            background:
+                radial-gradient(circle at 85% 40%,
+                    rgba(128, 43, 214, 0.16),
+                    transparent 35%),
+                #090909;
+
+            margin-bottom: 26px;
+        }
+
+        .hero::after {
+            content: "";
+
+            position: absolute;
+
+            width: 260px;
+            height: 260px;
+
+            right: 80px;
+            top: -100px;
+
+            border: 1px solid rgba(170, 75, 255, 0.13);
+
+            border-radius: 50%;
+        }
+
+        .hero-label {
+            color: #a94cff;
+            font-size: 10px;
+            letter-spacing: 4px;
+            margin-bottom: 14px;
+        }
+
+        .hero h1 {
+            margin: 0 0 12px;
+
+            font-size: 32px;
+            line-height: 1.2;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero p {
+            margin: 0;
+
+            color: #777;
+
+            font-size: 14px;
+            line-height: 1.7;
+
+            max-width: 850px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        /* =========================================
+           GRID
+        ========================================== */
+
+        .content-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(520px, 1.4fr) minmax(390px, 0.85fr);
+
+            gap: 24px;
+        }
+
+        .panel {
+            background: #080808;
+
+            border: 1px solid #292929;
+
+            border-radius: 18px;
+
+            padding: 30px;
+        }
+
+        .panel-title {
+            font-size: 20px;
+            margin-bottom: 7px;
+        }
+
+        .panel-subtitle {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 28px;
+        }
+
+        /* =========================================
+           FORM
+        ========================================== */
+
+        .form-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 20px 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        input,
+        select {
+
+            width: 100%;
+            height: 53px;
+
+            background: #111;
+
+            color: #fff;
+
+            border: 1px solid #2b2b2b;
+
+            border-radius: 10px;
+
+            padding: 0 15px;
+
+            font-size: 14px;
+
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+
+            border-color: #8d3ee4;
+
+            box-shadow:
+                0 0 0 2px rgba(141, 62, 228, 0.10);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #111;
+            color: #fff;
+        }
+
+        input::placeholder {
+            color: #555;
+        }
+
+        .hint {
+            margin-top: 6px;
+
+            color: #555;
+
+            font-size: 11px;
+        }
+
+        /* =========================================
+           CREATE BUTTON
+        ========================================== */
+
+        .create-button {
+
+            grid-column: 1 / -1;
+
+            height: 56px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(100deg,
+                    #7430e9,
+                    #b047f0);
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            margin-top: 5px;
+
+            box-shadow:
+                0 12px 30px rgba(125, 48, 230, 0.20);
+
+            transition: 0.2s;
+        }
+
+        .create-button:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 15px 35px rgba(125, 48, 230, 0.30);
+        }
+
+        .create-button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+            transform: none;
+        }
+
+        /* =========================================
+           MESSAGE
+        ========================================== */
+
+        .message {
+
+            display: none;
+
+            padding: 13px 15px;
+
+            border-radius: 9px;
+
+            font-size: 12px;
+
+            margin-bottom: 18px;
+
+            line-height: 1.5;
+        }
+
+        .message.success {
+
+            display: block;
+
+            background: rgba(34, 197, 94, 0.08);
+
+            border: 1px solid rgba(34, 197, 94, 0.25);
+
+            color: #72df94;
+        }
+
+        .message.error {
+
+            display: block;
+
+            background: rgba(239, 68, 68, 0.08);
+
+            border: 1px solid rgba(239, 68, 68, 0.25);
+
+            color: #ff7b7b;
+        }
+
+        /* =========================================
+           PREVIEW
+        ========================================== */
+
+        .preview-panel {
+            min-height: 610px;
+        }
+
+        .preview-box {
+
+            background: #0d0d0d;
+
+            border: 1px solid #292929;
+
+            border-radius: 13px;
+
+            padding: 21px;
+
+            margin-top: 32px;
+        }
+
+        .preview-label {
+
+            color: #777;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 18px;
+        }
+
+        .preview-row {
+
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            min-height: 48px;
+
+            border-bottom: 1px solid #1c1c1c;
+        }
+
+        .preview-row:last-child {
+            border-bottom: none;
+        }
+
+        .preview-row span:first-child {
+            color: #555;
+            font-size: 12px;
+        }
+
+        .preview-row span:last-child {
+            color: #ddd;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* =========================================
+           INTELLIGENCE CARD
+        ========================================== */
+
+        .intelligence {
+
+            margin-top: 20px;
+
+            padding: 20px;
+
+            border: 1px solid #34204c;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(135deg,
+                    rgba(95, 35, 145, 0.10),
+                    rgba(15, 8, 22, 0.50));
+        }
+
+        .intelligence-title {
+
+            color: #b34fff;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            margin-bottom: 10px;
+        }
+
+        .intelligence p {
+
+            color: #666;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+
+            margin: 0;
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 1100px) {
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-panel {
+                min-height: auto;
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .main-content {
+
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+            .page-container {
+
+                padding:
+                    20px 15px;
+            }
+
+            .form-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+            .form-group.full,
+            .create-button {
+
+                grid-column: auto;
+            }
+
+            .hero h1 {
+
+                font-size: 26px;
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    {% include 'partials/sidebar.html' %}
+
+
+
+    <!-- =========================================
+         MAIN
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- =====================================
+             TOPBAR
+        ====================================== -->
+
+        <header class="topbar">
+
+            <div class="topbar-title">
+
+                SYNQ / CREATE TASK
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <div class="topbar-date">
+
+                    Thursday, 10 September 2026
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <div class="page-container">
+
+
+            <!-- =====================================
+                 HERO
+            ====================================== -->
+
+            <section class="hero">
+
+                <div class="hero-label">
+
+                    S Y N Q · T A S K M A N A G E M E N T
+
+                </div>
+
+
+                <h1>
+
+                    Create a new task.
+
+                </h1>
+
+
+                <p>
+
+                    Enter the task characteristics below.
+                    You can use this information later with
+                    SYNQ's employee prediction engine to find
+                    the most suitable employee.
+
+                </p>
+
+            </section>
+
+
+
+            <!-- =====================================
+                 CONTENT GRID
+            ====================================== -->
+
+            <div class="content-grid">
+
+
+                <!-- =================================
+                     FORM PANEL
+                ================================== -->
+
+                <section class="panel">
+
+
+                    <div class="panel-title">
+
+                        Task Information
+
+                    </div>
+
+
+                    <div class="panel-subtitle">
+
+                        Provide the basic characteristics of the task.
+
+                    </div>
+
+
+                    <div id="message" class="message"></div>
+
+
+
+                    <form id="taskForm">
+
+
+                        <div class="form-grid">
+
+
+                            <!-- TASK TYPE -->
+
+                            <div class="form-group">
+
+                                <label for="task_type">
+
+                                    Task Type
+
+                                </label>
+
+
+                                <select id="task_type" name="task_type" required>
+
+                                    <option value="">
+
+                                        Loading task types...
+
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- PRIORITY -->
+
+                            <div class="form-group">
+
+                                <label for="priority">
+
+                                    Priority
+
+                                </label>
+
+
+                                <select id="priority" name="priority" required>
+
+                                    <option value="">
+
+                                        Loading priorities...
+
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- DEADLINE -->
+
+                            <div class="form-group">
+
+                                <label for="days_to_deadline">
+
+                                    Days to Deadline
+
+                                </label>
+
+
+                                <input type="number" id="days_to_deadline" name="days_to_deadline" placeholder="e.g. 6"
+                                    min="0" step="1" required>
+
+                            </div>
+
+
+
+                            <!-- VOLUME -->
+
+                            <div class="form-group">
+
+                                <label for="volume_metric">
+
+                                    Volume Metric
+
+                                </label>
+
+
+                                <input type="number" id="volume_metric" name="volume_metric" placeholder="e.g. 0.14"
+                                    min="0" step="0.01" required>
+
+                            </div>
+
+
+
+                            <!-- DIFFICULTY -->
+
+                            <div class="form-group">
+
+                                <label for="perceived_difficulty">
+
+                                    Perceived Difficulty
+
+                                </label>
+
+
+                                <select id="perceived_difficulty" name="perceived_difficulty" required>
+
+                                    <option value="">
+
+                                        Select difficulty
+
+                                    </option>
+
+                                    <option value="Low">
+
+                                        Low
+
+                                    </option>
+
+                                    <option value="Medium">
+
+                                        Medium
+
+                                    </option>
+
+                                    <option value="High">
+
+                                        High
+
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- ERROR RISK -->
+
+                            <div class="form-group">
+
+                                <label for="error_risk">
+
+                                    Error Risk
+
+                                </label>
+
+
+                                <select id="error_risk" name="error_risk" required>
+
+                                    <option value="">
+
+                                        Select risk
+
+                                    </option>
+
+                                    <option value="0">
+
+                                        0 — Minimal
+
+                                    </option>
+
+                                    <option value="1">
+
+                                        1 — Very Low
+
+                                    </option>
+
+                                    <option value="2">
+
+                                        2 — Low
+
+                                    </option>
+
+                                    <option value="3">
+
+                                        3 — Moderate
+
+                                    </option>
+
+                                    <option value="4">
+
+                                        4 — High
+
+                                    </option>
+
+                                    <option value="5">
+
+                                        5 — Critical
+
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- DEPENDENCY -->
+
+                            <div class="form-group">
+
+                                <label for="dependency_score">
+
+                                    Dependency Score
+
+                                </label>
+
+
+                                <input type="number" id="dependency_score" name="dependency_score"
+                                    placeholder="0.00 – 1.00" min="0" max="1" step="0.01" required>
+
+
+                                <div class="hint">
+
+                                    Enter a value between 0 and 1.
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- DATE -->
+
+                            <div class="form-group">
+
+                                <label for="task_date">
+
+                                    Task Date
+
+                                </label>
+
+
+                                <input type="date" id="task_date" name="task_date" required>
+
+                            </div>
+
+
+
+                            <!-- BUTTON -->
+
+                            <button type="submit" class="create-button" id="createButton">
+
+                                CREATE TASK
+
+                            </button>
+
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+
+
+                <!-- =================================
+                     PREVIEW PANEL
+                ================================== -->
+
+                <section class="panel preview-panel">
+
+
+                    <div class="panel-title">
+
+                        Task Preview
+
+                    </div>
+
+
+                    <div class="panel-subtitle">
+
+                        Review the task before creating it.
+
+                    </div>
+
+
+
+                    <div class="preview-box">
+
+
+                        <div class="preview-label">
+
+                            TASK DETAILS
+
+                        </div>
+
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Task Type
+                            </span>
+
+                            <span id="previewTaskType">
+                                —
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Priority
+                            </span>
+
+                            <span id="previewPriority">
+                                —
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Deadline
+                            </span>
+
+                            <span id="previewDeadline">
+                                —
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Volume
+                            </span>
+
+                            <span id="previewVolume">
+                                —
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Difficulty
+                            </span>
+
+                            <span id="previewDifficulty">
+                                —
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Error Risk
+                            </span>
+
+                            <span id="previewRisk">
+                                —
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Dependency
+                            </span>
+
+                            <span id="previewDependency">
+                                —
+                            </span>
+
+                        </div>
+
+
+
+                        <div class="preview-row">
+
+                            <span>
+                                Task Date
+                            </span>
+
+                            <span id="previewDate">
+                                —
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="intelligence">
+
+
+                        <div class="intelligence-title">
+
+                            SYNQ Intelligence
+
+                        </div>
+
+
+                        <p>
+
+                            Task characteristics can be used
+                            by the prediction engine to evaluate
+                            employee suitability and expected
+                            performance.
+
+                        </p>
+
+                    </div>
+
+
+                </section>
+
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script>
+
+        /* =========================================
+           RISK NAMES
+        ========================================== */
+
+        const riskNames = {
+
+            0: "Minimal",
+            1: "Very Low",
+            2: "Low",
+            3: "Moderate",
+            4: "High",
+            5: "Critical"
+
+        };
+
+
+        /* =========================================
+           LOAD TASK OPTIONS
+        ========================================== */
+
+        async function loadTaskOptions() {
+
+            const taskType =
+                document.getElementById(
+                    "task_type"
+                );
+
+            const priority =
+                document.getElementById(
+                    "priority"
+                );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/task-options"
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load task options"
+                    );
+
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                /*
+                    Backend response:
+
+                    {
+                        success: true,
+                        options: {
+                            task_types: [],
+                            priorities: []
+                        }
+                    }
+                */
+
+
+                const options =
+                    data.options || data;
+
+
+                const taskTypes =
+                    Array.isArray(
+                        options.task_types
+                    )
+                        ? options.task_types
+                        : [];
+
+
+                const priorities =
+                    Array.isArray(
+                        options.priorities
+                    )
+                        ? options.priorities
+                        : [];
+
+
+                /* =====================================
+                   TASK TYPE
+                ====================================== */
+
+                taskType.innerHTML =
+                    '<option value="">Select task type</option>';
+
+
+                taskTypes.forEach(
+                    function (item) {
+
+                        const value =
+                            String(item).trim();
+
+
+                        if (!value) {
+
+                            return;
+
+                        }
+
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+
+                        option.value =
+                            value;
+
+
+                        option.textContent =
+                            value;
+
+
+                        taskType.appendChild(
+                            option
+                        );
+
+                    }
+                );
+
+
+                /* =====================================
+                   PRIORITY
+                ====================================== */
+
+                priority.innerHTML =
+                    '<option value="">Select priority</option>';
+
+
+                priorities.forEach(
+                    function (item) {
+
+                        const value =
+                            String(item).trim();
+
+
+                        if (!value) {
+
+                            return;
+
+                        }
+
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+
+                        option.value =
+                            value;
+
+
+                        option.textContent =
+                            value;
+
+
+                        priority.appendChild(
+                            option
+                        );
+
+                    }
+                );
+
+
+                /* =====================================
+                   DEFAULT TASK TYPE
+                ====================================== */
+
+                if (
+                    taskTypes.length > 0
+                ) {
+
+                    taskType.value =
+                        String(
+                            taskTypes[0]
+                        ).trim();
+
+                }
+
+
+                /* =====================================
+                   DEFAULT PRIORITY
+                ====================================== */
+
+                const mediumPriority =
+                    Array.from(
+                        priority.options
+                    ).find(
+                        function (option) {
+
+                            return (
+                                option.value
+                                    .toLowerCase()
+                                    .trim()
+                                ===
+                                "medium"
+                            );
+
+                        }
+                    );
+
+
+                if (mediumPriority) {
+
+                    priority.value =
+                        mediumPriority.value;
+
+                }
+                else if (
+                    priorities.length > 0
+                ) {
+
+                    priority.value =
+                        String(
+                            priorities[0]
+                        ).trim();
+
+                }
+
+
+                console.log(
+                    "SYNQ Task Types:",
+                    taskTypes
+                );
+
+
+                console.log(
+                    "SYNQ Priorities:",
+                    priorities
+                );
+
+
+                updatePreview();
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Task options error:",
+                    error
+                );
+
+
+                taskType.innerHTML =
+                    '<option value="">Unable to load task types</option>';
+
+
+                priority.innerHTML =
+                    '<option value="">Unable to load priorities</option>';
+
+            }
+
+        }
+
+
+        /* =========================================
+           UPDATE PREVIEW
+        ========================================== */
+
+        function updatePreview() {
+
+            const taskType =
+                document.getElementById(
+                    "task_type"
+                ).value;
+
+
+            const priority =
+                document.getElementById(
+                    "priority"
+                ).value;
+
+
+            const deadline =
+                document.getElementById(
+                    "days_to_deadline"
+                ).value;
+
+
+            const volume =
+                document.getElementById(
+                    "volume_metric"
+                ).value;
+
+
+            const difficulty =
+                document.getElementById(
+                    "perceived_difficulty"
+                ).value;
+
+
+            const risk =
+                document.getElementById(
+                    "error_risk"
+                ).value;
+
+
+            const dependency =
+                document.getElementById(
+                    "dependency_score"
+                ).value;
+
+
+            const date =
+                document.getElementById(
+                    "task_date"
+                ).value;
+
+
+            document.getElementById(
+                "previewTaskType"
+            ).textContent =
+                taskType || "—";
+
+
+            document.getElementById(
+                "previewPriority"
+            ).textContent =
+                priority || "—";
+
+
+            document.getElementById(
+                "previewDeadline"
+            ).textContent =
+                deadline
+                    ? `${deadline} day(s)`
+                    : "—";
+
+
+            document.getElementById(
+                "previewVolume"
+            ).textContent =
+                volume || "—";
+
+
+            document.getElementById(
+                "previewDifficulty"
+            ).textContent =
+                difficulty || "—";
+
+
+            document.getElementById(
+                "previewRisk"
+            ).textContent =
+                risk !== ""
+                    ? `${risk} — ${riskNames[risk]}`
+                    : "—";
+
+
+            document.getElementById(
+                "previewDependency"
+            ).textContent =
+                dependency || "—";
+
+
+            document.getElementById(
+                "previewDate"
+            ).textContent =
+                date || "—";
+
+        }
+
+
+        /* =========================================
+           FORM LISTENERS
+        ========================================== */
+
+        const fields = [
+
+            "task_type",
+            "priority",
+            "days_to_deadline",
+            "volume_metric",
+            "perceived_difficulty",
+            "error_risk",
+            "dependency_score",
+            "task_date"
+
+        ];
+
+
+        fields.forEach(
+            function (id) {
+
+                const element =
+                    document.getElementById(id);
+
+
+                if (!element) {
+
+                    return;
+
+                }
+
+
+                element.addEventListener(
+                    "input",
+                    updatePreview
+                );
+
+
+                element.addEventListener(
+                    "change",
+                    updatePreview
+                );
+
+            }
+        );
+
+
+        /* =========================================
+           CREATE TASK
+        ========================================== */
+
+        document
+            .getElementById(
+                "taskForm"
+            )
+            .addEventListener(
+                "submit",
+                async function (event) {
+
+                    event.preventDefault();
+
+
+                    const button =
+                        document.getElementById(
+                            "createButton"
+                        );
+
+
+                    const message =
+                        document.getElementById(
+                            "message"
+                        );
+
+
+                    /* =============================
+                       VALUES
+                    ============================== */
+
+                    const taskType =
+                        document.getElementById(
+                            "task_type"
+                        ).value;
+
+
+                    const priority =
+                        document.getElementById(
+                            "priority"
+                        ).value;
+
+
+                    const daysToDeadline =
+                        Number(
+                            document.getElementById(
+                                "days_to_deadline"
+                            ).value
+                        );
+
+
+                    const volumeMetric =
+                        Number(
+                            document.getElementById(
+                                "volume_metric"
+                            ).value
+                        );
+
+
+                    const difficulty =
+                        document.getElementById(
+                            "perceived_difficulty"
+                        ).value;
+
+
+                    const errorRisk =
+                        Number(
+                            document.getElementById(
+                                "error_risk"
+                            ).value
+                        );
+
+
+                    const dependency =
+                        Number(
+                            document.getElementById(
+                                "dependency_score"
+                            ).value
+                        );
+
+
+                    const taskDate =
+                        document.getElementById(
+                            "task_date"
+                        ).value;
+
+
+                    /* =============================
+                       VALIDATION
+                    ============================== */
+
+                    if (!taskType) {
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Please select a task type.";
+
+                        return;
+
+                    }
+
+
+                    if (!priority) {
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Please select a priority.";
+
+                        return;
+
+                    }
+
+
+                    if (
+                        isNaN(daysToDeadline)
+                        ||
+                        daysToDeadline < 0
+                    ) {
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Please enter a valid deadline.";
+
+                        return;
+
+                    }
+
+
+                    if (
+                        isNaN(volumeMetric)
+                        ||
+                        volumeMetric < 0
+                    ) {
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Please enter a valid volume metric.";
+
+                        return;
+
+                    }
+
+
+                    if (!difficulty) {
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Please select difficulty.";
+
+                        return;
+
+                    }
+
+
+                    if (
+                        isNaN(errorRisk)
+                        ||
+                        errorRisk < 0
+                        ||
+                        errorRisk > 5
+                    ) {
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Please select a valid error risk.";
+
+                        return;
+
+                    }
+
+
+                    if (
+                        isNaN(dependency)
+                        ||
+                        dependency < 0
+                        ||
+                        dependency > 1
+                    ) {
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Dependency score must be between 0 and 1.";
+
+                        return;
+
+                    }
+
+
+                    if (!taskDate) {
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Please select a task date.";
+
+                        return;
+
+                    }
+
+
+                    /* =============================
+                       PAYLOAD
+                    ============================== */
+
+                    const payload = {
+
+                        task_type:
+                            taskType,
+
+                        priority:
+                            priority,
+
+                        days_to_deadline:
+                            daysToDeadline,
+
+                        volume_metric:
+                            volumeMetric,
+
+                        perceived_difficulty:
+                            difficulty,
+
+                        error_risk:
+                            errorRisk,
+
+                        dependency_score:
+                            dependency,
+
+                        task_date:
+                            taskDate
+
+                    };
+
+
+                    /* =============================
+                       LOADING
+                    ============================== */
+
+                    button.disabled =
+                        true;
+
+
+                    button.textContent =
+                        "CREATING...";
+
+
+                    message.className =
+                        "message";
+
+
+                    message.textContent =
+                        "";
+
+
+                    try {
+
+
+                        const response =
+                            await fetch(
+                                "/create-task",
+                                {
+
+                                    method:
+                                        "POST",
+
+                                    headers: {
+
+                                        "Content-Type":
+                                            "application/json"
+
+                                    },
+
+                                    body:
+                                        JSON.stringify(
+                                            payload
+                                        )
+
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        if (!response.ok) {
+
+                            throw new Error(
+                                data.message
+                                ||
+                                data.msg
+                                ||
+                                data.error
+                                ||
+                                "Unable to create task."
+                            );
+
+                        }
+
+
+                        /* =========================
+                           SUCCESS
+                        ========================== */
+
+                        message.className =
+                            "message success";
+
+
+                        message.textContent =
+                            data.message
+                            ||
+                            "Task created successfully.";
+
+
+                        updatePreview();
+
+                    }
+
+
+                    catch (error) {
+
+                        console.error(
+                            "Create task error:",
+                            error
+                        );
+
+
+                        message.className =
+                            "message error";
+
+
+                        message.textContent =
+                            error.message
+                            ||
+                            "Unable to connect to server.";
+
+                    }
+
+
+                    finally {
+
+                        button.disabled =
+                            false;
+
+
+                        button.textContent =
+                            "CREATE TASK";
+
+                    }
+
+                }
+            );
+
+
+        /* =========================================
+           DEFAULT DATE
+        ========================================== */
+
+        const dateInput =
+            document.getElementById(
+                "task_date"
+            );
+
+
+        if (
+            dateInput &&
+            !dateInput.value
+        ) {
+
+            const today =
+                new Date();
+
+
+            const year =
+                today.getFullYear();
+
+
+            const month =
+                String(
+                    today.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            const day =
+                String(
+                    today.getDate()
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            dateInput.value =
+                `${year}-${month}-${day}`;
+
+        }
+
+
+        /* =========================================
+           INITIALIZE
+        ========================================== */
+
+        loadTaskOptions();
+
+        updatePreview();
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SYNQ | Create Account</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #050505;
+            color: #ffffff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+
+            width: 500px;
+            height: 500px;
+
+            background: #7c3aed;
+            filter: blur(180px);
+
+            opacity: 0.15;
+
+            top: -180px;
+            left: -150px;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+
+            width: 450px;
+            height: 450px;
+
+            background: #a855f7;
+            filter: blur(180px);
+
+            opacity: 0.10;
+
+            bottom: -200px;
+            right: -150px;
+        }
+
+        /* MAIN CONTAINER */
+
+        .container {
+            width: 100%;
+            max-width: 1050px;
+
+            min-height: 620px;
+
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+
+            background: rgba(12, 12, 12, 0.94);
+
+            border: 1px solid #242424;
+            border-radius: 24px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 0 60px rgba(124, 58, 237, 0.12);
+
+            position: relative;
+            z-index: 2;
+        }
+
+        /* LEFT */
+
+        .brand-section {
+            position: relative;
+
+            padding: 55px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            border-right: 1px solid #222;
+
+            background:
+                radial-gradient(circle at 20% 20%,
+                    rgba(124, 58, 237, 0.16),
+                    transparent 38%),
+                #070707;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+
+            gap: 13px;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(135deg,
+                    #7c3aed,
+                    #a855f7);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 23px;
+            font-weight: bold;
+
+            box-shadow:
+                0 0 25px rgba(168, 85, 247, 0.35);
+        }
+
+        .logo-text {
+            font-size: 28px;
+
+            font-weight: 800;
+
+            letter-spacing: 4px;
+        }
+
+        .brand-content {
+            margin-top: 50px;
+        }
+
+        .brand-content h1 {
+            font-size: clamp(55px, 8vw, 105px);
+
+            line-height: 0.9;
+
+            letter-spacing: -5px;
+
+            font-weight: 900;
+
+            background:
+                linear-gradient(135deg,
+                    #ffffff 25%,
+                    #a855f7 65%,
+                    #7c3aed);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tagline {
+            margin-top: 25px;
+
+            color: #999;
+
+            font-size: 14px;
+
+            letter-spacing: 4px;
+
+            text-transform: uppercase;
+        }
+
+        .brand-content p {
+            margin-top: 22px;
+
+            max-width: 420px;
+
+            color: #666;
+
+            line-height: 1.7;
+
+            font-size: 14px;
+        }
+
+        .bottom-text {
+            color: #444;
+
+            font-size: 11px;
+
+            letter-spacing: 2px;
+        }
+
+        /* RIGHT */
+
+        .register-section {
+            padding: 55px 60px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .register-box {
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .register-box h2 {
+            font-size: 32px;
+
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #777;
+
+            font-size: 14px;
+
+            margin-bottom: 32px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #aaa;
+
+            font-size: 13px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+
+            padding: 15px 16px;
+
+            background: #101010;
+
+            color: #fff;
+
+            border: 1px solid #292929;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: 0.25s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #8b5cf6;
+
+            box-shadow:
+                0 0 0 3px rgba(139,
+                    92,
+                    246,
+                    0.10);
+        }
+
+        /* PASSWORD */
+
+        .password-toggle {
+            position: absolute;
+
+            right: 14px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #777;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            user-select: none;
+        }
+
+        /* BUTTON */
+
+        .register-btn {
+            width: 100%;
+
+            margin-top: 10px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(135deg,
+                    #7c3aed,
+                    #9333ea);
+
+            color: white;
+
+            font-weight: 700;
+
+            font-size: 14px;
+
+            letter-spacing: 1px;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+            box-shadow:
+                0 8px 25px rgba(124,
+                    58,
+                    237,
+                    0.22);
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 32px rgba(124,
+                    58,
+                    237,
+                    0.35);
+        }
+
+        .register-btn:disabled {
+            opacity: 0.6;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+        /* MESSAGE */
+
+        .message {
+            margin-top: 18px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            display: none;
+        }
+
+        .message.error {
+            display: block;
+
+            color: #fca5a5;
+
+            background:
+                rgba(239, 68, 68, 0.08);
+
+            border:
+                1px solid rgba(239,
+                    68,
+                    68,
+                    0.20);
+        }
+
+        .message.success {
+            display: block;
+
+            color: #86efac;
+
+            background:
+                rgba(34, 197, 94, 0.08);
+
+            border:
+                1px solid rgba(34,
+                    197,
+                    94,
+                    0.20);
+        }
+
+        /* LOGIN LINK */
+
+        .login-link {
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: #666;
+
+            font-size: 13px;
+        }
+
+        .login-link a {
+            color: #a855f7;
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+        .login-link a:hover {
+            color: #c084fc;
+        }
+
+        .secure-text {
+            text-align: center;
+
+            margin-top: 30px;
+
+            color: #3f3f3f;
+
+            font-size: 10px;
+
+            letter-spacing: 1px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 800px) {
+
+            body {
+                padding: 20px;
+
+                overflow: auto;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+
+                min-height: auto;
+            }
+
+            .brand-section {
+                padding: 35px;
+
+                min-height: 360px;
+
+                border-right: none;
+
+                border-bottom: 1px solid #222;
+            }
+
+            .brand-content {
+                margin-top: 30px;
+            }
+
+            .brand-content h1 {
+                font-size: 70px;
+            }
+
+            .register-section {
+                padding: 45px 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- =====================================
+         LEFT BRAND
+    ====================================== -->
+
+        <div class="brand-section">
+
+            <div class="logo">
+
+                <div class="logo-icon">
+                    ✦
+                </div>
+
+                <div class="logo-text">
+                    SYNQ
+                </div>
+
+            </div>
+
+
+            <div class="brand-content">
+
+                <h1>
+                    SYNQ
+                </h1>
+
+                <div class="tagline">
+                    PEOPLE DATA · PERFORMANCE
+                </div>
+
+                <p>
+                    AI-powered employee performance
+                    intelligence for a smarter and
+                    more efficient workplace.
+                </p>
+
+            </div>
+
+
+            <div class="bottom-text">
+                SMART PEOPLE • SMARTER PERFORMANCE
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+         REGISTER
+    ====================================== -->
+
+        <div class="register-section">
+
+            <div class="register-box">
+
+                <h2>
+                    Create account
+                </h2>
+
+                <div class="subtitle">
+                    Create your SYNQ manager account.
+                </div>
+
+
+                <form id="registerForm">
+
+                    <!-- USERNAME -->
+
+                    <div class="input-group">
+
+                        <label for="username">
+                            Username
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input type="text" id="username" placeholder="Choose a username" required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="input-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input type="password" id="password" placeholder="Create a password" required>
+
+                            <span class="password-toggle" onclick="togglePassword('password', this)">
+                                Show
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="input-group">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+
+                            <span class="password-toggle" onclick="togglePassword('confirmPassword', this)">
+                                Show
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BUTTON -->
+
+                    <button type="submit" class="register-btn" id="registerBtn">
+                        CREATE ACCOUNT
+                    </button>
+
+                </form>
+
+
+                <!-- MESSAGE -->
+
+                <div id="message" class="message"></div>
+
+
+                <!-- LOGIN -->
+
+                <div class="login-link">
+
+                    Already have an account?
+
+                    <a href="/">
+                        Sign in
+                    </a>
+
+                </div>
+
+
+                <div class="secure-text">
+                    🔒 SECURE AUTHENTICATION
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // =========================================
+        // PASSWORD SHOW / HIDE
+        // =========================================
+
+        function togglePassword(
+            inputId,
+            toggleElement
+        ) {
+
+            const input =
+                document.getElementById(inputId);
+
+            if (input.type === "password") {
+
+                input.type = "text";
+
+                toggleElement.textContent = "Hide";
+
+            } else {
+
+                input.type = "password";
+
+                toggleElement.textContent = "Show";
+            }
+        }
+
+
+        // =========================================
+        // REGISTER
+        // =========================================
+
+        document
+            .getElementById("registerForm")
+            .addEventListener(
+                "submit",
+                async function (event) {
+
+                    event.preventDefault();
+
+
+                    const username =
+                        document
+                            .getElementById("username")
+                            .value
+                            .trim();
+
+
+                    const password =
+                        document
+                            .getElementById("password")
+                            .value;
+
+
+                    const confirmPassword =
+                        document
+                            .getElementById("confirmPassword")
+                            .value;
+
+
+                    const button =
+                        document
+                            .getElementById("registerBtn");
+
+
+                    const message =
+                        document
+                            .getElementById("message");
+
+
+                    // Clear previous message
+
+                    message.className = "message";
+
+                    message.textContent = "";
+
+
+                    // Check password match
+
+                    if (password !== confirmPassword) {
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Passwords do not match.";
+
+                        return;
+                    }
+
+
+                    // Password length
+
+                    if (password.length < 6) {
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Password must contain at least 6 characters.";
+
+                        return;
+                    }
+
+
+                    button.disabled = true;
+
+                    button.textContent =
+                        "CREATING ACCOUNT...";
+
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                "/api/register",
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body: JSON.stringify({
+                                        username:
+                                            username,
+
+                                        password:
+                                            password
+                                    })
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        if (response.ok) {
+
+                            message.className =
+                                "message success";
+
+                            message.textContent =
+                                "Account created successfully. Redirecting to login...";
+
+
+                            setTimeout(
+                                function () {
+
+                                    window.location.href =
+                                        "/";
+
+                                },
+                                1200
+                            );
+
+                        } else {
+
+                            message.className =
+                                "message error";
+
+                            message.textContent =
+                                data.message ||
+                                "Registration failed.";
+
+                            button.disabled = false;
+
+                            button.textContent =
+                                "CREATE ACCOUNT";
+                        }
+
+                    } catch (error) {
+
+                        console.error(error);
+
+                        message.className =
+                            "message error";
+
+                        message.textContent =
+                            "Unable to connect to server.";
+
+                        button.disabled = false;
+
+                        button.textContent =
+                            "CREATE ACCOUNT";
+                    }
+
+                }
+            );
+
+    </script>
+
+</body>
+
+</html>

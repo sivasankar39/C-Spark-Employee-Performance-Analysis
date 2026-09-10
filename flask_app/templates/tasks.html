@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SYNQ — Task History</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .tasks-page {
+            padding: 35px 40px;
+            min-height: 100vh;
+            background: #050505;
+            color: #fff;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .label {
+            color: #666;
+            font-size: 10px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 13px;
+            margin-top: 8px;
+        }
+
+        .create-btn {
+            background: #a855f7;
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .create-btn:hover {
+            background: #9333ea;
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           STATS
+        ===================================================== */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: #0b0b0b;
+            border: 1px solid #1c1c1c;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .stat-title {
+            color: #666;
+            font-size: 10px;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .purple {
+            color: #a855f7;
+        }
+
+        .red {
+            color: #ef4444;
+        }
+
+
+        /* =====================================================
+           FILTERS
+        ===================================================== */
+
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .filters input,
+        .filters select {
+
+            background: #0b0b0b;
+            border: 1px solid #222;
+            color: #fff;
+            padding: 11px 13px;
+            border-radius: 8px;
+            outline: none;
+            font-size: 12px;
+
+        }
+
+        .filters input {
+            flex: 1;
+        }
+
+        .filters input:focus,
+        .filters select:focus {
+            border-color: #7c3aed;
+        }
+
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-card {
+            background: #0b0b0b;
+            border: 1px solid #1c1c1c;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table-top {
+            padding: 17px 20px;
+            border-bottom: 1px solid #1c1c1c;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .count {
+            color: #666;
+            font-size: 11px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1150px;
+            border-collapse: collapse;
+        }
+
+        th {
+            color: #555;
+            font-size: 10px;
+            text-align: left;
+            padding: 14px 18px;
+            border-bottom: 1px solid #1c1c1c;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        td {
+            color: #aaa;
+            font-size: 12px;
+            padding: 15px 18px;
+            border-bottom: 1px solid #151515;
+            white-space: nowrap;
+        }
+
+        tbody tr:hover {
+            background: #101010;
+        }
+
+        .task-id {
+            color: #a855f7;
+            font-weight: 600;
+        }
+
+        .task-type {
+            color: #ddd;
+            font-weight: 500;
+        }
+
+
+        /* =====================================================
+           PRIORITY BADGES
+        ===================================================== */
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .high {
+            color: #fca5a5;
+            background: rgba(239, 68, 68, 0.10);
+        }
+
+        .medium {
+            color: #fcd34d;
+            background: rgba(234, 179, 8, 0.10);
+        }
+
+        .low {
+            color: #86efac;
+            background: rgba(34, 197, 94, 0.10);
+        }
+
+
+        /* =====================================================
+           ACTION BUTTONS
+        ===================================================== */
+
+        .action-buttons {
+            display: flex;
+            gap: 7px;
+        }
+
+        .edit-btn,
+        .delete-btn {
+
+            border: 1px solid #252525;
+            background: #111;
+            padding: 7px 11px;
+            border-radius: 6px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: 0.2s;
+
+        }
+
+        .edit-btn {
+            color: #aaa;
+        }
+
+        .edit-btn:hover {
+
+            color: #c084fc;
+            border-color: #7c3aed;
+            background: #171020;
+
+        }
+
+        .delete-btn {
+            color: #999;
+        }
+
+        .delete-btn:hover {
+
+            color: #f87171;
+            border-color: #ef4444;
+            background: #1c0d0d;
+
+        }
+
+
+        /* =====================================================
+           EMPTY / ERROR
+        ===================================================== */
+
+        .empty {
+            text-align: center;
+            padding: 60px !important;
+            color: #555;
+        }
+
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .modal-overlay {
+
+            position: fixed;
+            inset: 0;
+
+            background: rgba(0, 0, 0, 0.78);
+
+            display: none;
+
+            align-items: center;
+            justify-content: center;
+
+            z-index: 5000;
+
+            padding: 20px;
+
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+
+        .modal {
+
+            width: 100%;
+            max-width: 600px;
+
+            background: #0b0b0b;
+
+            border: 1px solid #252525;
+
+            border-radius: 14px;
+
+            box-shadow:
+                0 25px 80px rgba(0, 0, 0, 0.65);
+
+            overflow: hidden;
+
+        }
+
+
+        .modal-header {
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 20px 22px;
+
+            border-bottom: 1px solid #1d1d1d;
+
+        }
+
+
+        .modal-title {
+
+            font-size: 16px;
+            font-weight: 600;
+
+        }
+
+
+        .modal-task-id {
+
+            color: #a855f7;
+            font-size: 11px;
+            margin-top: 4px;
+
+        }
+
+
+        .close-modal {
+
+            border: none;
+            background: transparent;
+
+            color: #666;
+
+            font-size: 22px;
+
+            cursor: pointer;
+
+        }
+
+        .close-modal:hover {
+            color: #fff;
+        }
+
+
+        .modal-body {
+            padding: 22px;
+        }
+
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 16px;
+
+        }
+
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+
+        .form-group label {
+
+            color: #777;
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 7px;
+
+        }
+
+
+        .form-group input,
+        .form-group select {
+
+            width: 100%;
+
+            box-sizing: border-box;
+
+            background: #070707;
+
+            border: 1px solid #252525;
+
+            color: #fff;
+
+            padding: 11px 12px;
+
+            border-radius: 7px;
+
+            outline: none;
+
+            font-size: 12px;
+
+        }
+
+
+        .form-group input:focus,
+        .form-group select:focus {
+
+            border-color: #7c3aed;
+
+        }
+
+
+        .modal-footer {
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+
+            padding: 16px 22px;
+
+            border-top: 1px solid #1d1d1d;
+
+        }
+
+
+        .cancel-btn,
+        .save-btn {
+
+            padding: 10px 17px;
+
+            border-radius: 7px;
+
+            font-size: 11px;
+
+            cursor: pointer;
+
+        }
+
+
+        .cancel-btn {
+
+            background: #111;
+
+            border: 1px solid #252525;
+
+            color: #999;
+
+        }
+
+
+        .save-btn {
+
+            background: #a855f7;
+
+            border: 1px solid #a855f7;
+
+            color: #fff;
+
+        }
+
+
+        .save-btn:hover {
+            background: #9333ea;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .tasks-page {
+                padding: 25px 15px;
+            }
+
+            .topbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    {% include 'partials/sidebar.html' %}
+
+
+    <main class="main-content">
+
+        <div class="tasks-page">
+
+
+            <!-- =====================================================
+         HEADER
+    ===================================================== -->
+
+            <div class="topbar">
+
+                <div>
+
+                    <div class="label">
+                        TASK MANAGEMENT
+                    </div>
+
+                    <h1>
+                        Created Tasks
+                    </h1>
+
+                    <div class="subtitle">
+                        View and manage all tasks created through SYNQ.
+                    </div>
+
+                </div>
+
+
+                <a href="{{ url_for('create_task') }}" class="create-btn">
+                    + Create Task
+                </a>
+
+            </div>
+
+
+            <!-- =====================================================
+         STATS
+    ===================================================== -->
+
+            <div class="stats">
+
+                <div class="stat">
+
+                    <div class="stat-title">
+                        Total Tasks
+                    </div>
+
+                    <div class="stat-value purple" id="totalTasks">
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-title">
+                        High Priority
+                    </div>
+
+                    <div class="stat-value" id="highPriority">
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-title">
+                        Avg Deadline
+                    </div>
+
+                    <div class="stat-value" id="avgDeadline">
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="stat">
+
+                    <div class="stat-title">
+                        Avg Error Risk
+                    </div>
+
+                    <div class="stat-value red" id="avgRisk">
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+         FILTERS
+    ===================================================== -->
+
+            <div class="filters">
+
+                <input type="text" id="search" placeholder="Search task ID or task type...">
+
+
+                <select id="priority">
+
+                    <option value="all">
+                        All Priorities
+                    </option>
+
+                    <option value="high">
+                        High
+                    </option>
+
+                    <option value="medium">
+                        Medium
+                    </option>
+
+                    <option value="low">
+                        Low
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- =====================================================
+         TABLE
+    ===================================================== -->
+
+            <div class="table-card">
+
+                <div class="table-top">
+
+                    <div class="table-title">
+                        Task History
+                    </div>
+
+                    <div class="count" id="count">
+                        0 tasks
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrap">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Task ID</th>
+
+                                <th>Task Type</th>
+
+                                <th>Priority</th>
+
+                                <th>Deadline</th>
+
+                                <th>Volume</th>
+
+                                <th>Difficulty</th>
+
+                                <th>Error Risk</th>
+
+                                <th>Dependency</th>
+
+                                <th>Date</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="taskBody">
+
+                            <tr>
+
+                                <td colspan="10" class="empty">
+                                    Loading tasks...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================================
+     EDIT MODAL
+========================================================= -->
+
+    <div class="modal-overlay" id="editModal">
+
+        <div class="modal">
+
+
+            <div class="modal-header">
+
+                <div>
+
+                    <div class="modal-title">
+                        Edit Task
+                    </div>
+
+                    <div class="modal-task-id" id="modalTaskId">
+                        TSK-0001
+                    </div>
+
+                </div>
+
+
+                <button class="close-modal" onclick="closeEditModal()">
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <form id="editForm">
+
+                    <div class="form-grid">
+
+
+                        <!-- TASK TYPE -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Task Type
+                            </label>
+
+                            <select id="editTaskType" required>
+
+                                <option value="">
+                                    Select Task Type
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- PRIORITY -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Priority
+                            </label>
+
+                            <select id="editPriority" required>
+
+                                <option value="Low">
+                                    Low
+                                </option>
+
+                                <option value="Medium">
+                                    Medium
+                                </option>
+
+                                <option value="High">
+                                    High
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- DEADLINE -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Days to Deadline
+                            </label>
+
+                            <input type="number" id="editDeadline" min="0" step="0.1" required>
+
+                        </div>
+
+
+                        <!-- VOLUME -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Volume Metric
+                            </label>
+
+                            <input type="number" id="editVolume" min="0" step="0.01" required>
+
+                        </div>
+
+
+                        <!-- DIFFICULTY -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Perceived Difficulty
+                            </label>
+
+                            <select id="editDifficulty" required>
+
+                                <option value="Low">
+                                    Low
+                                </option>
+
+                                <option value="Medium">
+                                    Medium
+                                </option>
+
+                                <option value="High">
+                                    High
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- ERROR RISK -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Error Risk
+                            </label>
+
+                            <input type="number" id="editRisk" min="0" max="5" step="0.1" required>
+
+                        </div>
+
+
+                        <!-- DEPENDENCY -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Dependency Score
+                            </label>
+
+                            <input type="number" id="editDependency" min="0" max="1" step="0.01" required>
+
+                        </div>
+
+
+                        <!-- DATE -->
+
+                        <div class="form-group">
+
+                            <label>
+                                Task Date
+                            </label>
+
+                            <input type="date" id="editDate" required>
+
+                        </div>
+
+
+                    </div>
+
+                </form>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button class="cancel-btn" onclick="closeEditModal()">
+                    Cancel
+                </button>
+
+
+                <button class="save-btn" onclick="saveEditedTask()">
+                    Save Changes
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        let allTasks = [];
+
+        let editingTaskId = null;
+
+
+        /* =====================================================
+           LOAD TASKS
+        ===================================================== */
+
+        async function loadTasks() {
+
+            try {
+
+                const response =
+                    await fetch("/api/tasks");
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    throw new Error(
+                        data.error ||
+                        "Failed to load tasks"
+                    );
+
+                }
+
+
+                allTasks =
+                    Array.isArray(data.tasks)
+                        ? data.tasks
+                        : [];
+
+
+                updateStats(
+                    allTasks
+                );
+
+
+                populateTaskTypes();
+
+
+                renderTasks(
+                    allTasks
+                );
+
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+
+                document.getElementById(
+                    "taskBody"
+                ).innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="10"
+                    class="empty"
+                >
+
+                    Failed to load tasks.
+
+                </td>
+
+            </tr>
+
+        `;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           TASK TYPE OPTIONS
+        ===================================================== */
+
+        async function populateTaskTypes() {
+
+            const select =
+                document.getElementById(
+                    "editTaskType"
+                );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/task-options"
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                const options =
+                    data.options || data;
+
+
+                const taskTypes =
+                    Array.isArray(
+                        options.task_types
+                    )
+                        ? options.task_types
+                        : [];
+
+
+                select.innerHTML = `
+
+            <option value="">
+                Select Task Type
+            </option>
+
+        `;
+
+
+                taskTypes.forEach(
+                    type => {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+
+                        option.value =
+                            type;
+
+                        option.textContent =
+                            type;
+
+
+                        select.appendChild(
+                            option
+                        );
+
+                    }
+                );
+
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Task type loading error:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           UPDATE STATS
+        ===================================================== */
+
+        function updateStats(tasks) {
+
+            document.getElementById(
+                "totalTasks"
+            ).textContent =
+                tasks.length;
+
+
+            const high =
+                tasks.filter(
+                    task =>
+                        String(
+                            task.priority || ""
+                        ).toLowerCase()
+                        === "high"
+                ).length;
+
+
+            document.getElementById(
+                "highPriority"
+            ).textContent =
+                high;
+
+
+            let deadlineTotal = 0;
+
+            let riskTotal = 0;
+
+
+            tasks.forEach(task => {
+
+                deadlineTotal +=
+                    parseFloat(
+                        task.days_to_deadline
+                    ) || 0;
+
+
+                riskTotal +=
+                    parseFloat(
+                        task.error_risk
+                    ) || 0;
+
+            });
+
+
+            document.getElementById(
+                "avgDeadline"
+            ).textContent =
+
+                tasks.length
+                    ? (
+                        deadlineTotal /
+                        tasks.length
+                    ).toFixed(1) + " days"
+                    : "0";
+
+
+            document.getElementById(
+                "avgRisk"
+            ).textContent =
+
+                tasks.length
+                    ? (
+                        riskTotal /
+                        tasks.length
+                    ).toFixed(2)
+                    : "0";
+
+        }
+
+
+        /* =====================================================
+           RENDER TASKS
+        ===================================================== */
+
+        function renderTasks(tasks) {
+
+            const body =
+                document.getElementById(
+                    "taskBody"
+                );
+
+
+            document.getElementById(
+                "count"
+            ).textContent =
+                `${tasks.length} ${tasks.length === 1
+                    ? "task"
+                    : "tasks"
+                }`;
+
+
+            if (!tasks.length) {
+
+                body.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="10"
+                    class="empty"
+                >
+
+                    No tasks created yet.
+
+                    <br><br>
+
+                    Create your first task.
+
+                </td>
+
+            </tr>
+
+        `;
+
+                return;
+
+            }
+
+
+            body.innerHTML =
+                tasks.map(
+                    task => {
+
+                        const priority =
+                            String(
+                                task.priority || ""
+                            );
+
+
+                        const priorityClass =
+                            priority.toLowerCase();
+
+
+                        return `
+
+                    <tr>
+
+                        <td>
+
+                            <span class="task-id">
+
+                                ${escapeHTML(
+                            task.task_id
+                        )}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="task-type">
+
+                                ${escapeHTML(
+                            task.task_type
+                        )}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            <span
+                                class="badge ${priorityClass}"
+                            >
+
+                                ${escapeHTML(
+                            priority
+                        )}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            ${formatNumber(
+                            task.days_to_deadline
+                        )}
+
+                            days
+
+                        </td>
+
+
+                        <td>
+
+                            ${formatNumber(
+                            task.volume_metric
+                        )}
+
+                        </td>
+
+
+                        <td>
+
+                            ${escapeHTML(
+                            task.perceived_difficulty
+                            || "-"
+                        )}
+
+                        </td>
+
+
+                        <td>
+
+                            ${formatNumber(
+                            task.error_risk
+                        )}
+
+                        </td>
+
+
+                        <td>
+
+                            ${formatNumber(
+                            task.dependency_score
+                        )}
+
+                        </td>
+
+
+                        <td>
+
+                            ${escapeHTML(
+                            task.task_date
+                            || "-"
+                        )}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="action-buttons">
+
+                                <button
+                                    class="edit-btn"
+                                    onclick="openEditModal('${task.task_id}')"
+                                >
+                                    Edit
+                                </button>
+
+
+                                <button
+                                    class="delete-btn"
+                                    onclick="deleteTask('${task.task_id}')"
+                                >
+                                    Delete
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                    }
+                ).join("");
+
+        }
+
+
+        /* =====================================================
+           EDIT MODAL
+        ===================================================== */
+
+        function openEditModal(taskId) {
+
+            const task =
+                allTasks.find(
+                    item =>
+                        item.task_id === taskId
+                );
+
+
+            if (!task) {
+
+                alert(
+                    "Task not found."
+                );
+
+                return;
+
+            }
+
+
+            editingTaskId =
+                taskId;
+
+
+            document.getElementById(
+                "modalTaskId"
+            ).textContent =
+                taskId;
+
+
+            document.getElementById(
+                "editTaskType"
+            ).value =
+                task.task_type || "";
+
+
+            document.getElementById(
+                "editPriority"
+            ).value =
+                task.priority || "Medium";
+
+
+            document.getElementById(
+                "editDeadline"
+            ).value =
+                task.days_to_deadline || "";
+
+
+            document.getElementById(
+                "editVolume"
+            ).value =
+                task.volume_metric || "";
+
+
+            document.getElementById(
+                "editDifficulty"
+            ).value =
+                task.perceived_difficulty || "Medium";
+
+
+            document.getElementById(
+                "editRisk"
+            ).value =
+                task.error_risk || 0;
+
+
+            document.getElementById(
+                "editDependency"
+            ).value =
+                task.dependency_score || 0;
+
+
+            document.getElementById(
+                "editDate"
+            ).value =
+                task.task_date || "";
+
+
+            document.getElementById(
+                "editModal"
+            ).classList.add(
+                "active"
+            );
+
+        }
+
+
+        /* =====================================================
+           CLOSE EDIT MODAL
+        ===================================================== */
+
+        function closeEditModal() {
+
+            editingTaskId = null;
+
+
+            document.getElementById(
+                "editModal"
+            ).classList.remove(
+                "active"
+            );
+
+        }
+
+
+        /* =====================================================
+           SAVE EDITED TASK
+        ===================================================== */
+
+        async function saveEditedTask() {
+
+            if (!editingTaskId) {
+
+                return;
+
+            }
+
+
+            const taskType =
+                document.getElementById(
+                    "editTaskType"
+                ).value;
+
+
+            const priority =
+                document.getElementById(
+                    "editPriority"
+                ).value;
+
+
+            const deadline =
+                document.getElementById(
+                    "editDeadline"
+                ).value;
+
+
+            const volume =
+                document.getElementById(
+                    "editVolume"
+                ).value;
+
+
+            const difficulty =
+                document.getElementById(
+                    "editDifficulty"
+                ).value;
+
+
+            const risk =
+                document.getElementById(
+                    "editRisk"
+                ).value;
+
+
+            const dependency =
+                document.getElementById(
+                    "editDependency"
+                ).value;
+
+
+            const date =
+                document.getElementById(
+                    "editDate"
+                ).value;
+
+
+            if (
+                !taskType ||
+                !priority ||
+                !deadline ||
+                !volume ||
+                !difficulty ||
+                !risk ||
+                !dependency ||
+                !date
+            ) {
+
+                alert(
+                    "Please fill all fields."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                Number(deadline) < 0 ||
+                Number(volume) < 0 ||
+                Number(risk) < 0 ||
+                Number(risk) > 5 ||
+                Number(dependency) < 0 ||
+                Number(dependency) > 1
+            ) {
+
+                alert(
+                    "Please enter valid numeric values."
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/tasks/${editingTaskId}`,
+                        {
+
+                            method: "PUT",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    task_type:
+                                        taskType,
+
+                                    priority:
+                                        priority,
+
+                                    days_to_deadline:
+                                        deadline,
+
+                                    volume_metric:
+                                        volume,
+
+                                    perceived_difficulty:
+                                        difficulty,
+
+                                    error_risk:
+                                        risk,
+
+                                    dependency_score:
+                                        dependency,
+
+                                    task_date:
+                                        date
+
+                                })
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    alert(
+                        data.error ||
+                        "Failed to update task."
+                    );
+
+                    return;
+
+                }
+
+
+                closeEditModal();
+
+
+                await loadTasks();
+
+
+                alert(
+                    `${editingTaskId} updated successfully.`
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Failed to update task."
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           DELETE TASK
+        ===================================================== */
+
+        async function deleteTask(taskId) {
+
+            const confirmed =
+                confirm(
+
+                    `Delete ${taskId}?\n\n` +
+                    `This task will be permanently removed.`
+
+                );
+
+
+            if (!confirmed) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/tasks/${taskId}`,
+                        {
+
+                            method: "DELETE"
+
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    alert(
+                        data.error ||
+                        "Failed to delete task."
+                    );
+
+                    return;
+
+                }
+
+
+                await loadTasks();
+
+
+                alert(
+                    `${taskId} deleted successfully.`
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                alert(
+                    "Failed to delete task."
+                );
+
+            }
+
+        }
+
+
+        /* =====================================================
+           FILTER
+        ===================================================== */
+
+        function filterTasks() {
+
+            const search =
+                document.getElementById(
+                    "search"
+                ).value
+                    .toLowerCase()
+                    .trim();
+
+
+            const priority =
+                document.getElementById(
+                    "priority"
+                ).value
+                    .toLowerCase();
+
+
+            const filtered =
+                allTasks.filter(
+                    task => {
+
+                        const id =
+                            String(
+                                task.task_id || ""
+                            ).toLowerCase();
+
+
+                        const type =
+                            String(
+                                task.task_type || ""
+                            ).toLowerCase();
+
+
+                        const taskPriority =
+                            String(
+                                task.priority || ""
+                            ).toLowerCase();
+
+
+                        const searchMatch =
+                            !search ||
+                            id.includes(search) ||
+                            type.includes(search);
+
+
+                        const priorityMatch =
+                            priority === "all" ||
+                            taskPriority === priority;
+
+
+                        return (
+                            searchMatch &&
+                            priorityMatch
+                        );
+
+                    }
+                );
+
+
+            renderTasks(
+                filtered
+            );
+
+        }
+
+
+        /* =====================================================
+           FORMAT NUMBER
+        ===================================================== */
+
+        function formatNumber(value) {
+
+            const number =
+                parseFloat(value);
+
+
+            if (isNaN(number)) {
+
+                return "-";
+
+            }
+
+
+            return Number(
+                number.toFixed(2)
+            );
+
+        }
+
+
+        /* =====================================================
+           ESCAPE HTML
+        ===================================================== */
+
+        function escapeHTML(value) {
+
+            return String(
+                value || ""
+            )
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        /* =====================================================
+           EVENTS
+        ===================================================== */
+
+        document
+            .getElementById(
+                "search"
+            )
+            .addEventListener(
+                "input",
+                filterTasks
+            );
+
+
+        document
+            .getElementById(
+                "priority"
+            )
+            .addEventListener(
+                "change",
+                filterTasks
+            );
+
+
+        document
+            .getElementById(
+                "editModal"
+            )
+            .addEventListener(
+                "click",
+                function (event) {
+
+                    if (
+                        event.target === this
+                    ) {
+
+                        closeEditModal();
+
+                    }
+
+                }
+            );
+
+
+        document
+            .getElementById(
+                "editForm"
+            )
+            .addEventListener(
+                "submit",
+                function (event) {
+
+                    event.preventDefault();
+
+                    saveEditedTask();
+
+                }
+            );
+
+
+        /* =====================================================
+           INITIAL LOAD
+        ===================================================== */
+
+        loadTasks();
+
+    </script>
+
+
+</body>
+
+</html>

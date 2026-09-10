@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SYNQ - Predict Employee</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        /* =====================================================
+           RESET
+        ===================================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #050505;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+            margin-left: 260px;
+            width: calc(100% - 260px);
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 80% 5%,
+                    rgba(106, 35, 172, 0.07),
+                    transparent 22%),
+                #050505;
+        }
+
+
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
+
+        .topbar {
+            height: 70px;
+            border-bottom: 1px solid #222;
+            display: flex;
+            align-items: center;
+            padding: 0 38px;
+            gap: 28px;
+        }
+
+        .menu-button {
+            color: #a648ff;
+            font-size: 25px;
+        }
+
+        .search {
+            width: 535px;
+            height: 48px;
+            border: 1px solid #292929;
+            background: #0b0b0b;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 12px;
+        }
+
+        .search-icon {
+            color: #777;
+            font-size: 15px;
+        }
+
+        .search input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .search input::placeholder {
+            color: #555;
+        }
+
+        .top-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .notification {
+            color: #a647ff;
+            font-size: 19px;
+        }
+
+        .date {
+            color: #aaa;
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .page {
+            padding: 31px 39px 50px;
+        }
+
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            border: 1px solid #4b2770;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            padding: 29px 36px 32px;
+
+            background:
+                radial-gradient(circle at 78% 40%,
+                    rgba(100, 34, 170, 0.16),
+                    transparent 35%),
+                #080808;
+
+            margin-bottom: 24px;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+
+            width: 235px;
+            height: 235px;
+
+            border: 1px solid rgba(153, 69, 255, 0.20);
+            border-radius: 50%;
+
+            right: 160px;
+            top: -25px;
+        }
+
+        .hero-small {
+            color: #ad50ff;
+            font-size: 12px;
+            letter-spacing: 5px;
+            margin-bottom: 14px;
+        }
+
+        .hero h1 {
+            font-size: 34px;
+            line-height: 1.2;
+            margin-bottom: 13px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero h1 span {
+            color: #ad4cff;
+        }
+
+        .hero p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.7;
+            max-width: 800px;
+            position: relative;
+            z-index: 2;
+        }
+
+
+        /* =====================================================
+           CONTENT GRID
+        ===================================================== */
+
+        .content-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(500px, 1.55fr) minmax(390px, 0.90fr);
+
+            gap: 24px;
+        }
+
+
+        /* =====================================================
+           PANEL
+        ===================================================== */
+
+        .panel {
+            background: #080808;
+            border: 1px solid #282828;
+            border-radius: 18px;
+            padding: 29px;
+        }
+
+        .panel-header {
+            margin-bottom: 26px;
+        }
+
+        .panel-header h3 {
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .panel-header p {
+            color: #666;
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 19px 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        input,
+        select {
+
+            width: 100%;
+            height: 54px;
+
+            background: #111111;
+            color: #ffffff;
+
+            border: 1px solid #292929;
+            border-radius: 11px;
+
+            padding: 0 16px;
+
+            outline: none;
+
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+
+            border-color: #873bce;
+
+            box-shadow:
+                0 0 0 2px rgba(135, 59, 206, 0.10);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #111111;
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           PREDICT BUTTON
+        ===================================================== */
+
+        .predict-button {
+
+            grid-column: 1 / -1;
+
+            height: 57px;
+
+            margin-top: 7px;
+
+            border: none;
+            border-radius: 11px;
+
+            color: #ffffff;
+
+            font-size: 16px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(100deg,
+                    #7630e9,
+                    #ae4df1);
+
+            box-shadow:
+                0 12px 30px rgba(125, 48, 230, 0.20);
+
+            transition: 0.2s ease;
+        }
+
+        .predict-button:hover {
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 15px 35px rgba(125, 48, 230, 0.30);
+        }
+
+        .predict-button:disabled {
+
+            opacity: 0.65;
+            cursor: wait;
+            transform: none;
+        }
+
+
+        /* =====================================================
+           RESULT PANEL
+        ===================================================== */
+
+        .result-panel {
+
+            min-height: 610px;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .result-content {
+
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 20px;
+        }
+
+        .result-icon {
+
+            width: 78px;
+            height: 78px;
+
+            border-radius: 19px;
+
+            background: #160d25;
+            color: #b14dff;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 34px;
+
+            margin-bottom: 23px;
+
+            box-shadow:
+                0 0 35px rgba(151, 61, 255, 0.08);
+        }
+
+        .result-content h2 {
+
+            font-size: 21px;
+            margin-bottom: 12px;
+        }
+
+        .result-content>p {
+
+            color: #666;
+
+            line-height: 1.7;
+
+            max-width: 360px;
+
+            font-size: 13px;
+        }
+
+        .ready-text {
+
+            color: #aa48f5;
+
+            font-size: 48px;
+
+            font-weight: 800;
+
+            margin-top: 30px;
+        }
+
+        .ready-label {
+
+            color: #666;
+
+            font-size: 12px;
+
+            letter-spacing: 1px;
+
+            margin-top: 7px;
+        }
+
+
+        /* =====================================================
+           SUCCESS RESULT
+        ===================================================== */
+
+        .prediction-result {
+            width: 100%;
+            height: 100%;
+        }
+
+        .success-result {
+
+            width: 100%;
+
+            text-align: center;
+        }
+
+        .success-result .result-icon {
+
+            margin:
+                5px auto 16px;
+        }
+
+        .result-label {
+
+            color: #777;
+
+            font-size: 11px;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 8px;
+        }
+
+        .employee-name {
+
+            color: #b34fff;
+
+            font-size: 36px;
+
+            font-weight: 800;
+
+            margin-bottom: 24px;
+
+            word-break: break-word;
+        }
+
+        .result-grid {
+
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 11px;
+
+            text-align: left;
+        }
+
+        .result-card {
+
+            background: #0f0f0f;
+
+            border: 1px solid #282828;
+
+            border-radius: 11px;
+
+            padding: 16px;
+        }
+
+        .result-card span {
+
+            display: block;
+
+            color: #666;
+
+            font-size: 11px;
+
+            margin-bottom: 8px;
+        }
+
+        .result-card strong {
+
+            display: block;
+
+            color: #ffffff;
+
+            font-size: 15px;
+        }
+
+        .model-status {
+
+            margin-top: 18px;
+
+            padding: 13px;
+
+            border: 1px solid #3b2356;
+
+            background: #100b16;
+
+            color: #a77cc9;
+
+            border-radius: 9px;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           LOADING
+        ===================================================== */
+
+        .loading-result {
+
+            text-align: center;
+
+            width: 100%;
+        }
+
+        .loading-result .result-icon {
+
+            margin:
+                0 auto 20px;
+
+            animation:
+                pulse 1s infinite;
+        }
+
+        .loading-result h2 {
+
+            color: #b34fff;
+
+            margin-bottom: 12px;
+        }
+
+        .loading-result p {
+
+            color: #666;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        @keyframes pulse {
+
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1.08);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+        }
+
+
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
+        .error-result {
+
+            text-align: center;
+
+            width: 100%;
+        }
+
+        .error-result .result-icon {
+
+            margin:
+                0 auto 20px;
+
+            color: #ff5c8a;
+        }
+
+        .error-result h2 {
+
+            color: #ff5c8a;
+
+            margin-bottom: 12px;
+        }
+
+        .error-result p {
+
+            margin: 0 auto;
+
+            color: #999;
+
+            max-width: 400px;
+
+            line-height: 1.6;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1150px) {
+
+            .sidebar {
+                width: 250px;
+            }
+
+            .main {
+
+                margin-left: 250px;
+
+                width:
+                    calc(100% - 250px);
+            }
+
+            .content-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+            .result-panel {
+
+                min-height: 500px;
+            }
+        }
+
+
+        @media (max-width: 750px) {
+
+            .sidebar {
+
+                position: relative;
+
+                width: 100%;
+
+                min-width: 100%;
+
+                min-height: auto;
+            }
+
+            .app {
+                display: block;
+            }
+
+            .main {
+
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+            .topbar {
+
+                padding: 0 18px;
+            }
+
+            .search {
+
+                width: 100%;
+            }
+
+            .date {
+                display: none;
+            }
+
+            .page {
+
+                padding:
+                    22px 16px;
+            }
+
+            .form-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+            .predict-button {
+
+                grid-column: auto;
+            }
+
+            .hero h1 {
+
+                font-size: 28px;
+            }
+
+            .result-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="app">
+
+
+        <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+        {% include 'partials/sidebar.html' %}
+
+
+        <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+        <main class="main">
+
+
+            <!-- =================================================
+             TOPBAR
+        ================================================== -->
+
+            <header class="topbar">
+
+                <div class="menu-button">
+                    ☰
+                </div>
+
+                <div class="search">
+
+                    <span class="search-icon">
+                        ⌕
+                    </span>
+
+                    <input type="text" placeholder="Search employees, tasks, insights...">
+
+                </div>
+
+
+                <div class="top-right">
+
+                    <div class="notification">
+                        ♧
+                    </div>
+
+                    <div class="date">
+                        Thursday, 10 September 2026
+                    </div>
+
+                </div>
+
+            </header>
+
+
+
+            <!-- =================================================
+             PAGE
+        ================================================== -->
+
+            <div class="page">
+
+
+                <!-- =================================================
+                 HERO
+            ================================================== -->
+
+                <section class="hero">
+
+                    <div class="hero-small">
+
+                        S Y N Q · P E R F O R M A N C E
+                        &nbsp;
+                        P R E D I C T I O N
+
+                    </div>
+
+
+                    <h1>
+
+                        Find the right
+
+                        <span>
+                            employee
+                        </span>
+
+                        for the task.
+
+                    </h1>
+
+
+                    <p>
+
+                        Provide task information and SYNQ will analyze
+                        employee performance data to generate a prediction.
+
+                    </p>
+
+                </section>
+
+
+
+                <!-- =================================================
+                 CONTENT
+            ================================================== -->
+
+                <div class="content-grid">
+
+
+                    <!-- =================================================
+                     INPUT PANEL
+                ================================================== -->
+
+                    <section class="panel">
+
+
+                        <div class="panel-header">
+
+                            <h3>
+                                Prediction Inputs
+                            </h3>
+
+                            <p>
+                                Enter the task and performance details
+                            </p>
+
+                        </div>
+
+
+
+                        <div class="form-grid">
+
+
+                            <!-- =========================================
+                             TASK TYPE
+                        ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="task_type">
+                                    Task Type
+                                </label>
+
+                                <select id="task_type">
+
+                                    <option value="">
+                                        Loading task types...
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                             PRIORITY
+                        ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="priority">
+                                    Priority
+                                </label>
+
+                                <select id="priority">
+
+                                    <option value="">
+                                        Loading priorities...
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                             DAYS TO DEADLINE
+                        ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="days_to_deadline">
+                                    Days to Deadline
+                                </label>
+
+                                <input type="number" id="days_to_deadline" value="6" min="0" step="1">
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                             VOLUME
+                        ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="volume_metric">
+                                    Volume Metric
+                                </label>
+
+                                <input type="number" id="volume_metric" value="0.14" min="0" step="0.01">
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                             DIFFICULTY
+                        ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="perceived_difficulty">
+                                    Perceived Difficulty
+                                </label>
+
+                                <select id="perceived_difficulty">
+
+                                    <option value="Low">
+                                        Low
+                                    </option>
+
+                                    <option value="Medium" selected>
+                                        Medium
+                                    </option>
+
+                                    <option value="High">
+                                        High
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                             ERROR RISK
+                        ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="error_risk">
+                                    Error Risk
+                                </label>
+
+                                <select id="error_risk">
+
+                                    <option value="0">
+                                        0 — Minimal
+                                    </option>
+
+                                    <option value="1">
+                                        1 — Very Low
+                                    </option>
+
+                                    <option value="2">
+                                        2 — Low
+                                    </option>
+
+                                    <option value="3">
+                                        3 — Moderate
+                                    </option>
+
+                                    <option value="4" selected>
+                                        4 — High
+                                    </option>
+
+                                    <option value="5">
+                                        5 — Critical
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                             DEPENDENCY
+                        ========================================== -->
+
+                            <div class="form-group">
+
+                                <label for="dependency_score">
+                                    Dependency Score
+                                </label>
+
+                                <input type="number" id="dependency_score" value="0.06" min="0" max="1" step="0.01">
+
+                            </div>
+
+
+
+                            <!-- =========================================
+                             PREDICT BUTTON
+                        ========================================== -->
+
+                            <button type="button" class="predict-button" id="predictButton" onclick="predictEmployee()">
+
+                                ✦ &nbsp;
+                                PREDICT EMPLOYEE
+
+                            </button>
+
+
+                        </div>
+
+                    </section>
+
+
+
+                    <!-- =================================================
+                     RESULT PANEL
+                ================================================== -->
+
+                    <section class="panel result-panel">
+
+
+                        <div class="panel-header">
+
+                            <h3>
+                                Prediction Result
+                            </h3>
+
+                            <p>
+                                SYNQ prediction output
+                            </p>
+
+                        </div>
+
+
+
+                        <div class="result-content" id="predictionResult">
+
+
+                            <div class="result-icon">
+                                ◎
+                            </div>
+
+
+                            <h2>
+                                Ready for prediction
+                            </h2>
+
+
+                            <p>
+
+                                Select the task characteristics
+                                and click Predict Employee to
+                                get the best-fit recommendation.
+
+                            </p>
+
+
+                            <div class="ready-text">
+                                READY
+                            </div>
+
+
+                            <div class="ready-label">
+                                PREDICTED EMPLOYEE
+                            </div>
+
+
+                        </div>
+
+                    </section>
+
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+
+    <!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+
+    <script>
+
+
+        /* =====================================================
+           LOAD TASK OPTIONS
+        ===================================================== */
+
+        async function loadTaskOptions() {
+
+            const taskTypeSelect =
+                document.getElementById("task_type");
+
+            const prioritySelect =
+                document.getElementById("priority");
+
+
+            try {
+
+                const response =
+                    await fetch("/api/task-options");
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.error ||
+                        "Unable to load task options"
+                    );
+
+                }
+
+
+                /*
+                =================================================
+                IMPORTANT
+    
+                Backend returns:
+    
+                {
+                    success: true,
+                    options: {
+                        task_types: [...],
+                        priorities: [...]
+                    }
+                }
+                =================================================
+                */
+
+                const options =
+                    data.options || {};
+
+
+                const taskTypes =
+                    options.task_types || [];
+
+
+                const priorities =
+                    options.priorities || [];
+
+
+
+                /* =============================================
+                   TASK TYPE
+                ============================================== */
+
+                taskTypeSelect.innerHTML =
+                    '<option value="">Select task type</option>';
+
+
+                taskTypes.forEach(function (taskType) {
+
+                    const option =
+                        document.createElement("option");
+
+
+                    option.value =
+                        taskType;
+
+
+                    option.textContent =
+                        taskType;
+
+
+                    taskTypeSelect.appendChild(
+                        option
+                    );
+
+                });
+
+
+
+                /* =============================================
+                   PRIORITY
+                ============================================== */
+
+                prioritySelect.innerHTML =
+                    '<option value="">Select priority</option>';
+
+
+                priorities.forEach(function (priority) {
+
+                    const option =
+                        document.createElement("option");
+
+
+                    option.value =
+                        priority;
+
+
+                    option.textContent =
+                        priority;
+
+
+                    prioritySelect.appendChild(
+                        option
+                    );
+
+                });
+
+
+
+                /* =============================================
+                   DEFAULT TASK TYPE
+                ============================================== */
+
+                if (taskTypes.length > 0) {
+
+                    taskTypeSelect.value =
+                        taskTypes[0];
+
+                }
+
+
+
+                /* =============================================
+                   DEFAULT PRIORITY = MEDIUM
+                ============================================== */
+
+                const mediumOption =
+                    Array.from(
+                        prioritySelect.options
+                    ).find(function (option) {
+
+                        return option.value
+                            .toLowerCase()
+                            .trim() === "medium";
+
+                    });
+
+
+                if (mediumOption) {
+
+                    prioritySelect.value =
+                        mediumOption.value;
+
+                }
+                else if (priorities.length > 0) {
+
+                    prioritySelect.value =
+                        priorities[0];
+
+                }
+
+
+
+                console.log(
+                    "SYNQ Task Types:",
+                    taskTypes
+                );
+
+
+                console.log(
+                    "SYNQ Priorities:",
+                    priorities
+                );
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Task options error:",
+                    error
+                );
+
+
+                taskTypeSelect.innerHTML =
+                    '<option value="">Unable to load task types</option>';
+
+
+                prioritySelect.innerHTML =
+                    '<option value="">Unable to load priorities</option>';
+
+            }
+
+        }
+
+
+
+        /* =====================================================
+           PREDICT EMPLOYEE
+        ===================================================== */
+
+        async function predictEmployee() {
+
+
+            const button =
+                document.getElementById(
+                    "predictButton"
+                );
+
+
+            const resultBox =
+                document.getElementById(
+                    "predictionResult"
+                );
+
+
+
+            /* =============================================
+               INPUTS
+            ============================================== */
+
+            const taskType =
+                document.getElementById(
+                    "task_type"
+                ).value;
+
+
+            const priority =
+                document.getElementById(
+                    "priority"
+                ).value;
+
+
+            const daysToDeadline =
+                document.getElementById(
+                    "days_to_deadline"
+                ).value;
+
+
+            const volumeMetric =
+                document.getElementById(
+                    "volume_metric"
+                ).value;
+
+
+            const perceivedDifficulty =
+                document.getElementById(
+                    "perceived_difficulty"
+                ).value;
+
+
+            const errorRisk =
+                document.getElementById(
+                    "error_risk"
+                ).value;
+
+
+            const dependencyScore =
+                document.getElementById(
+                    "dependency_score"
+                ).value;
+
+
+
+            /* =============================================
+               VALIDATION
+            ============================================== */
+
+            if (!taskType) {
+
+                showError(
+                    "Please select a Task Type."
+                );
+
+                return;
+
+            }
+
+
+            if (!priority) {
+
+                showError(
+                    "Please select a Priority."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                daysToDeadline === "" ||
+                isNaN(parseFloat(daysToDeadline))
+            ) {
+
+                showError(
+                    "Please enter Days to Deadline."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                volumeMetric === "" ||
+                isNaN(parseFloat(volumeMetric))
+            ) {
+
+                showError(
+                    "Please enter Volume Metric."
+                );
+
+                return;
+
+            }
+
+
+            if (
+                dependencyScore === "" ||
+                isNaN(parseFloat(dependencyScore))
+            ) {
+
+                showError(
+                    "Please enter Dependency Score."
+                );
+
+                return;
+
+            }
+
+
+            const dependency =
+                parseFloat(dependencyScore);
+
+
+            if (
+                dependency < 0 ||
+                dependency > 1
+            ) {
+
+                showError(
+                    "Dependency Score must be between 0 and 1."
+                );
+
+                return;
+
+            }
+
+
+
+            /* =============================================
+               LOADING
+            ============================================== */
+
+            button.disabled = true;
+
+
+            button.innerHTML =
+                "◌ &nbsp; ANALYZING...";
+
+
+            resultBox.innerHTML = `
+
+            <div class="loading-result">
+
+                <div class="result-icon">
+                    ◉
+                </div>
+
+                <h2>
+                    ANALYZING...
+                </h2>
+
+                <p>
+                    SYNQ is analyzing employee
+                    performance data.
+                </p>
+
+            </div>
+
+        `;
+
+
+
+            /* =============================================
+               REQUEST DATA
+            ============================================== */
+
+            const requestData = {
+
+                task_type:
+                    taskType,
+
+                priority:
+                    priority,
+
+                days_to_deadline:
+                    parseFloat(
+                        daysToDeadline
+                    ),
+
+                volume_metric:
+                    parseFloat(
+                        volumeMetric
+                    ),
+
+                perceived_difficulty:
+                    perceivedDifficulty,
+
+                error_risk:
+                    parseFloat(
+                        errorRisk
+                    ),
+
+                dependency_score:
+                    dependency
+
+            };
+
+
+
+            try {
+
+
+                /* =========================================
+                   API REQUEST
+                ========================================== */
+
+                const response =
+                    await fetch(
+                        "/api/predict",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    requestData
+                                )
+
+                        }
+                    );
+
+
+
+                const result =
+                    await response.json();
+
+
+
+                if (
+                    !response.ok ||
+                    !result.success
+                ) {
+
+                    throw new Error(
+                        result.error ||
+                        "Prediction failed."
+                    );
+
+                }
+
+
+
+                /* =========================================
+                   RESULT VALUES
+                ========================================== */
+
+                const employee =
+                    result.best_fit_employee ??
+                    "N/A";
+
+
+                const rating =
+                    result.predicted_rating ??
+                    "N/A";
+
+
+                const category =
+                    result.category ??
+                    "N/A";
+
+
+                const risk =
+                    result.error_risk ??
+                    "N/A";
+
+
+                const riskLevel =
+                    result.risk_level ??
+                    getRiskName(
+                        Number(
+                            result.error_risk
+                        )
+                    );
+
+
+
+                /* =========================================
+                   MODEL STATUS
+                ========================================== */
+
+                let modelMessage;
+
+
+                if (result.model_available) {
+
+                    modelMessage =
+                        "✓ SYNQ trained model used";
+
+                }
+                else {
+
+                    modelMessage =
+                        "⚠ Historical dataset fallback used";
+
+                }
+
+
+
+                /* =========================================
+                   DISPLAY RESULT
+                ========================================== */
+
+                resultBox.innerHTML = `
+
+                <div class="success-result">
+
+
+                    <div class="result-icon">
+                        ◎
+                    </div>
+
+
+                    <div class="result-label">
+                        BEST FIT EMPLOYEE
+                    </div>
+
+
+                    <div class="employee-name">
+                        ${escapeHtml(
+                    String(employee)
+                )}
+                    </div>
+
+
+
+                    <div class="result-grid">
+
+
+                        <div class="result-card">
+
+                            <span>
+                                Predicted Rating
+                            </span>
+
+                            <strong>
+                                ${escapeHtml(
+                    String(rating)
+                )}/10
+                            </strong>
+
+                        </div>
+
+
+
+                        <div class="result-card">
+
+                            <span>
+                                Performance
+                            </span>
+
+                            <strong>
+                                ${escapeHtml(
+                    String(category)
+                )}
+                            </strong>
+
+                        </div>
+
+
+
+                        <div class="result-card">
+
+                            <span>
+                                Error Risk
+                            </span>
+
+                            <strong>
+                                ${escapeHtml(
+                    String(risk)
+                )}
+                            </strong>
+
+                        </div>
+
+
+
+                        <div class="result-card">
+
+                            <span>
+                                Risk Level
+                            </span>
+
+                            <strong>
+                                ${escapeHtml(
+                    String(riskLevel)
+                )}
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="model-status">
+
+                        ${modelMessage}
+
+                    </div>
+
+
+                </div>
+
+            `;
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Prediction error:",
+                    error
+                );
+
+
+                showError(
+                    error.message ||
+                    "Something went wrong while predicting."
+                );
+
+            }
+
+
+            finally {
+
+                button.disabled = false;
+
+
+                button.innerHTML =
+                    "✦ &nbsp; PREDICT EMPLOYEE";
+
+            }
+
+        }
+
+
+
+        /* =====================================================
+           RISK NAME
+        ===================================================== */
+
+        function getRiskName(value) {
+
+            const riskNames = {
+
+                0: "Minimal",
+
+                1: "Very Low",
+
+                2: "Low",
+
+                3: "Moderate",
+
+                4: "High",
+
+                5: "Critical"
+
+            };
+
+
+            return (
+                riskNames[value] ||
+                "Unknown"
+            );
+
+        }
+
+
+
+        /* =====================================================
+           SHOW ERROR
+        ===================================================== */
+
+        function showError(message) {
+
+
+            const resultBox =
+                document.getElementById(
+                    "predictionResult"
+                );
+
+
+            resultBox.innerHTML = `
+
+            <div class="error-result">
+
+
+                <div class="result-icon">
+                    !
+                </div>
+
+
+                <h2>
+                    PREDICTION FAILED
+                </h2>
+
+
+                <p>
+
+                    ${escapeHtml(
+                String(message)
+            )}
+
+                </p>
+
+
+            </div>
+
+        `;
+
+        }
+
+
+
+        /* =====================================================
+           HTML ESCAPE
+        ===================================================== */
+
+        function escapeHtml(value) {
+
+            return value
+
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+
+        /* =====================================================
+           PAGE LOAD
+        ===================================================== */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                loadTaskOptions();
+
+            }
+        );
+
+    </script>
+
+
+</body>
+
+</html>

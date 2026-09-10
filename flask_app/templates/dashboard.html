@@ -1,0 +1,2151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SYNQ Intelligence — Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <style>
+        /* =====================================================
+           SYNQ DASHBOARD
+        ===================================================== */
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            background: #07080d !important;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        .main-content {
+            background: #07080d !important;
+            min-height: 100vh;
+        }
+
+        .dashboard-page {
+            padding: 28px 34px 45px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+
+        /* =====================================================
+           TOP HEADER
+        ===================================================== */
+
+        .dashboard-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+
+        .dashboard-heading h1 {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.8px;
+        }
+
+        .dashboard-heading p {
+            margin: 6px 0 0;
+            color: #70717a;
+            font-size: 13px;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 11px 17px;
+
+            background: #0d0e14;
+            border: 1px solid #272832;
+            border-radius: 11px;
+
+            color: #c4c4cc;
+            font-size: 12px;
+        }
+
+        .ai-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+
+            background: #a855f7;
+            box-shadow: 0 0 13px #a855f7;
+        }
+
+        .date-box {
+            padding-left: 16px;
+            border-left: 1px solid #272832;
+
+            color: #777984;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+
+            min-height: 185px;
+
+            padding: 32px 38px;
+            margin-bottom: 22px;
+
+            border: 1px solid #3a2453;
+            border-radius: 18px;
+
+            background:
+                radial-gradient(circle at 85% 50%,
+                    rgba(119, 48, 202, .24),
+                    transparent 35%),
+                linear-gradient(110deg,
+                    #0c0d14,
+                    #100d19);
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+
+            opacity: .12;
+
+            background-image:
+                linear-gradient(rgba(150, 80, 255, .35) 1px,
+                    transparent 1px),
+                linear-gradient(90deg,
+                    rgba(150, 80, 255, .35) 1px,
+                    transparent 1px);
+
+            background-size: 40px 40px;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+
+            max-width: 650px;
+        }
+
+        .hero-label {
+            display: inline-block;
+
+            margin-bottom: 13px;
+
+            color: #9f6cff;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+        }
+
+        .hero h2 {
+            margin: 0;
+
+            font-size: 34px;
+            letter-spacing: -1px;
+        }
+
+        .hero h2 span {
+            color: #a855f7;
+        }
+
+        .hero p {
+            max-width: 670px;
+
+            margin: 10px 0 18px;
+
+            color: #767783;
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            padding: 10px 17px;
+
+            border-radius: 9px;
+
+            text-decoration: none;
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .hero-btn.primary {
+            color: white;
+
+            background:
+                linear-gradient(135deg,
+                    #8b3ff2,
+                    #b44cff);
+
+            box-shadow:
+                0 7px 25px rgba(139, 63, 242, .25);
+        }
+
+        .hero-btn.secondary {
+            color: #bbbcc5;
+
+            background: #14151d;
+            border: 1px solid #2a2b35;
+        }
+
+        .hero-orbit {
+            position: absolute;
+
+            right: -65px;
+            top: -100px;
+
+            width: 390px;
+            height: 390px;
+
+            border: 1px solid rgba(168, 85, 247, .35);
+            border-radius: 50%;
+        }
+
+        .hero-orbit::before {
+            content: "";
+
+            position: absolute;
+
+            top: 45px;
+            left: 45px;
+
+            width: 300px;
+            height: 300px;
+
+            border: 1px solid rgba(168, 85, 247, .22);
+            border-radius: 50%;
+        }
+
+        .hero-orbit::after {
+            content: "";
+
+            position: absolute;
+
+            width: 8px;
+            height: 8px;
+
+            top: 78px;
+            left: 78px;
+
+            background: #b96cff;
+            border-radius: 50%;
+
+            box-shadow: 0 0 20px #a855f7;
+        }
+
+
+        /* =====================================================
+           KPI CARDS
+        ===================================================== */
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 16px;
+
+            margin-bottom: 20px;
+        }
+
+        .kpi-card {
+            position: relative;
+            overflow: hidden;
+
+            min-height: 108px;
+
+            padding: 20px;
+
+            background: #0c0d12;
+
+            border: 1px solid #252630;
+            border-radius: 15px;
+
+            transition: .25s ease;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-3px);
+
+            border-color: #48305d;
+
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, .35);
+        }
+
+        .kpi-icon {
+            position: absolute;
+
+            top: 18px;
+            left: 18px;
+
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            background: #181126;
+
+            color: #a855f7;
+
+            font-size: 17px;
+        }
+
+        .kpi-card:nth-child(2) .kpi-icon {
+            background: #101a2a;
+            color: #4da3ff;
+        }
+
+        .kpi-card:nth-child(3) .kpi-icon {
+            background: #10231e;
+            color: #35d39a;
+        }
+
+        .kpi-card:nth-child(4) .kpi-icon {
+            background: #25121f;
+            color: #f05b9d;
+        }
+
+        .kpi-info {
+            margin-left: 58px;
+        }
+
+        .kpi-label {
+            color: #777984;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.1px;
+        }
+
+        .kpi-value {
+            margin-top: 8px;
+
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .kpi-value small {
+            color: #696b76;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .kpi-description {
+            margin-top: 5px;
+
+            color: #5a5c67;
+            font-size: 10px;
+        }
+
+        .kpi-spark {
+            position: absolute;
+
+            right: 18px;
+            bottom: 14px;
+
+            width: 82px;
+            height: 30px;
+        }
+
+        .spark-line {
+            fill: none;
+            stroke: #a855f7;
+            stroke-width: 2;
+        }
+
+
+        /* =====================================================
+           DASHBOARD CARDS
+        ===================================================== */
+
+        .content-grid {
+            display: grid;
+
+            grid-template-columns:
+                1.1fr .9fr;
+
+            gap: 18px;
+
+            margin-bottom: 18px;
+        }
+
+        .card {
+            background: #0c0d12;
+
+            border: 1px solid #252630;
+            border-radius: 15px;
+
+            overflow: hidden;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+
+            padding: 19px 21px 10px;
+        }
+
+        .card-title {
+            margin: 0;
+
+            color: #eeeeef;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            margin-top: 5px;
+
+            color: #60626d;
+            font-size: 10px;
+        }
+
+        .card-tag {
+            padding: 5px 9px;
+
+            border: 1px solid #4a2c68;
+            border-radius: 6px;
+
+            color: #ad70ef;
+            background: #15101d;
+
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+
+        /* =====================================================
+           PERFORMANCE HEALTH
+        ===================================================== */
+
+        .health-body {
+            display: flex;
+            align-items: center;
+
+            gap: 27px;
+
+            padding: 13px 23px 23px;
+        }
+
+        .health-ring {
+            position: relative;
+
+            width: 132px;
+            height: 132px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                conic-gradient(#a855f7 0deg,
+                    #8b5cf6 165deg,
+                    #242632 165deg,
+                    #242632 360deg);
+        }
+
+        .health-ring::before {
+            content: "";
+
+            position: absolute;
+
+            width: 105px;
+            height: 105px;
+
+            border-radius: 50%;
+
+            background: #0c0d12;
+        }
+
+        .health-value {
+            position: relative;
+            z-index: 2;
+
+            text-align: center;
+        }
+
+        .health-value strong {
+            display: block;
+
+            color: #fff;
+            font-size: 27px;
+        }
+
+        .health-value span {
+            color: #666875;
+
+            font-size: 9px;
+            letter-spacing: 1px;
+        }
+
+        .health-bars {
+            flex: 1;
+        }
+
+        .health-row {
+            margin-bottom: 16px;
+        }
+
+        .health-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .health-row-head {
+            display: flex;
+            justify-content: space-between;
+
+            margin-bottom: 7px;
+
+            color: #777984;
+            font-size: 10px;
+        }
+
+        .health-row-head strong {
+            color: #dedee1;
+        }
+
+        .bar {
+            height: 6px;
+
+            overflow: hidden;
+
+            border-radius: 20px;
+
+            background: #202129;
+        }
+
+        .bar span {
+            display: block;
+
+            height: 100%;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(90deg,
+                    #7c3aed,
+                    #c084fc);
+        }
+
+
+        /* =====================================================
+           TASK COMPLETION
+        ===================================================== */
+
+        .completion-body {
+            display: flex;
+            align-items: center;
+
+            gap: 25px;
+
+            padding: 12px 23px 24px;
+        }
+
+        .completion-ring {
+            position: relative;
+
+            width: 125px;
+            height: 125px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+                conic-gradient(#34d399 0deg,
+                    #34d399 245deg,
+                    #30313a 245deg,
+                    #30313a 360deg);
+        }
+
+        .completion-ring::before {
+            content: "";
+
+            position: absolute;
+
+            width: 98px;
+            height: 98px;
+
+            background: #0c0d12;
+            border-radius: 50%;
+        }
+
+        .completion-value {
+            position: relative;
+            z-index: 2;
+
+            text-align: center;
+        }
+
+        .completion-value strong {
+            display: block;
+
+            color: #fff;
+            font-size: 25px;
+        }
+
+        .completion-value span {
+            color: #676975;
+
+            font-size: 9px;
+            letter-spacing: 1px;
+        }
+
+        .completion-stats {
+            flex: 1;
+        }
+
+        .completion-stat {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            margin-bottom: 15px;
+
+            color: #777984;
+            font-size: 11px;
+        }
+
+        .completion-stat:last-child {
+            margin-bottom: 0;
+        }
+
+        .completion-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+        }
+
+        .green {
+            background: #34d399;
+        }
+
+        .purple {
+            background: #8b5cf6;
+        }
+
+        .gray {
+            background: #555862;
+        }
+
+        .completion-stat strong {
+            color: #ddd;
+        }
+
+
+        /* =====================================================
+           RISK DISTRIBUTION
+        ===================================================== */
+
+        .risk-chart {
+            display: flex;
+            align-items: flex-end;
+
+            gap: 18px;
+
+            height: 150px;
+
+            padding: 10px 23px 22px;
+        }
+
+        .risk-column {
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+
+            height: 100%;
+        }
+
+        .risk-percent {
+            margin-bottom: 6px;
+
+            color: #ccc;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .risk-bar {
+            width: 100%;
+            max-width: 48px;
+
+            border-radius: 6px 6px 0 0;
+
+            background:
+                linear-gradient(to top,
+                    #7c3aed,
+                    #a855f7);
+        }
+
+        .risk-column:nth-child(2) .risk-bar {
+            background:
+                linear-gradient(to top,
+                    #2563eb,
+                    #60a5fa);
+        }
+
+        .risk-column:nth-child(3) .risk-bar {
+            background:
+                linear-gradient(to top,
+                    #ea580c,
+                    #fb923c);
+        }
+
+        .risk-column:nth-child(4) .risk-bar {
+            background:
+                linear-gradient(to top,
+                    #be123c,
+                    #fb7185);
+        }
+
+        .risk-name {
+            margin-top: 8px;
+
+            color: #686a75;
+            font-size: 9px;
+        }
+
+
+        /* =====================================================
+           LOWER GRID
+        ===================================================== */
+
+        .lower-grid {
+            display: grid;
+
+            grid-template-columns:
+                1.1fr .9fr;
+
+            gap: 18px;
+        }
+
+
+        /* =====================================================
+           EMPLOYEE TABLE
+        ===================================================== */
+
+        .employee-table {
+            width: 100%;
+            border-collapse: collapse;
+
+            padding: 0 20px;
+        }
+
+        .employee-table th {
+            padding: 9px 10px;
+
+            background: #15161e;
+
+            color: #777984;
+
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: .7px;
+
+            text-align: left;
+        }
+
+        .employee-table td {
+            padding: 12px 10px;
+
+            border-bottom: 1px solid #191a21;
+
+            color: #c7c8ce;
+
+            font-size: 10px;
+        }
+
+        .employee-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rank {
+            width: 22px;
+            height: 22px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            color: #b56cff;
+            background: #181025;
+
+            font-size: 9px;
+        }
+
+        .employee-id {
+            color: #eee;
+            font-weight: 600;
+        }
+
+        .rating {
+            color: #ddd;
+            font-weight: 700;
+        }
+
+        .mini-progress {
+            width: 70px;
+            height: 5px;
+
+            overflow: hidden;
+
+            border-radius: 20px;
+
+            background: #24252e;
+        }
+
+        .mini-progress span {
+            display: block;
+
+            height: 100%;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(90deg,
+                    #8b5cf6,
+                    #c084fc);
+        }
+
+
+        /* =====================================================
+           AI INSIGHTS
+        ===================================================== */
+
+        .insights {
+            padding: 3px 20px 18px;
+        }
+
+        .insight {
+            display: flex;
+
+            gap: 12px;
+
+            padding: 12px;
+
+            margin-bottom: 8px;
+
+            border: 1px solid #1f2028;
+            border-radius: 9px;
+
+            background: #111219;
+        }
+
+        .insight:last-child {
+            margin-bottom: 0;
+        }
+
+        .insight-icon {
+            width: 31px;
+            height: 31px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 8px;
+
+            color: #a855f7;
+            background: #1b1127;
+        }
+
+        .insight h4 {
+            margin: 0;
+
+            color: #b76cff;
+
+            font-size: 11px;
+        }
+
+        .insight p {
+            margin: 4px 0 0;
+
+            color: #666873;
+
+            font-size: 9px;
+            line-height: 1.5;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1200px) {
+
+            .kpi-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .content-grid,
+            .lower-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .dashboard-page {
+                padding: 20px 15px;
+            }
+
+            .dashboard-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .top-right {
+                width: 100%;
+            }
+
+            .hero {
+                padding: 27px;
+            }
+
+            .hero h2 {
+                font-size: 27px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .health-body,
+            .completion-body {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .health-ring,
+            .completion-ring {
+                margin: auto;
+            }
+
+            .risk-chart {
+                gap: 9px;
+            }
+        }
+    </style>
+
+</head>
+
+
+<body class="synq-dashboard">
+
+
+    {% include 'partials/sidebar.html' %}
+
+
+    <main class="main-content">
+
+
+        <div class="dashboard-page">
+
+
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
+
+            <div class="dashboard-top">
+
+                <div class="dashboard-heading">
+
+                    <h1>
+                        Dashboard
+                    </h1>
+
+                    <p>
+                        Employee performance intelligence overview
+                    </p>
+
+                </div>
+
+
+                <div class="top-right">
+
+                    <div class="ai-status">
+
+                        <span class="ai-dot"></span>
+
+                        SYNQ Intelligence Active
+
+                    </div>
+
+                    <div class="date-box">
+
+                        Wed, 10 Sep 2026<br>
+
+                        12:24 PM
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 HERO
+            ================================================== -->
+
+            <section class="hero">
+
+                <div class="hero-grid"></div>
+
+                <div class="hero-content">
+
+                    <div class="hero-label">
+                        AI-POWERED WORKFORCE INTELLIGENCE
+                    </div>
+
+                    <h2>
+                        Welcome to <span>SYNQ.</span>
+                    </h2>
+
+                    <p>
+                        Monitor employee performance, evaluate task risk,
+                        identify high-performing employees and make smarter
+                        workforce decisions using data-driven intelligence.
+                    </p>
+
+                    <div class="hero-buttons">
+
+                        <a href="{{ url_for('create_task') }}" class="hero-btn primary">
+
+                            → &nbsp; Get Started
+
+                        </a>
+
+                        <a href="/insights" class="hero-btn secondary">
+
+                            View Insights
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <div class="hero-orbit"></div>
+
+            </section>
+
+
+            <!-- =================================================
+                 KPI CARDS
+            ================================================== -->
+
+            <section class="kpi-grid">
+
+
+                <!-- EMPLOYEES -->
+
+                <div class="kpi-card">
+
+                    <div class="kpi-icon">
+                        👥
+                    </div>
+
+                    <div class="kpi-info">
+
+                        <div class="kpi-label">
+                            TOTAL EMPLOYEES
+                        </div>
+
+                        <div class="kpi-value">
+                            {{ "{:,}".format(stats.total_employees) }}
+                        </div>
+
+                        <div class="kpi-description">
+                            Employees in dataset
+                        </div>
+
+                    </div>
+
+                    <svg class="kpi-spark" viewBox="0 0 100 40">
+
+                        <polyline class="spark-line" points="0,35 15,22 30,27 45,13 60,19 75,7 100,13">
+                        </polyline>
+
+                    </svg>
+
+                </div>
+
+
+                <!-- TASKS -->
+
+                <div class="kpi-card">
+
+                    <div class="kpi-icon">
+                        ▤
+                    </div>
+
+                    <div class="kpi-info">
+
+                        <div class="kpi-label">
+                            TOTAL TASKS
+                        </div>
+
+                        <div class="kpi-value">
+                            {{ "{:,}".format(stats.total_tasks) }}
+                        </div>
+
+                        <div class="kpi-description">
+                            Recorded task activities
+                        </div>
+
+                    </div>
+
+                    <svg class="kpi-spark" viewBox="0 0 100 40">
+
+                        <polyline class="spark-line" points="0,35 15,25 30,28 45,15 60,19 75,9 100,14">
+                        </polyline>
+
+                    </svg>
+
+                </div>
+
+
+                <!-- RATING -->
+
+                <div class="kpi-card">
+
+                    <div class="kpi-icon">
+                        ★
+                    </div>
+
+                    <div class="kpi-info">
+
+                        <div class="kpi-label">
+                            AVERAGE RATING
+                        </div>
+
+                        <div class="kpi-value">
+
+                            {{ "%.2f"|format(stats.avg_rating) }}
+
+                            <small>/ 10</small>
+
+                        </div>
+
+                        <div class="kpi-description">
+                            Historical performance
+                        </div>
+
+                    </div>
+
+                    <svg class="kpi-spark" viewBox="0 0 100 40">
+
+                        <polyline class="spark-line" points="0,35 15,27 30,29 45,17 60,22 75,10 100,15">
+                        </polyline>
+
+                    </svg>
+
+                </div>
+
+
+                <!-- RISK -->
+
+                <div class="kpi-card">
+
+                    <div class="kpi-icon">
+                        !
+                    </div>
+
+                    <div class="kpi-info">
+
+                        <div class="kpi-label">
+                            ERROR RISK
+                        </div>
+
+                        <div class="kpi-value">
+                            {{ "%.2f"|format(stats.avg_error_risk) }}
+                        </div>
+
+                        <div class="kpi-description">
+                            Average recorded risk
+                        </div>
+
+                    </div>
+
+                    <svg class="kpi-spark" viewBox="0 0 100 40">
+
+                        <polyline class="spark-line" points="0,35 15,25 30,29 45,16 60,22 75,11 100,16">
+                        </polyline>
+
+                    </svg>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 PERFORMANCE + COMPLETION
+            ================================================== -->
+
+            <section class="content-grid">
+
+
+                <!-- PERFORMANCE HEALTH -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3 class="card-title">
+                                Performance Health
+                            </h3>
+
+                            <div class="card-subtitle">
+                                Overall workforce performance signal
+                            </div>
+
+                        </div>
+
+                        <div class="card-tag">
+                            LIVE DATA
+                        </div>
+
+                    </div>
+
+
+                    <div class="health-body">
+
+
+                        <div class="health-ring" style="
+                                background:
+                                conic-gradient(
+                                    #a855f7 0deg,
+                                    #8b5cf6
+                                    {{ stats.avg_rating * 36 }}deg,
+                                    #242632
+                                    {{ stats.avg_rating * 36 }}deg,
+                                    #242632 360deg
+                                );
+                            ">
+
+                            <div class="health-value">
+
+                                <strong>
+                                    {{ "%.0f"|format(stats.avg_rating * 10) }}%
+                                </strong>
+
+                                <span>
+                                    HEALTH
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="health-bars">
+
+
+                            <div class="health-row">
+
+                                <div class="health-row-head">
+
+                                    <span>
+                                        Performance Score
+                                    </span>
+
+                                    <strong>
+                                        {{ "%.2f"|format(stats.avg_rating) }}/10
+                                    </strong>
+
+                                </div>
+
+                                <div class="bar">
+
+                                    <span style="
+                                            width:
+                                            {{ stats.avg_rating * 10 }}%;
+                                        ">
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="health-row">
+
+                                <div class="health-row-head">
+
+                                    <span>
+                                        Risk Stability
+                                    </span>
+
+                                    <strong>
+                                        {{ "%.1f"|format(
+                                        100 - stats.avg_error_risk * 10
+                                        ) }}%
+                                    </strong>
+
+                                </div>
+
+                                <div class="bar">
+
+                                    <span style="
+                                            width:
+                                            {{ 100 - stats.avg_error_risk * 10 }}%;
+                                        ">
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="health-row">
+
+                                <div class="health-row-head">
+
+                                    <span>
+                                        Data Coverage
+                                    </span>
+
+                                    <strong>
+                                        100%
+                                    </strong>
+
+                                </div>
+
+                                <div class="bar">
+
+                                    <span style="width:100%;"></span>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TASK COMPLETION -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3 class="card-title">
+                                Task Completion Rate
+                            </h3>
+
+                            <div class="card-subtitle">
+                                Overall task completion status
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="completion-body">
+
+
+                        <div class="completion-ring">
+
+                            <div class="completion-value">
+
+                                <strong id="completionPercent">
+                                    --
+                                </strong>
+
+                                <span>
+                                    COMPLETED
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="completion-stats">
+
+
+                            <div class="completion-stat">
+
+                                <div class="completion-left">
+
+                                    <span class="legend-dot green"></span>
+
+                                    <span>
+                                        Completed
+                                    </span>
+
+                                </div>
+
+                                <strong id="completedTasks">
+                                    --
+                                </strong>
+
+                            </div>
+
+
+                            <div class="completion-stat">
+
+                                <div class="completion-left">
+
+                                    <span class="legend-dot purple"></span>
+
+                                    <span>
+                                        Pending
+                                    </span>
+
+                                </div>
+
+                                <strong id="pendingTasks">
+                                    --
+                                </strong>
+
+                            </div>
+
+
+                            <div class="completion-stat">
+
+                                <div class="completion-left">
+
+                                    <span class="legend-dot gray"></span>
+
+                                    <span>
+                                        Other
+                                    </span>
+
+                                </div>
+
+                                <strong>
+                                    0
+                                </strong>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </section>
+
+
+            <!-- =================================================
+                 RISK + TOP EMPLOYEES
+            ================================================== -->
+
+            <section class="content-grid">
+
+
+                <!-- RISK DISTRIBUTION -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3 class="card-title">
+                                Risk Distribution
+                            </h3>
+
+                            <div class="card-subtitle">
+                                Task risk level distribution
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="risk-chart">
+
+
+                        <div class="risk-column">
+
+                            <div class="risk-percent">
+                                32%
+                            </div>
+
+                            <div class="risk-bar" style="height:85px;">
+                            </div>
+
+                            <div class="risk-name">
+                                Low
+                            </div>
+
+                        </div>
+
+
+                        <div class="risk-column">
+
+                            <div class="risk-percent">
+                                28%
+                            </div>
+
+                            <div class="risk-bar" style="height:73px;">
+                            </div>
+
+                            <div class="risk-name">
+                                Moderate
+                            </div>
+
+                        </div>
+
+
+                        <div class="risk-column">
+
+                            <div class="risk-percent">
+                                24%
+                            </div>
+
+                            <div class="risk-bar" style="height:63px;">
+                            </div>
+
+                            <div class="risk-name">
+                                High
+                            </div>
+
+                        </div>
+
+
+                        <div class="risk-column">
+
+                            <div class="risk-percent">
+                                16%
+                            </div>
+
+                            <div class="risk-bar" style="height:43px;">
+                            </div>
+
+                            <div class="risk-name">
+                                Critical
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- PERFORMANCE SUMMARY -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3 class="card-title">
+                                Workforce Summary
+                            </h3>
+
+                            <div class="card-subtitle">
+                                Current SYNQ performance indicators
+                            </div>
+
+                        </div>
+
+                        <div class="card-tag">
+                            ANALYTICS
+                        </div>
+
+                    </div>
+
+
+                    <div class="health-body">
+
+                        <div class="health-bars">
+
+
+                            <div class="health-row">
+
+                                <div class="health-row-head">
+
+                                    <span>
+                                        Average Rating
+                                    </span>
+
+                                    <strong>
+                                        {{ "%.2f"|format(stats.avg_rating) }}/10
+                                    </strong>
+
+                                </div>
+
+                                <div class="bar">
+
+                                    <span style="
+                                            width:
+                                            {{ stats.avg_rating * 10 }}%;
+                                        ">
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="health-row">
+
+                                <div class="health-row-head">
+
+                                    <span>
+                                        Error Risk
+                                    </span>
+
+                                    <strong>
+                                        {{ "%.2f"|format(stats.avg_error_risk) }}
+                                    </strong>
+
+                                </div>
+
+                                <div class="bar">
+
+                                    <span style="
+                                            width:
+                                            {{ stats.avg_error_risk * 20 }}%;
+                                        ">
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="health-row">
+
+                                <div class="health-row-head">
+
+                                    <span>
+                                        Employee Coverage
+                                    </span>
+
+                                    <strong>
+                                        {{ stats.total_employees }}
+                                    </strong>
+
+                                </div>
+
+                                <div class="bar">
+
+                                    <span style="width:100%;"></span>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </section>
+
+
+            <!-- =================================================
+                 LOWER GRID
+            ================================================== -->
+
+            <section class="lower-grid">
+
+
+                <!-- TOP EMPLOYEES -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3 class="card-title">
+                                Top Performing Employees
+                            </h3>
+
+                            <div class="card-subtitle">
+                                Highest historical employee ratings
+                            </div>
+
+                        </div>
+
+                        <div class="card-tag">
+                            TOP 5
+                        </div>
+
+                    </div>
+
+
+                    <table class="employee-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>#</th>
+
+                                <th>EMPLOYEE ID</th>
+
+                                <th>TASKS</th>
+
+                                <th>AVG RATING</th>
+
+                                <th>COMPLETION</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="employeeRows">
+
+                            <tr>
+
+                                <td colspan="5" style="
+                                        text-align:center;
+                                        color:#555;
+                                        padding:25px;
+                                    ">
+
+                                    Loading employee data...
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <!-- SYNQ INTELLIGENCE -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <h3 class="card-title">
+                                SYNQ Intelligence
+                            </h3>
+
+                            <div class="card-subtitle">
+                                Automated dataset observations
+                            </div>
+
+                        </div>
+
+                        <div class="card-tag">
+                            AI INSIGHTS
+                        </div>
+
+                    </div>
+
+
+                    <div class="insights">
+
+
+                        <div class="insight">
+
+                            <div class="insight-icon">
+                                👥
+                            </div>
+
+                            <div>
+
+                                <h4>
+                                    Workforce Size
+                                </h4>
+
+                                <p>
+                                    SYNQ is currently analyzing
+                                    {{ "{:,}".format(stats.total_employees) }}
+                                    employees across
+                                    {{ "{:,}".format(stats.total_tasks) }}
+                                    recorded tasks.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="insight">
+
+                            <div class="insight-icon">
+                                ★
+                            </div>
+
+                            <div>
+
+                                <h4>
+                                    Performance Signal
+                                </h4>
+
+                                <p>
+                                    Current average employee rating is
+                                    {{ "%.2f"|format(stats.avg_rating) }}
+                                    out of 10.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="insight">
+
+                            <div class="insight-icon">
+                                !
+                            </div>
+
+                            <div>
+
+                                <h4>
+                                    Risk Signal
+                                </h4>
+
+                                <p>
+                                    Average recorded error risk is
+                                    {{ "%.2f"|format(stats.avg_error_risk) }}.
+                                    Use Predict Employee for
+                                    task-level evaluation.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="insight">
+
+                            <div class="insight-icon">
+                                ◎
+                            </div>
+
+                            <div>
+
+                                <h4>
+                                    Recommended Action
+                                </h4>
+
+                                <p>
+                                    Use employee-level analytics and
+                                    prediction tools to support
+                                    workforce allocation decisions.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+    </main>
+
+
+    <!-- =====================================================
+         DASHBOARD JAVASCRIPT
+    ====================================================== -->
+
+    <script>
+
+        async function loadDashboardEmployees() {
+
+            try {
+
+                const response =
+                    await fetch("/api/employee-data");
+
+                const data =
+                    await response.json();
+
+                if (
+                    !data.success ||
+                    !data.employees
+                ) {
+                    return;
+                }
+
+
+                const employees =
+                    [...data.employees]
+                        .sort(
+                            (a, b) =>
+                                Number(b.avg_rating) -
+                                Number(a.avg_rating)
+                        );
+
+
+                /* ---------------------------------------------
+                   TOP 5
+                --------------------------------------------- */
+
+                const topEmployees =
+                    employees.slice(0, 5);
+
+
+                const rows =
+                    document.getElementById(
+                        "employeeRows"
+                    );
+
+
+                rows.innerHTML =
+                    topEmployees.map(
+                        (employee, index) => `
+
+                        <tr>
+
+                            <td>
+                                <span class="rank">
+                                    ${index + 1}
+                                </span>
+                            </td>
+
+                            <td>
+                                <span class="employee-id">
+                                    ${employee.employee_id}
+                                </span>
+                            </td>
+
+                            <td>
+                                ${Number(
+                            employee.tasks
+                        ).toLocaleString()}
+                            </td>
+
+                            <td>
+                                <span class="rating">
+                                    ${Number(
+                            employee.avg_rating
+                        ).toFixed(2)}
+                                </span>
+                            </td>
+
+                            <td>
+
+                                <div style="
+                                    display:flex;
+                                    align-items:center;
+                                    gap:8px;
+                                ">
+
+                                    <div class="mini-progress">
+
+                                        <span
+                                            style="
+                                                width:
+                                                ${Math.min(
+                            employee.completion,
+                            100
+                        )}%;
+                                            ">
+                                        </span>
+
+                                    </div>
+
+                                    ${Number(
+                            employee.completion
+                        ).toFixed(0)}%
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    `
+                    ).join("");
+
+
+                /* ---------------------------------------------
+                   COMPLETION
+                --------------------------------------------- */
+
+                let totalTasks = 0;
+                let completedTasks = 0;
+
+
+                employees.forEach(
+                    employee => {
+
+                        const tasks =
+                            Number(employee.tasks) || 0;
+
+                        const completion =
+                            Number(employee.completion) || 0;
+
+                        totalTasks += tasks;
+
+                        completedTasks +=
+                            tasks * (completion / 100);
+
+                    }
+                );
+
+
+                if (totalTasks > 0) {
+
+                    const completionRate =
+                        (
+                            completedTasks /
+                            totalTasks
+                        ) * 100;
+
+
+                    document.getElementById(
+                        "completionPercent"
+                    ).textContent =
+                        completionRate.toFixed(0) + "%";
+
+
+                    document.getElementById(
+                        "completedTasks"
+                    ).textContent =
+                        Math.round(
+                            completedTasks
+                        ).toLocaleString();
+
+
+                    document.getElementById(
+                        "pendingTasks"
+                    ).textContent =
+                        Math.round(
+                            totalTasks -
+                            completedTasks
+                        ).toLocaleString();
+
+
+                    const ring =
+                        document.querySelector(
+                            ".completion-ring"
+                        );
+
+
+                    const degree =
+                        completionRate * 3.6;
+
+
+                    ring.style.background =
+                        `
+                        conic-gradient(
+                            #34d399 0deg,
+                            #34d399 ${degree}deg,
+                            #30313a ${degree}deg,
+                            #30313a 360deg
+                        )
+                        `;
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Dashboard employee loading error:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            loadDashboardEmployees
+        );
+
+    </script>
+
+
+</body>
+
+</html>

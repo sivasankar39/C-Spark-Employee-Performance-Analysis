@@ -1,0 +1,193 @@
+<aside class="sidebar">
+
+    <!-- =========================
+         SYNQ LOGO
+    ========================== -->
+
+    <div class="sidebar-logo">
+
+        <div class="logo-area">
+
+            <img src="{{ url_for('static', filename='css/images/synq-logo.png') }}" alt="SYNQ" class="synq-logo">
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         WORKSPACE
+    ========================== -->
+
+    <div class="nav-section">
+
+        <div class="nav-title">
+            WORKSPACE
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            <a href="{{ url_for('dashboard') }}" class="nav-item">
+
+                <span class="nav-icon">
+                    ◆
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <a href="{{ url_for('predict_page') }}" class="nav-item">
+
+                <span class="nav-icon">
+                    ◎
+                </span>
+
+                <span>
+                    Predict Employee
+                </span>
+
+            </a>
+
+
+            <a href="{{ url_for('create_task') }}" class="nav-item">
+
+                <span class="nav-icon">
+                    ＋
+                </span>
+
+                <span>
+                    Create Task
+                </span>
+
+            </a>
+            <a href="{{ url_for('tasks_page') }}" class="nav-item">
+                <span class="nav-icon">▤</span>
+                <span>Task History</span>
+            </a>
+
+
+            <a href="/employee-data" class="nav-item">
+
+                <span class="nav-icon">
+                    ♟
+                </span>
+
+                <span>
+                    Employee Data
+                </span>
+
+            </a>
+
+
+            <a href="{{ url_for('analytics_page') }}" class="nav-item">
+                <span class="nav-icon">◉</span>
+                <span>Analytics</span>
+            </a>
+
+
+            <a href="/insights" class="nav-item">
+
+                <span class="nav-icon">
+                    ◇
+                </span>
+
+                <span>
+                    Insights
+                </span>
+
+            </a>
+            <a href="{{ url_for('insights_page') }}" class="nav-item">
+                <span class="nav-icon">✦</span>
+                <span>AI Insights</span>
+            </a>
+
+
+        </nav>
+
+    </div>
+
+
+    <!-- =========================
+         SYSTEM
+    ========================== -->
+
+    <div class="system-section">
+
+        <div class="nav-title">
+            SYSTEM
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+
+
+
+            <a href="/settings" class="nav-item">
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                <span>
+                    Settings
+                </span>
+
+            </a>
+
+
+        </nav>
+
+    </div>
+
+
+    <!-- =========================
+         BOTTOM USER AREA
+    ========================== -->
+
+    <div class="sidebar-bottom">
+
+
+        <div class="user-card">
+
+            <div class="avatar">
+                A
+            </div>
+
+
+            <div class="user-info">
+
+                <div class="user-name">
+                    amalendu06
+                </div>
+
+                <div class="user-role">
+                    MANAGER
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <a href="/" class="logout">
+
+            <span>
+                →|
+            </span>
+
+            Logout
+
+        </a>
+
+
+    </div>
+
+</aside>
