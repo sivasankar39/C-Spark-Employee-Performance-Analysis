@@ -22,7 +22,7 @@ class EmployeePredictor:
         self,
         classification_models,
         regression_models,
-    ):
+        ):
         self.classification_models = classification_models
         self.regression_models = regression_models
 
@@ -57,6 +57,32 @@ class EmployeePredictor:
             "days_to_deadline"
         ]
 
+    def _difficulty_to_number(self, value):
+        if value is None:
+            return 3.0
+
+        if isinstance(value, (int, float)):
+            return float(value)
+
+        mapping = {
+          "low": 1.0,
+          "easy": 1.0,
+          "medium": 3.0,
+          "moderate": 3.0,
+         "high": 5.0,
+          "hard": 5.0,
+        }
+
+        text = str(value).strip().lower()
+
+        if text in mapping:
+         return mapping[text]
+
+        try:
+         return float(text)
+        except ValueError:
+         return 3.0
+
     def _create_task_input(self, task):
         """
         Convert a new task into the feature format
@@ -81,9 +107,7 @@ class EmployeePredictor:
             "volume_metric": task["volume_metric"],
             "dependency_score": task["dependency_score"],
             "error_risk": task["error_risk"],
-            "perceived_difficulty": task[
-                "perceived_difficulty"
-            ],
+            "perceived_difficulty": self._difficulty_to_number(task["perceived_difficulty"]),
             "primary_skill_matching": task[
                 "primary_skill_matching"
             ],
