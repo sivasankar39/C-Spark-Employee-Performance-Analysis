@@ -4,6 +4,8 @@ import pickle
 import numpy as np
 import pandas as pd
 
+from src.pipeline import run_pipeline
+
 # =========================================================
 # PATHS
 # =========================================================
@@ -612,64 +614,141 @@ def historical_rating_prediction(df, data):
         np.clip(base_rating + adjustment, 1, 10)
     )
 
+_predictor = None
+
+def get_predictor():
+    global _predictor
+
+    if _predictor is None:
+        _predictor = run_pipeline()
+
+    return _predictor
+
 
 # =========================================================
 # MAIN PREDICTION
 # =========================================================
 
 def predict_employee(data):
-    df = load_dataset()
+    """
+    Run the complete employee prediction pipeline.
 
-    # Select the employee first.
-    best_employee = find_best_employee(df, data)
+    Stage 1:
+        Classification models identify employees predicted
+        to complete the task.
 
-    # Then use THAT employee's trained Random Forest model.
-    model_data = load_employee_model(best_employee)
+    Stage 2:
+        Regression models predict ratings for eligible employees.
 
-    predicted_rating = None
-    model_available = False
+    Final:
+        Employees are ranked by predicted rating and the
+        highest-rated employee is recommended.
+    """
 
-    if model_data is not None:
-        model_available = True
-        predicted_rating = model_rating_prediction(
-            model_data,
-            data
-        )
+    # Get the saved-model prediction pipeline.
+    predictor = get_predictor()
 
-    # Only use historical fallback if the trained model
-    # cannot produce a prediction.
-    fallback_used = False
+    # The predictor expects task_given_date and task_deadline.
+    # The frontend currently sends days_to_deadline instead.
+    given_date = pd.Timestamp.today().normalize()
 
-    if predicted_rating is None:
-        predicted_rating = historical_rating_prediction(
-            df,
-            data
-        )
-        fallback_used = True
+    days_to_deadline = safe_float(
+        data.get("days_to_deadline"),
+        5.0
+    )
+
+    deadline_date = given_date + pd.Timedelta(
+        days=days_to_deadline
+    )
+
+    # Create the input expected by EmployeePredictor.
+    prediction_data = dict(data)
+
+    prediction_data["task_given_date"] = given_date
+    prediction_data["task_deadline"] = deadline_date
+
+    # Run Stage 1 -> Stage 2 -> ranking.
+    result = predictor.predict(prediction_data)
+
+    # Convert the predictor result into the format
+    # expected by the existing frontend.
+    ranked_employees = result.get(
+        "ranked_employees",
+        []
+    )
+
+    if not ranked_employees:
+        return {
+            "best_fit_employee": None,
+            "predicted_rating": None,
+            "category": "No Eligible Employee",
+            "error_risk": round(
+                float(
+                    np.clip(
+                        safe_float(
+                            data.get("error_risk"),
+                            1.0
+                        ),
+                        0,
+                        5
+                    )
+                ),
+                2
+            ),
+            "risk_level": get_risk_level(
+                np.clip(
+                    safe_float(
+                        data.get("error_risk"),
+                        1.0
+                    ),
+                    0,
+                    5
+                )
+            ),
+            "model_available": True,
+            "fallback_used": False,
+            "model_type": "Classification + Random Forest Regression",
+            "eligible_employees": [],
+            "ranked_employees": [],
+        }
+
+    best_employee = ranked_employees[0]
+
+    predicted_rating = normalize_rating(
+        best_employee["predicted_rating"]
+    )
 
     error_risk = np.clip(
-        safe_float(data.get("error_risk"), 1.0),
+        safe_float(
+            data.get("error_risk"),
+            1.0
+        ),
         0,
         5
     )
 
     return {
-        "best_fit_employee": best_employee,
+        "best_fit_employee": best_employee["employee_id"],
         "predicted_rating": round(
-            float(predicted_rating), 2
+            float(predicted_rating),
+            2
         ),
         "category": get_rating_category(
             predicted_rating
         ),
         "error_risk": round(
-            float(error_risk), 2
+            float(error_risk),
+            2
         ),
         "risk_level": get_risk_level(
             error_risk
         ),
-        "model_available": model_available,
-        "fallback_used": fallback_used,
-        "model_type": "Random Forest Regression"
-            if model_available and not fallback_used
-            else "Historical Fallback",
+        "model_available": True,
+        "fallback_used": False,
+        "model_type": "Classification + Random Forest Regression",
+        "eligible_employees": result.get(
+            "eligible_employees",
+            []
+        ),
+        "ranked_employees": ranked_employees,
     }

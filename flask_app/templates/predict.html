@@ -1,14 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
 
+<<<<<<< HEAD
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+=======
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
     <title>SYNQ - Predict Employee</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
 
     <style>
+<<<<<<< HEAD
         * {
             margin: 0;
             padding: 0;
@@ -28,12 +39,31 @@
             color: #fff;
             min-height: 100vh;
         }
+=======
+      /* =====================================================
+           RESET
+        ===================================================== */
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #050505;
+        color: #ffffff;
+        min-height: 100vh;
+      }
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+
+<<<<<<< HEAD
         /* =====================================================
            MAIN LAYOUT
         ===================================================== */
@@ -114,11 +144,74 @@
 
             font-size: 14px;
         }
+=======
+      /* =====================================================
+           MAIN
+        ===================================================== */
 
-        .search input::placeholder {
-            color: #555;
-        }
+      .main {
+        margin-left: 260px;
+        width: calc(100% - 260px);
+        min-height: 100vh;
+        background:
+          radial-gradient(
+            circle at 80% 5%,
+            rgba(106, 35, 172, 0.07),
+            transparent 22%
+          ),
+          #050505;
+      }
 
+      /* =====================================================
+           TOPBAR
+        ===================================================== */
+
+      .topbar {
+        height: 70px;
+        border-bottom: 1px solid #222;
+        display: flex;
+        align-items: center;
+        padding: 0 38px;
+        gap: 28px;
+      }
+
+      .menu-button {
+        color: #a648ff;
+        font-size: 25px;
+      }
+
+      .search {
+        width: 535px;
+        height: 48px;
+        border: 1px solid #292929;
+        background: #0b0b0b;
+        border-radius: 11px;
+        display: flex;
+        align-items: center;
+        padding: 0 16px;
+        gap: 12px;
+      }
+
+      .search-icon {
+        color: #777;
+        font-size: 15px;
+      }
+
+      .search input {
+        flex: 1;
+        border: none;
+        outline: none;
+        background: transparent;
+        color: #ffffff;
+        font-size: 14px;
+      }
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+      .search input::placeholder {
+        color: #555;
+      }
+
+<<<<<<< HEAD
         .top-right {
             margin-left: auto;
 
@@ -128,12 +221,21 @@
 
             min-width: 0;
         }
+=======
+      .top-right {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        gap: 25px;
+      }
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-        .notification {
-            color: #a647ff;
-            font-size: 19px;
-        }
+      .notification {
+        color: #a647ff;
+        font-size: 19px;
+      }
 
+<<<<<<< HEAD
         .date {
             color: #aaa;
             font-size: 14px;
@@ -162,13 +264,41 @@
             overflow: hidden;
 
             padding: 29px 36px 32px;
+=======
+      .date {
+        color: #aaa;
+        font-size: 14px;
+      }
 
-            background:
-                radial-gradient(circle at 78% 40%,
-                    rgba(100, 34, 170, 0.16),
-                    transparent 35%),
-                #080808;
+      /* =====================================================
+           PAGE
+        ===================================================== */
 
+      .page {
+        padding: 31px 39px 50px;
+      }
+
+      /* =====================================================
+           HERO
+        ===================================================== */
+
+      .hero {
+        border: 1px solid #4b2770;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+        padding: 29px 36px 32px;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+        background:
+          radial-gradient(
+            circle at 78% 40%,
+            rgba(100, 34, 170, 0.16),
+            transparent 35%
+          ),
+          #080808;
+
+<<<<<<< HEAD
             margin-bottom: 24px;
 
             width: 100%;
@@ -179,24 +309,33 @@
             content: "";
 
             position: absolute;
+=======
+        margin-bottom: 24px;
+      }
 
-            width: 235px;
-            height: 235px;
+      .hero::after {
+        content: "";
+        position: absolute;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-            border: 1px solid rgba(153, 69, 255, 0.20);
-            border-radius: 50%;
+        width: 235px;
+        height: 235px;
 
-            right: 160px;
-            top: -25px;
-        }
+        border: 1px solid rgba(153, 69, 255, 0.2);
+        border-radius: 50%;
 
-        .hero-small {
-            color: #ad50ff;
-            font-size: 12px;
-            letter-spacing: 5px;
-            margin-bottom: 14px;
-        }
+        right: 160px;
+        top: -25px;
+      }
 
+      .hero-small {
+        color: #ad50ff;
+        font-size: 12px;
+        letter-spacing: 5px;
+        margin-bottom: 14px;
+      }
+
+<<<<<<< HEAD
         .hero h1 {
             font-size: 34px;
             line-height: 1.2;
@@ -205,11 +344,21 @@
             position: relative;
             z-index: 2;
         }
+=======
+      .hero h1 {
+        font-size: 34px;
+        line-height: 1.2;
+        margin-bottom: 13px;
+        position: relative;
+        z-index: 2;
+      }
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-        .hero h1 span {
-            color: #ad4cff;
-        }
+      .hero h1 span {
+        color: #ad4cff;
+      }
 
+<<<<<<< HEAD
         .hero p {
             color: #777;
             font-size: 14px;
@@ -222,12 +371,25 @@
         }
 
         /* =====================================================
+=======
+      .hero p {
+        color: #777;
+        font-size: 14px;
+        line-height: 1.7;
+        max-width: 800px;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* =====================================================
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
            CONTENT GRID
         ===================================================== */
 
-        .content-grid {
-            display: grid;
+      .content-grid {
+        display: grid;
 
+<<<<<<< HEAD
             /*
              IMPORTANT:
              minmax(0, ...) prevents the panels from
@@ -261,21 +423,39 @@
             width: 100%;
             min-width: 0;
         }
+=======
+        grid-template-columns: minmax(500px, 1.55fr) minmax(390px, 0.9fr);
 
-        .panel-header {
-            margin-bottom: 26px;
-        }
+        gap: 24px;
+      }
 
-        .panel-header h3 {
-            font-size: 21px;
-            margin-bottom: 8px;
-        }
+      /* =====================================================
+           PANEL
+        ===================================================== */
 
-        .panel-header p {
-            color: #666;
-            font-size: 13px;
-        }
+      .panel {
+        background: #080808;
+        border: 1px solid #282828;
+        border-radius: 18px;
+        padding: 29px;
+      }
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+      .panel-header {
+        margin-bottom: 26px;
+      }
+
+      .panel-header h3 {
+        font-size: 21px;
+        margin-bottom: 8px;
+      }
+
+      .panel-header p {
+        color: #666;
+        font-size: 13px;
+      }
+
+<<<<<<< HEAD
         /* =====================================================
            FORM
         ===================================================== */
@@ -297,13 +477,30 @@
             flex-direction: column;
             min-width: 0;
         }
+=======
+      /* =====================================================
+           FORM
+        ===================================================== */
 
-        label {
-            color: #999;
-            font-size: 13px;
-            margin-bottom: 9px;
-        }
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 19px 22px;
+      }
 
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+      label {
+        color: #999;
+        font-size: 13px;
+        margin-bottom: 9px;
+      }
+
+<<<<<<< HEAD
         input,
         select {
             width: 100%;
@@ -313,25 +510,49 @@
 
             background: #111;
             color: #fff;
+=======
+      input,
+      select {
+        width: 100%;
+        height: 54px;
 
-            border: 1px solid #292929;
-            border-radius: 11px;
+        background: #111111;
+        color: #ffffff;
 
-            padding: 0 16px;
+        border: 1px solid #292929;
+        border-radius: 11px;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-            outline: none;
+        padding: 0 16px;
 
-            font-size: 15px;
-        }
+        outline: none;
 
+        font-size: 15px;
+      }
+
+      input:focus,
+      select:focus {
+        border-color: #873bce;
+
+<<<<<<< HEAD
         input:focus,
         select:focus {
             border-color: #873bce;
+=======
+        box-shadow: 0 0 0 2px rgba(135, 59, 206, 0.1);
+      }
 
-            box-shadow:
-                0 0 0 2px rgba(135, 59, 206, 0.10);
-        }
+      select {
+        cursor: pointer;
+      }
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+      select option {
+        background: #111111;
+        color: #ffffff;
+      }
+
+<<<<<<< HEAD
         select {
             cursor: pointer;
         }
@@ -350,30 +571,44 @@
 
             width: 100%;
             height: 57px;
+=======
+      /* =====================================================
+           PREDICT BUTTON
+        ===================================================== */
 
-            margin-top: 7px;
+      .predict-button {
+        grid-column: 1 / -1;
 
-            border: none;
-            border-radius: 11px;
+        height: 57px;
 
+        margin-top: 7px;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+        border: none;
+        border-radius: 11px;
+
+        color: #ffffff;
+
+<<<<<<< HEAD
             color: #fff;
+=======
+        font-size: 16px;
+        font-weight: 700;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-            font-size: 16px;
-            font-weight: 700;
+        cursor: pointer;
 
-            cursor: pointer;
+        background: linear-gradient(100deg, #7630e9, #ae4df1);
 
-            background:
-                linear-gradient(100deg,
-                    #7630e9,
-                    #ae4df1);
+        box-shadow: 0 12px 30px rgba(125, 48, 230, 0.2);
 
-            box-shadow:
-                0 12px 30px rgba(125, 48, 230, 0.20);
+        transition: 0.2s ease;
+      }
 
-            transition: 0.2s ease;
-        }
+      .predict-button:hover {
+        transform: translateY(-1px);
 
+<<<<<<< HEAD
         .predict-button:hover {
             transform: translateY(-1px);
 
@@ -400,15 +635,47 @@
 
         .result-content {
             flex: 1;
+=======
+        box-shadow: 0 15px 35px rgba(125, 48, 230, 0.3);
+      }
 
-            display: flex;
-            flex-direction: column;
+      .predict-button:disabled {
+        opacity: 0.65;
+        cursor: wait;
+        transform: none;
+      }
 
-            align-items: center;
-            justify-content: center;
+      /* =====================================================
+           RESULT PANEL
+        ===================================================== */
 
-            text-align: center;
+      .result-panel {
+        min-height: 610px;
 
+        display: flex;
+        flex-direction: column;
+      }
+
+      .result-content {
+        flex: 1;
+
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+        text-align: center;
+
+        padding: 20px;
+      }
+
+      .result-icon {
+        width: 78px;
+        height: 78px;
+
+<<<<<<< HEAD
             padding: 20px;
 
             min-width: 0;
@@ -417,24 +684,42 @@
         .result-icon {
             width: 78px;
             height: 78px;
+=======
+        border-radius: 19px;
 
-            border-radius: 19px;
+        background: #160d25;
+        color: #b14dff;
 
-            background: #160d25;
-            color: #b14dff;
+        display: flex;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+        align-items: center;
+        justify-content: center;
+
+        font-size: 34px;
+
+<<<<<<< HEAD
             display: flex;
             align-items: center;
             justify-content: center;
+=======
+        margin-bottom: 23px;
 
-            font-size: 34px;
+        box-shadow: 0 0 35px rgba(151, 61, 255, 0.08);
+      }
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-            margin-bottom: 23px;
+      .result-content h2 {
+        font-size: 21px;
+        margin-bottom: 12px;
+      }
 
-            box-shadow:
-                0 0 35px rgba(151, 61, 255, 0.08);
-        }
+      .result-content > p {
+        color: #666;
 
+        line-height: 1.7;
+
+<<<<<<< HEAD
         .result-content h2 {
             font-size: 21px;
             margin-bottom: 12px;
@@ -499,17 +784,105 @@
 
         .result-grid {
             width: 100%;
+=======
+        max-width: 360px;
 
-            display: grid;
+        font-size: 13px;
+      }
 
+      .ready-text {
+        color: #aa48f5;
+
+        font-size: 48px;
+
+        font-weight: 800;
+
+        margin-top: 30px;
+      }
+
+      .ready-label {
+        color: #666;
+
+        font-size: 12px;
+
+        letter-spacing: 1px;
+
+        margin-top: 7px;
+      }
+
+      /* =====================================================
+           SUCCESS RESULT
+        ===================================================== */
+
+      .prediction-result {
+        width: 100%;
+        height: 100%;
+      }
+
+      .success-result {
+        width: 100%;
+
+        text-align: center;
+      }
+
+      .success-result .result-icon {
+        margin: 5px auto 16px;
+      }
+
+      .result-label {
+        color: #777;
+
+        font-size: 11px;
+
+        letter-spacing: 2px;
+
+        margin-bottom: 8px;
+      }
+
+      .employee-name {
+        color: #b34fff;
+
+        font-size: 36px;
+
+        font-weight: 800;
+
+        margin-bottom: 24px;
+
+        word-break: break-word;
+      }
+
+      .result-grid {
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 11px;
+
+        text-align: left;
+      }
+
+      .result-card {
+        background: #0f0f0f;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+        border: 1px solid #282828;
+
+<<<<<<< HEAD
             grid-template-columns:
                 minmax(0, 1fr) minmax(0, 1fr);
+=======
+        border-radius: 11px;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-            gap: 11px;
+        padding: 16px;
+      }
 
-            text-align: left;
-        }
+      .result-card span {
+        display: block;
 
+<<<<<<< HEAD
         .result-card {
             background: #0f0f0f;
 
@@ -526,10 +899,33 @@
 
             color: #666;
             font-size: 11px;
+=======
+        color: #666;
 
-            margin-bottom: 8px;
-        }
+        font-size: 11px;
 
+        margin-bottom: 8px;
+      }
+
+      .result-card strong {
+        display: block;
+
+        color: #ffffff;
+
+        font-size: 15px;
+      }
+
+      .model-status {
+        margin-top: 18px;
+
+        padding: 13px;
+
+        border: 1px solid #3b2356;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+        background: #100b16;
+
+<<<<<<< HEAD
         .result-card strong {
             display: block;
 
@@ -572,8 +968,65 @@
         .loading-result h2 {
             color: #b34fff;
             margin-bottom: 12px;
+=======
+        color: #a77cc9;
+
+        border-radius: 9px;
+
+        font-size: 11px;
+
+        line-height: 1.5;
+      }
+
+      /* =====================================================
+           LOADING
+        ===================================================== */
+
+      .loading-result {
+        text-align: center;
+
+        width: 100%;
+      }
+
+      .loading-result .result-icon {
+        margin: 0 auto 20px;
+
+        animation: pulse 1s infinite;
+      }
+
+      .loading-result h2 {
+        color: #b34fff;
+
+        margin-bottom: 12px;
+      }
+
+      .loading-result p {
+        color: #666;
+
+        font-size: 13px;
+
+        line-height: 1.6;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.7;
         }
 
+        50% {
+          transform: scale(1.08);
+          opacity: 1;
+        }
+
+        100% {
+          transform: scale(1);
+          opacity: 0.7;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+        }
+      }
+
+<<<<<<< HEAD
         .loading-result p {
             color: #666;
             font-size: 13px;
@@ -729,8 +1182,121 @@
             .employee-name {
                 font-size: 30px;
             }
+=======
+      /* =====================================================
+           ERROR
+        ===================================================== */
+
+      .error-result {
+        text-align: center;
+
+        width: 100%;
+      }
+
+      .error-result .result-icon {
+        margin: 0 auto 20px;
+
+        color: #ff5c8a;
+      }
+
+      .error-result h2 {
+        color: #ff5c8a;
+
+        margin-bottom: 12px;
+      }
+
+      .error-result p {
+        margin: 0 auto;
+
+        color: #999;
+
+        max-width: 400px;
+
+        line-height: 1.6;
+
+        font-size: 13px;
+      }
+
+      /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+      @media (max-width: 1150px) {
+        .sidebar {
+          width: 250px;
         }
+
+        .main {
+          margin-left: 250px;
+
+          width: calc(100% - 250px);
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+        }
+
+        .content-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .result-panel {
+          min-height: 500px;
+        }
+      }
+
+      @media (max-width: 750px) {
+        .sidebar {
+          position: relative;
+
+          width: 100%;
+
+          min-width: 100%;
+
+          min-height: auto;
+        }
+
+        .app {
+          display: block;
+        }
+
+        .main {
+          margin-left: 0;
+
+          width: 100%;
+        }
+
+        .topbar {
+          padding: 0 18px;
+        }
+
+        .search {
+          width: 100%;
+        }
+
+        .date {
+          display: none;
+        }
+
+        .page {
+          padding: 22px 16px;
+        }
+
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .predict-button {
+          grid-column: auto;
+        }
+
+        .hero h1 {
+          font-size: 28px;
+        }
+
+        .result-grid {
+          grid-template-columns: 1fr;
+        }
+      }
     </style>
+<<<<<<< HEAD
 </head>
 
 <body>
@@ -746,19 +1312,47 @@
 
             <!-- TOPBAR -->
             <header class="topbar">
+=======
+  </head>
 
-                <div class="menu-button">
-                    ☰
-                </div>
+  <body>
+    <div class="app">
+      <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
 
-                <div class="search">
+      {% include 'partials/sidebar.html' %}
 
-                    <span class="search-icon">
-                        ⌕
-                    </span>
+      <!-- =====================================================
+         MAIN
+    ====================================================== -->
 
-                    <input type="text" placeholder="Search employees, tasks, insights...">
+      <main class="main">
+        <!-- =================================================
+             TOPBAR
+        ================================================== -->
 
+        <header class="topbar">
+          <div class="menu-button">☰</div>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+          <div class="search">
+            <span class="search-icon"> ⌕ </span>
+
+            <input
+              type="text"
+              placeholder="Search employees, tasks, insights..."
+            />
+          </div>
+
+          <div class="top-right">
+            <div class="notification">♧</div>
+
+            <div class="date">Thursday, 10 September 2026</div>
+          </div>
+        </header>
+
+<<<<<<< HEAD
                 </div>
 
                 <div class="top-right">
@@ -825,11 +1419,66 @@
 
                             <!-- TASK TYPE -->
                             <div class="form-group">
+=======
+        <!-- =================================================
+             PAGE
+        ================================================== -->
 
-                                <label for="task_type">
-                                    Task Type
-                                </label>
+        <div class="page">
+          <!-- =================================================
+                 HERO
+            ================================================== -->
 
+          <section class="hero">
+            <div class="hero-small">
+              S Y N Q · P E R F O R M A N C E &nbsp; P R E D I C T I O N
+            </div>
+
+            <h1>
+              Find the right
+
+              <span> employee </span>
+
+              for the task.
+            </h1>
+
+            <p>
+              Provide task information and SYNQ will analyze employee
+              performance data to generate a prediction.
+            </p>
+          </section>
+
+          <!-- =================================================
+                 CONTENT
+            ================================================== -->
+
+          <div class="content-grid">
+            <!-- =================================================
+                     INPUT PANEL
+                ================================================== -->
+
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Prediction Inputs</h3>
+
+                <p>Enter the task and performance details</p>
+              </div>
+
+              <div class="form-grid">
+                <!-- =========================================
+                             TASK TYPE
+                        ========================================== -->
+
+                <div class="form-group">
+                  <label for="task_type"> Task Type </label>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+                  <select id="task_type">
+                    <option value="">Loading task types...</option>
+                  </select>
+                </div>
+
+<<<<<<< HEAD
                                 <select id="task_type">
 
                                     <option value="">
@@ -843,11 +1492,21 @@
 
                             <!-- PRIORITY -->
                             <div class="form-group">
+=======
+                <!-- =========================================
+                             PRIORITY
+                        ========================================== -->
 
-                                <label for="priority">
-                                    Priority
-                                </label>
+                <div class="form-group">
+                  <label for="priority"> Priority </label>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+                  <select id="priority">
+                    <option value="">Loading priorities...</option>
+                  </select>
+                </div>
+
+<<<<<<< HEAD
                                 <select id="priority">
 
                                     <option value="">
@@ -861,11 +1520,25 @@
 
                             <!-- DAYS -->
                             <div class="form-group">
+=======
+                <!-- =========================================
+                             DAYS TO DEADLINE
+                        ========================================== -->
 
-                                <label for="days_to_deadline">
-                                    Days to Deadline
-                                </label>
+                <div class="form-group">
+                  <label for="days_to_deadline"> Days to Deadline </label>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+                  <input
+                    type="number"
+                    id="days_to_deadline"
+                    value="6"
+                    min="0"
+                    step="1"
+                  />
+                </div>
+
+<<<<<<< HEAD
                                 <input type="number" id="days_to_deadline" value="6" min="0" step="1">
 
                             </div>
@@ -873,11 +1546,25 @@
 
                             <!-- VOLUME -->
                             <div class="form-group">
+=======
+                <!-- =========================================
+                             VOLUME
+                        ========================================== -->
 
-                                <label for="volume_metric">
-                                    Volume Metric
-                                </label>
+                <div class="form-group">
+                  <label for="volume_metric"> Volume Metric </label>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+                  <input
+                    type="number"
+                    id="volume_metric"
+                    value="0.14"
+                    min="0"
+                    step="0.01"
+                  />
+                </div>
+
+<<<<<<< HEAD
                                 <input type="number" id="volume_metric" value="3" min="0" step="1">
 
                             </div>
@@ -885,17 +1572,27 @@
 
                             <!-- DIFFICULTY -->
                             <div class="form-group">
+=======
+                <!-- =========================================
+                             DIFFICULTY
+                        ========================================== -->
 
-                                <label for="perceived_difficulty">
-                                    Perceived Difficulty
-                                </label>
+                <div class="form-group">
+                  <label for="perceived_difficulty">
+                    Perceived Difficulty
+                  </label>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-                                <select id="perceived_difficulty">
+                  <select id="perceived_difficulty">
+                    <option value="Low">Low</option>
 
-                                    <option value="Low">
-                                        Low
-                                    </option>
+                    <option value="Medium" selected>Medium</option>
 
+                    <option value="High">High</option>
+                  </select>
+                </div>
+
+<<<<<<< HEAD
                                     <option value="Medium" selected>
                                         Medium
                                     </option>
@@ -911,29 +1608,31 @@
 
                             <!-- ERROR RISK -->
                             <div class="form-group">
+=======
+                <!-- =========================================
+                             ERROR RISK
+                        ========================================== -->
 
-                                <label for="error_risk">
-                                    Error Risk
-                                </label>
+                <div class="form-group">
+                  <label for="error_risk"> Error Risk </label>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-                                <select id="error_risk">
+                  <select id="error_risk">
+                    <option value="0">0 — Minimal</option>
 
-                                    <option value="0">
-                                        0 — Minimal
-                                    </option>
+                    <option value="1">1 — Very Low</option>
 
-                                    <option value="1">
-                                        1 — Very Low
-                                    </option>
+                    <option value="2">2 — Low</option>
 
-                                    <option value="2">
-                                        2 — Low
-                                    </option>
+                    <option value="3">3 — Moderate</option>
 
-                                    <option value="3">
-                                        3 — Moderate
-                                    </option>
+                    <option value="4" selected>4 — High</option>
 
+                    <option value="5">5 — Critical</option>
+                  </select>
+                </div>
+
+<<<<<<< HEAD
                                     <option value="4" selected>
                                         4 — High
                                     </option>
@@ -949,15 +1648,60 @@
 
                             <!-- DEPENDENCY -->
                             <div class="form-group">
+=======
+                <!-- =========================================
+                             DEPENDENCY
+                        ========================================== -->
 
-                                <label for="dependency_score">
-                                    Dependency Score
-                                </label>
+                <div class="form-group">
+                  <label for="dependency_score"> Dependency Score </label>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+                  <input
+                    type="number"
+                    id="dependency_score"
+                    value="0.06"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                  />
+                </div>
+
+<<<<<<< HEAD
                                 <input type="number" id="dependency_score" value="3" min="0" max="5" step="1">
+=======
+                <div class="form-group">
+                  <label for="primary_skill_matching">
+                    Primary Skill Matching
+                  </label>
+                  <input
+                    type="number"
+                    id="primary_skill_matching"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.80"
+                    required
+                  />
+                </div>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-                            </div>
+                <div class="form-group">
+                  <label for="secondary_skill_matching">
+                    Secondary Skill Matching
+                  </label>
+                  <input
+                    type="number"
+                    id="secondary_skill_matching"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="0.50"
+                    required
+                  />
+                </div>
 
+<<<<<<< HEAD
 
                             <!-- BUTTON -->
                             <button type="button" class="predict-button" id="predictButton" onclick="predictEmployee()">
@@ -973,15 +1717,45 @@
                     <section class="panel result-panel">
 
                         <div class="panel-header">
+=======
+                <!-- =========================================
+                             PREDICT BUTTON
+                        ========================================== -->
 
-                            <h3>
-                                Prediction Result
-                            </h3>
+                <button
+                  type="button"
+                  class="predict-button"
+                  id="predictButton"
+                  onclick="predictEmployee()"
+                >
+                  ✦ &nbsp; PREDICT EMPLOYEE
+                </button>
+              </div>
+            </section>
 
-                            <p>
-                                SYNQ prediction output
-                            </p>
+            <!-- =================================================
+                     RESULT PANEL
+                ================================================== -->
 
+            <section class="panel result-panel">
+              <div class="panel-header">
+                <h3>Prediction Result</h3>
+
+                <p>SYNQ prediction output</p>
+              </div>
+
+              <div class="result-content" id="predictionResult">
+                <div class="result-icon">◎</div>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+                <h2>Ready for prediction</h2>
+
+                <p>
+                  Select the task characteristics and click Predict Employee to
+                  get the best-fit recommendation.
+                </p>
+
+<<<<<<< HEAD
                         </div>
 
 
@@ -1018,24 +1792,43 @@
             </div>
 
         </main>
+=======
+                <div class="ready-text">READY</div>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+                <div class="ready-label">PREDICTED EMPLOYEE</div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
     </div>
 
+<<<<<<< HEAD
 
     <script>
 
         /* =====================================================
+=======
+    <!-- =========================================================
+     JAVASCRIPT
+========================================================== -->
+
+    <script>
+      /* =====================================================
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
            LOAD TASK OPTIONS
         ===================================================== */
 
-        async function loadTaskOptions() {
+      async function loadTaskOptions() {
+        const taskTypeSelect = document.getElementById("task_type");
 
-            const taskTypeSelect =
-                document.getElementById("task_type");
+        const prioritySelect = document.getElementById("priority");
 
-            const prioritySelect =
-                document.getElementById("priority");
+        try {
+          const response = await fetch("/api/task-options");
 
+<<<<<<< HEAD
             try {
 
                 const response =
@@ -1064,15 +1857,55 @@
 
 
                 /* TASK TYPES */
+=======
+          const data = await response.json();
 
-                taskTypeSelect.innerHTML =
-                    '<option value="">Select task type</option>';
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || "Unable to load task options");
+          }
 
+          /*
+                =================================================
+                IMPORTANT
+    
+                Backend returns:
+    
+                {
+                    success: true,
+                    options: {
+                        task_types: [...],
+                        priorities: [...]
+                    }
+                }
+                =================================================
+                */
+
+          const options = data.options || {};
+
+          const taskTypes = options.task_types || [];
+
+          const priorities = options.priorities || [];
+
+          /* =============================================
+                   TASK TYPE
+                ============================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+          taskTypeSelect.innerHTML =
+            '<option value="">Select task type</option>';
+
+<<<<<<< HEAD
                 taskTypes.forEach(function (taskType) {
+=======
+          taskTypes.forEach(function (taskType) {
+            const option = document.createElement("option");
 
-                    const option =
-                        document.createElement("option");
+            option.value = taskType;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+            option.textContent = taskType;
+
+<<<<<<< HEAD
                     option.value = taskType;
                     option.textContent = taskType;
 
@@ -1082,15 +1915,30 @@
 
 
                 /* PRIORITIES */
+=======
+            taskTypeSelect.appendChild(option);
+          });
 
-                prioritySelect.innerHTML =
-                    '<option value="">Select priority</option>';
+          /* =============================================
+                   PRIORITY
+                ============================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+          prioritySelect.innerHTML =
+            '<option value="">Select priority</option>';
+
+<<<<<<< HEAD
                 priorities.forEach(function (priority) {
+=======
+          priorities.forEach(function (priority) {
+            const option = document.createElement("option");
 
-                    const option =
-                        document.createElement("option");
+            option.value = priority;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+            option.textContent = priority;
+
+<<<<<<< HEAD
                     option.value = priority;
                     option.textContent = priority;
 
@@ -1100,9 +1948,20 @@
 
 
                 /* DEFAULT TASK */
+=======
+            prioritySelect.appendChild(option);
+          });
 
-                if (taskTypes.length > 0) {
+          /* =============================================
+                   DEFAULT TASK TYPE
+                ============================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+          if (taskTypes.length > 0) {
+            taskTypeSelect.value = taskTypes[0];
+          }
+
+<<<<<<< HEAD
                     taskTypeSelect.value =
                         taskTypes[0];
 
@@ -1110,19 +1969,31 @@
 
 
                 /* DEFAULT MEDIUM */
+=======
+          /* =============================================
+                   DEFAULT PRIORITY = MEDIUM
+                ============================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-                const mediumOption =
-                    Array.from(
-                        prioritySelect.options
-                    ).find(function (option) {
+          const mediumOption = Array.from(prioritySelect.options).find(
+            function (option) {
+              return option.value.toLowerCase().trim() === "medium";
+            },
+          );
 
-                        return option.value
-                            .toLowerCase()
-                            .trim() === "medium";
+          if (mediumOption) {
+            prioritySelect.value = mediumOption.value;
+          } else if (priorities.length > 0) {
+            prioritySelect.value = priorities[0];
+          }
 
-                    });
+          console.log("SYNQ Task Types:", taskTypes);
 
+          console.log("SYNQ Priorities:", priorities);
+        } catch (error) {
+          console.error("Task options error:", error);
 
+<<<<<<< HEAD
                 if (mediumOption) {
 
                     prioritySelect.value =
@@ -1152,16 +2023,29 @@
                     '<option value="">Unable to load priorities</option>';
 
             }
+=======
+          taskTypeSelect.innerHTML =
+            '<option value="">Unable to load task types</option>';
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+          prioritySelect.innerHTML =
+            '<option value="">Unable to load priorities</option>';
         }
+      }
 
+<<<<<<< HEAD
 
         /* =====================================================
+=======
+      /* =====================================================
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
            PREDICT EMPLOYEE
         ===================================================== */
 
-        async function predictEmployee() {
+      async function predictEmployee() {
+        const button = document.getElementById("predictButton");
 
+<<<<<<< HEAD
             const button =
                 document.getElementById("predictButton");
 
@@ -1170,12 +2054,17 @@
 
 
             /* INPUTS */
+=======
+        const resultBox = document.getElementById("predictionResult");
 
-            const taskType =
-                document.getElementById(
-                    "task_type"
-                ).value;
+        /* =============================================
+               INPUTS
+            ============================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+        const taskType = document.getElementById("task_type").value;
+
+<<<<<<< HEAD
             const priority =
                 document.getElementById(
                     "priority"
@@ -1208,54 +2097,104 @@
 
 
             /* VALIDATION */
+=======
+        const priority = document.getElementById("priority").value;
 
-            if (!taskType) {
+        const daysToDeadline =
+          document.getElementById("days_to_deadline").value;
 
-                showError(
-                    "Please select a Task Type."
-                );
+        const volumeMetric = document.getElementById("volume_metric").value;
 
-                return;
+        const perceivedDifficulty = document.getElementById(
+          "perceived_difficulty",
+        ).value;
 
-            }
+        const errorRisk = document.getElementById("error_risk").value;
 
+        const dependencyScore =
+          document.getElementById("dependency_score").value;
 
-            if (!priority) {
+        const primarySkillMatching = document.getElementById(
+          "primary_skill_matching",
+        ).value;
 
-                showError(
-                    "Please select a Priority."
-                );
+        const secondarySkillMatching = document.getElementById(
+          "secondary_skill_matching",
+        ).value;
 
-                return;
+        /* =============================================
+               VALIDATION
+            ============================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-            }
+        if (!taskType) {
+          showError("Please select a Task Type.");
 
+          return;
+        }
 
-            if (
-                daysToDeadline === "" ||
-                isNaN(parseFloat(daysToDeadline))
-            ) {
+        if (!priority) {
+          showError("Please select a Priority.");
 
-                showError(
-                    "Please enter Days to Deadline."
-                );
+          return;
+        }
 
-                return;
+        if (daysToDeadline === "" || isNaN(parseFloat(daysToDeadline))) {
+          showError("Please enter Days to Deadline.");
 
-            }
+          return;
+        }
 
+        if (volumeMetric === "" || isNaN(parseFloat(volumeMetric))) {
+          showError("Please enter Volume Metric.");
 
-            if (
-                volumeMetric === "" ||
-                isNaN(parseFloat(volumeMetric))
-            ) {
+          return;
+        }
 
-                showError(
-                    "Please enter Volume Metric."
-                );
+        if (dependencyScore === "" || isNaN(parseFloat(dependencyScore))) {
+          showError("Please enter Dependency Score.");
 
-                return;
+          return;
+        }
 
+        const dependency = parseFloat(dependencyScore);
+
+        if (dependency < 0 || dependency > 1) {
+          showError("Dependency Score must be between 0 and 1.");
+
+          return;
+        }
+
+        if (
+          primarySkillMatching === "" ||
+          isNaN(parseFloat(primarySkillMatching))
+        ) {
+          showError("Please enter Primary Skill Matching.");
+          return;
+        }
+
+        if (
+          secondarySkillMatching === "" ||
+          isNaN(parseFloat(secondarySkillMatching))
+        ) {
+          showError("Please enter Secondary Skill Matching.");
+          return;
+        }
+
+        const primarySkill = parseFloat(primarySkillMatching);
+        const secondarySkill = parseFloat(secondarySkillMatching);
+
+        if (primarySkill < 0 || primarySkill > 1) {
+          showError("Primary Skill Matching must be between 0 and 1.");
+          return;
+        }
+
+        if (secondarySkill < 0 || secondarySkill > 1) {
+          showError("Secondary Skill Matching must be between 0 and 1.");
+          return;
+        }
+
+<<<<<<< HEAD
             }
 
 
@@ -1292,14 +2231,25 @@
 
 
             /* LOADING */
+=======
+        /* =============================================
+               LOADING
+            ============================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-            button.disabled = true;
+        button.disabled = true;
 
+<<<<<<< HEAD
             button.innerHTML =
                 "◌ &nbsp; ANALYZING...";
 
 
             resultBox.innerHTML = `
+=======
+        button.innerHTML = "◌ &nbsp; ANALYZING...";
+
+        resultBox.innerHTML = `
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
             <div class="loading-result">
 
@@ -1320,34 +2270,49 @@
 
         `;
 
+<<<<<<< HEAD
 
             /* REQUEST */
+=======
+        /* =============================================
+               REQUEST DATA
+            ============================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-            const requestData = {
+        const requestData = {
+          task_type: taskType,
 
-                task_type:
-                    taskType,
+          priority: priority,
 
-                priority:
-                    priority,
+          days_to_deadline: parseFloat(daysToDeadline),
 
+<<<<<<< HEAD
                 days_to_deadline:
                     parseFloat(daysToDeadline),
 
                 volume_metric:
                     parseFloat(volumeMetric),
+=======
+          volume_metric: parseFloat(volumeMetric),
 
-                perceived_difficulty:
-                    perceivedDifficulty,
+          perceived_difficulty: perceivedDifficulty,
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+          error_risk: parseFloat(errorRisk),
+
+<<<<<<< HEAD
                 error_risk:
                     parseFloat(errorRisk),
+=======
+          dependency_score: dependency,
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
-                dependency_score:
-                    dependency
+          primary_skill_matching: parseFloat(primarySkillMatching),
 
-            };
+          secondary_skill_matching: parseFloat(secondarySkillMatching),
+        };
 
+<<<<<<< HEAD
 
             try {
 
@@ -1388,11 +2353,36 @@
 
 
                 /* RESULT */
+=======
+        try {
+          /* =========================================
+                   API REQUEST
+                ========================================== */
 
-                const employee =
-                    result.best_fit_employee ??
-                    "N/A";
+          const response = await fetch("/api/predict", {
+            method: "POST",
 
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify(requestData),
+          });
+
+          const result = await response.json();
+
+          if (!response.ok || !result.success) {
+            throw new Error(result.error || "Prediction failed.");
+          }
+
+          /* =========================================
+                   RESULT VALUES
+                ========================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+          const employee = result.best_fit_employee ?? "N/A";
+
+<<<<<<< HEAD
                 const rating =
                     result.predicted_rating ??
                     "N/A";
@@ -1415,9 +2405,24 @@
 
 
                 /* MODEL STATUS */
+=======
+          const rating = result.predicted_rating ?? "N/A";
 
-                let modelMessage;
+          const category = result.category ?? "N/A";
 
+          const risk = result.error_risk ?? "N/A";
+
+          const riskLevel =
+            result.risk_level ?? getRiskName(Number(result.error_risk));
+
+          /* =========================================
+                   MODEL STATUS
+                ========================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+          let modelMessage;
+
+<<<<<<< HEAD
                 if (result.model_available) {
 
                     modelMessage =
@@ -1433,8 +2438,19 @@
 
 
                 /* DISPLAY */
+=======
+          if (result.model_available) {
+            modelMessage = "✓ SYNQ trained model used";
+          } else {
+            modelMessage = "⚠ Historical dataset fallback used";
+          }
 
-                resultBox.innerHTML = `
+          /* =========================================
+                   DISPLAY RESULT
+                ========================================== */
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
+
+          resultBox.innerHTML = `
 
                 <div class="success-result">
 
@@ -1447,9 +2463,7 @@
                     </div>
 
                     <div class="employee-name">
-                        ${escapeHtml(
-                    String(employee)
-                )}
+                        ${escapeHtml(String(employee))}
                     </div>
 
 
@@ -1462,9 +2476,7 @@
                             </span>
 
                             <strong>
-                                ${escapeHtml(
-                    String(rating)
-                )}/10
+                                ${escapeHtml(String(rating))}/10
                             </strong>
 
                         </div>
@@ -1477,9 +2489,7 @@
                             </span>
 
                             <strong>
-                                ${escapeHtml(
-                    String(category)
-                )}
+                                ${escapeHtml(String(category))}
                             </strong>
 
                         </div>
@@ -1492,9 +2502,7 @@
                             </span>
 
                             <strong>
-                                ${escapeHtml(
-                    String(risk)
-                )}
+                                ${escapeHtml(String(risk))}
                             </strong>
 
                         </div>
@@ -1507,9 +2515,7 @@
                             </span>
 
                             <strong>
-                                ${escapeHtml(
-                    String(riskLevel)
-                )}
+                                ${escapeHtml(String(riskLevel))}
                             </strong>
 
                         </div>
@@ -1524,7 +2530,10 @@
                 </div>
 
             `;
+        } catch (error) {
+          console.error("Prediction error:", error);
 
+<<<<<<< HEAD
             }
 
 
@@ -1551,18 +2560,32 @@
                     "✦ &nbsp; PREDICT EMPLOYEE";
 
             }
+=======
+          showError(error.message || "Something went wrong while predicting.");
+        } finally {
+          button.disabled = false;
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
+          button.innerHTML = "✦ &nbsp; PREDICT EMPLOYEE";
         }
+      }
 
+<<<<<<< HEAD
 
         /* =====================================================
+=======
+      /* =====================================================
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
            RISK NAME
         ===================================================== */
 
-        function getRiskName(value) {
+      function getRiskName(value) {
+        const riskNames = {
+          0: "Minimal",
 
-            const riskNames = {
+          1: "Very Low",
 
+<<<<<<< HEAD
                 0: "Minimal",
                 1: "Very Low",
                 2: "Low",
@@ -1581,17 +2604,37 @@
 
 
         /* =====================================================
+=======
+          2: "Low",
+
+          3: "Moderate",
+
+          4: "High",
+
+          5: "Critical",
+        };
+
+        return riskNames[value] || "Unknown";
+      }
+
+      /* =====================================================
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
            SHOW ERROR
         ===================================================== */
 
-        function showError(message) {
+      function showError(message) {
+        const resultBox = document.getElementById("predictionResult");
 
+<<<<<<< HEAD
             const resultBox =
                 document.getElementById(
                     "predictionResult"
                 );
 
             resultBox.innerHTML = `
+=======
+        resultBox.innerHTML = `
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
 
             <div class="error-result">
 
@@ -1604,24 +2647,37 @@
                 </h2>
 
                 <p>
+<<<<<<< HEAD
                     ${escapeHtml(
                 String(message)
             )}
+=======
+
+                    ${escapeHtml(String(message))}
+
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
                 </p>
 
             </div>
 
         `;
+      }
 
+<<<<<<< HEAD
         }
 
 
         /* =====================================================
+=======
+      /* =====================================================
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
            HTML ESCAPE
         ===================================================== */
 
-        function escapeHtml(value) {
+      function escapeHtml(value) {
+        return value
 
+<<<<<<< HEAD
             return value
                 .replace(
                     /&/g,
@@ -1648,20 +2704,33 @@
 
 
         /* =====================================================
+=======
+          .replace(/&/g, "&amp;")
+
+          .replace(/</g, "&lt;")
+
+          .replace(/>/g, "&gt;")
+
+          .replace(/"/g, "&quot;")
+
+          .replace(/'/g, "&#039;");
+      }
+
+      /* =====================================================
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
            PAGE LOAD
         ===================================================== */
 
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-
-                loadTaskOptions();
-
-            }
-        );
-
+      document.addEventListener("DOMContentLoaded", function () {
+        loadTaskOptions();
+      });
     </script>
+<<<<<<< HEAD
 
 </body>
 
 </html>
+=======
+  </body>
+</html>
+>>>>>>> c01d4dc79a76ec62462545a3e06644b9f0580ef6
