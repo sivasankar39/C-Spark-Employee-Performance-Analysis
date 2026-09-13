@@ -1124,8 +1124,8 @@
 
         const dependency = parseFloat(dependencyScore);
 
-        if (dependency < 0 || dependency > 1) {
-          showError("Dependency Score must be between 0 and 1.");
+        if (dependency <= 0 || dependency >= 5) {
+          showError("Dependency Score must be between 0 and 5.");
 
           return;
         }
@@ -1295,7 +1295,7 @@
                             </span>
 
                             <strong>
-                                ${escapeHtml(String(rating))}/10
+                                ${escapeHtml(String(rating))}/5
                             </strong>
 
                         </div>
