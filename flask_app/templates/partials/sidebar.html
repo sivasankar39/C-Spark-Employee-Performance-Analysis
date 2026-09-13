@@ -1,192 +1,461 @@
+<style>
+    /* =====================================================
+   SYNQ SIDEBAR
+===================================================== */
+
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+
+        width: 300px;
+
+        background:
+            radial-gradient(circle at 20% 10%,
+                rgba(116, 37, 190, 0.08),
+                transparent 25%),
+            #070707;
+
+        border-right: 1px solid #242424;
+
+        padding: 35px 18px 18px;
+
+        display: flex;
+        flex-direction: column;
+
+        z-index: 100;
+
+        color: #ffffff;
+        font-family: Arial, Helvetica, sans-serif;
+
+        overflow-y: auto;
+    }
+
+
+    /* LOGO */
+
+    .logo-area {
+        display: flex;
+        align-items: center;
+
+        gap: 15px;
+
+        padding-left: 2px;
+
+        margin-bottom: 40px;
+    }
+
+    .logo-symbol {
+        width: 48px;
+        height: 48px;
+
+        border-radius: 50%;
+
+        position: relative;
+
+        background: #0a0710;
+
+        box-shadow:
+            0 0 18px rgba(164, 76, 255, 0.35);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .logo-symbol::before {
+        content: "";
+
+        width: 30px;
+        height: 30px;
+
+        border: 4px solid #a94cff;
+
+        border-radius: 50%;
+
+        box-shadow:
+            0 0 10px rgba(169, 76, 255, 0.7);
+    }
+
+    .logo-symbol::after {
+        content: "";
+
+        position: absolute;
+
+        width: 12px;
+        height: 12px;
+
+        background: #b866ff;
+
+        border-radius: 50%;
+    }
+
+    .logo-text h1 {
+        margin: 0;
+
+        font-size: 30px;
+
+        letter-spacing: 5px;
+
+        font-weight: 800;
+
+        color: #ffffff;
+    }
+
+    .logo-text p {
+        margin: 6px 0 0;
+
+        color: #777;
+
+        font-size: 8px;
+
+        letter-spacing: 1.8px;
+    }
+
+    .logo-area {
+        width: 100%;
+        padding: 25px 20px 35px;
+        box-sizing: border-box;
+    }
+
+    .synq-logo {
+        width: 220px;
+        height: auto;
+        display: block;
+    }
+
+    .synq-logo {
+        width: 220px;
+    }
+
+    /* WORKSPACE */
+
+    .section-title {
+        color: #555;
+
+        font-size: 11px;
+
+        letter-spacing: 2px;
+
+        margin-left: 10px;
+
+        margin-bottom: 12px;
+
+        text-transform: uppercase;
+    }
+
+
+    /* NAVIGATION */
+
+    .nav {
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+    .nav a {
+        height: 53px;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 18px;
+
+        padding: 0 20px;
+
+        border-radius: 12px;
+
+        color: #858585;
+
+        font-size: 15px;
+
+        text-decoration: none;
+
+        transition: all 0.2s ease;
+    }
+
+    .nav a:hover {
+        background: #100b16;
+
+        color: #ffffff;
+    }
+
+    .nav a.active {
+        color: #ffffff;
+
+        background:
+            linear-gradient(90deg,
+                rgba(143, 52, 255, 0.19),
+                rgba(93, 28, 160, 0.05));
+
+        border-left: 2px solid #a747ff;
+
+        box-shadow:
+            inset 0 0 25px rgba(150, 50, 255, 0.05);
+    }
+
+    .nav-icon {
+        width: 20px;
+
+        min-width: 20px;
+
+        text-align: center;
+
+        color: #a044ff;
+
+        font-size: 17px;
+
+        text-decoration: none;
+    }
+
+
+    /* SYSTEM */
+
+    .system-section {
+        margin-top: 32px;
+    }
+
+
+    /* USER AREA */
+
+    .sidebar-bottom {
+        margin-top: auto;
+
+        padding-top: 25px;
+    }
+
+    .user-card {
+        border: 1px solid #292929;
+
+        border-radius: 13px;
+
+        padding: 14px;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 13px;
+
+        margin-bottom: 12px;
+
+        background: rgba(255, 255, 255, 0.01);
+    }
+
+    .avatar {
+        width: 45px;
+        height: 45px;
+
+        min-width: 45px;
+
+        border-radius: 50%;
+
+        background:
+            linear-gradient(135deg,
+                #8236e9,
+                #b351ff);
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        font-size: 18px;
+
+        font-weight: 700;
+
+        color: #ffffff;
+    }
+
+    .user-info {
+        min-width: 0;
+    }
+
+    .user-info strong {
+        display: block;
+
+        font-size: 14px;
+
+        margin-bottom: 5px;
+
+        color: #ffffff;
+    }
+
+    .user-info span {
+        color: #777;
+
+        font-size: 11px;
+    }
+
+
+    /* LOGOUT */
+
+    .logout {
+        height: 46px;
+
+        border: 1px solid #242424;
+
+        border-radius: 10px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        color: #777;
+
+        font-size: 14px;
+
+        text-decoration: none;
+
+        transition: all 0.2s ease;
+    }
+
+    .logout:hover {
+        color: #ffffff;
+
+        border-color: #7034a9;
+
+        background: #100b16;
+    }
+
+
+    /* SCROLLBAR */
+
+    .sidebar::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: #292929;
+
+        border-radius: 10px;
+    }
+
+
+    /* MOBILE */
+
+    @media (max-width: 900px) {
+
+        .sidebar {
+            width: 240px;
+
+            padding: 25px 12px 15px;
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+        }
+
+        .logo-text p {
+            font-size: 7px;
+        }
+
+        .nav a {
+            padding: 0 14px;
+
+            gap: 12px;
+
+            font-size: 14px;
+        }
+    }
+</style>
+
+
 <aside class="sidebar">
 
-    <!-- =========================
-         SYNQ LOGO
-    ========================== -->
-
-    <div class="sidebar-logo">
-
-        <div class="logo-area">
-
-            <img src="{{ url_for('static', filename='css/images/synq-logo.png') }}" alt="SYNQ" class="synq-logo">
-
-        </div>
-
+    <!-- LOGO -->
+    <div class="logo-area">
+        <img src="{{ url_for('static', filename='css/images/synq-logo.png') }}" alt="SYNQ" class="synq-logo">
+    </div>
+    <!-- WORKSPACE -->
+    <div class="section-title">
+        Workspace
     </div>
 
 
-    <!-- =========================
-         WORKSPACE
-    ========================== -->
+    <nav class="nav">
 
-    <div class="nav-section">
-
-        <div class="nav-title">
-            WORKSPACE
-        </div>
+        <a href="/dashboard">
+            <span class="nav-icon">◆</span>
+            <span>Dashboard</span>
+        </a>
 
 
-        <nav class="sidebar-nav">
+        <a href="/predict">
+            <span class="nav-icon">◎</span>
+            <span>Predict Employee</span>
+        </a>
 
 
-            <a href="{{ url_for('dashboard') }}" class="nav-item">
-
-                <span class="nav-icon">
-                    ◆
-                </span>
-
-                <span>
-                    Dashboard
-                </span>
-
-            </a>
+        <a href="/create-task">
+            <span class="nav-icon">＋</span>
+            <span>Create Task</span>
+        </a>
 
 
-            <a href="{{ url_for('predict_page') }}" class="nav-item">
-
-                <span class="nav-icon">
-                    ◎
-                </span>
-
-                <span>
-                    Predict Employee
-                </span>
-
-            </a>
+        <a href="/tasks">
+            <span class="nav-icon">▤</span>
+            <span>Task History</span>
+        </a>
 
 
-            <a href="{{ url_for('create_task') }}" class="nav-item">
-
-                <span class="nav-icon">
-                    ＋
-                </span>
-
-                <span>
-                    Create Task
-                </span>
-
-            </a>
-            <a href="{{ url_for('tasks_page') }}" class="nav-item">
-                <span class="nav-icon">▤</span>
-                <span>Task History</span>
-            </a>
+        <a href="/employee-data">
+            <span class="nav-icon">♟</span>
+            <span>Employee Data</span>
+        </a>
 
 
-            <a href="/employee-data" class="nav-item">
-
-                <span class="nav-icon">
-                    ♟
-                </span>
-
-                <span>
-                    Employee Data
-                </span>
-
-            </a>
+        <a href="/analytics">
+            <span class="nav-icon">◉</span>
+            <span>Analytics</span>
+        </a>
 
 
-            <a href="{{ url_for('analytics_page') }}" class="nav-item">
-                <span class="nav-icon">◉</span>
-                <span>Analytics</span>
-            </a>
-
-
-            <a href="/insights" class="nav-item">
-
-                <span class="nav-icon">
-                    ◇
-                </span>
-
-                <span>
-                    Insights
-                </span>
-
-            </a>
-            <a href="{{ url_for('insights_page') }}" class="nav-item">
-                <span class="nav-icon">✦</span>
-                <span>AI Insights</span>
-            </a>
-
-
-        </nav>
-
-    </div>
-
-
-    <!-- =========================
-         SYSTEM
-    ========================== -->
-
-    <div class="system-section">
-
-        <div class="nav-title">
-            SYSTEM
-        </div>
-
-
-        <nav class="sidebar-nav">
+    </nav>
 
 
 
 
-
-            <a href="/settings" class="nav-item">
-
-                <span class="nav-icon">
-                    ⚙
-                </span>
-
-                <span>
-                    Settings
-                </span>
-
-            </a>
-
-
-        </nav>
-
-    </div>
-
-
-    <!-- =========================
-         BOTTOM USER AREA
-    ========================== -->
-
+    <!-- USER -->
     <div class="sidebar-bottom">
-
 
         <div class="user-card">
 
             <div class="avatar">
-                A
+                {{ session.get("username", "U")[0]|upper }}
             </div>
 
 
             <div class="user-info">
 
-                <div class="user-name">
-                    amalendu06
-                </div>
+                <strong>
+                    {{ session.get("username", "User") }}
+                </strong>
 
-                <div class="user-role">
-                    MANAGER
-                </div>
+                <span>
+                    {{ session.get("role", "USER")|upper }}
+                </span>
 
             </div>
 
         </div>
 
 
-        <a href="/" class="logout">
-
-            <span>
-                →|
-            </span>
-
-            Logout
-
+        <!-- LOGOUT -->
+        <a href="/logout" class="logout">
+            →| &nbsp; Logout
         </a>
-
 
     </div>
 

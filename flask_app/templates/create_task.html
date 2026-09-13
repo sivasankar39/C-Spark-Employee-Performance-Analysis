@@ -2,12 +2,10 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SYNQ - Create Task</title>
+    <title>SYNQ - Task History</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -16,519 +14,628 @@
             box-sizing: border-box;
         }
 
+        html,
         body {
             margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
             background: #050505;
             color: #ffffff;
             font-family: Arial, Helvetica, sans-serif;
         }
 
+
+        /* =====================================================
+           MAIN CONTENT
+        ===================================================== */
+
         .main-content {
-            margin-left: 260px;
+            margin-left: 300px;
+            width: calc(100% - 300px);
             min-height: 100vh;
-            width: calc(100% - 260px);
+            background: #050505;
         }
 
-        .page-container {
-            padding: 28px 38px 50px;
-        }
 
-        /* =========================================
+        /* =====================================================
            TOPBAR
-        ========================================== */
+        ===================================================== */
 
         .topbar {
-            height: 70px;
-            border-bottom: 1px solid #222;
+            height: 72px;
+
             display: flex;
             align-items: center;
+
             padding: 0 38px;
+
+            border-bottom: 1px solid #222;
+
+            background: #070707;
         }
 
         .topbar-title {
-            font-size: 13px;
             color: #777;
-            letter-spacing: 1px;
+
+            font-size: 12px;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
         }
 
         .topbar-right {
             margin-left: auto;
+
             display: flex;
             align-items: center;
-            gap: 22px;
+
+            gap: 20px;
         }
 
-        .topbar-date {
-            color: #777;
-            font-size: 13px;
-        }
+        .status {
+            display: flex;
+            align-items: center;
 
-        /* =========================================
-           HERO
-        ========================================== */
+            gap: 9px;
 
-        .hero {
-            position: relative;
-            overflow: hidden;
-
-            padding: 36px 38px;
-
-            border: 1px solid #422060;
-            border-radius: 20px;
-
-            background:
-                radial-gradient(circle at 85% 40%,
-                    rgba(128, 43, 214, 0.16),
-                    transparent 35%),
-                #090909;
-
-            margin-bottom: 26px;
-        }
-
-        .hero::after {
-            content: "";
-
-            position: absolute;
-
-            width: 260px;
-            height: 260px;
-
-            right: 80px;
-            top: -100px;
-
-            border: 1px solid rgba(170, 75, 255, 0.13);
-
-            border-radius: 50%;
-        }
-
-        .hero-label {
-            color: #a94cff;
-            font-size: 10px;
-            letter-spacing: 4px;
-            margin-bottom: 14px;
-        }
-
-        .hero h1 {
-            margin: 0 0 12px;
-
-            font-size: 32px;
-            line-height: 1.2;
-
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero p {
-            margin: 0;
-
-            color: #777;
-
-            font-size: 14px;
-            line-height: 1.7;
-
-            max-width: 850px;
-
-            position: relative;
-            z-index: 2;
-        }
-
-        /* =========================================
-           GRID
-        ========================================== */
-
-        .content-grid {
-            display: grid;
-
-            grid-template-columns:
-                minmax(520px, 1.4fr) minmax(390px, 0.85fr);
-
-            gap: 24px;
-        }
-
-        .panel {
-            background: #080808;
+            padding: 10px 16px;
 
             border: 1px solid #292929;
 
-            border-radius: 18px;
+            border-radius: 12px;
 
-            padding: 30px;
+            color: #aaa;
+
+            font-size: 12px;
         }
 
-        .panel-title {
-            font-size: 20px;
-            margin-bottom: 7px;
+        .status-dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #a94cff;
+
+            box-shadow: 0 0 10px #a94cff;
         }
 
-        .panel-subtitle {
-            color: #666;
-            font-size: 13px;
-            margin-bottom: 28px;
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .page-container {
+            padding: 34px 38px 60px;
         }
 
-        /* =========================================
-           FORM
-        ========================================== */
 
-        .form-grid {
-            display: grid;
+        /* =====================================================
+           PAGE HEADER
+        ===================================================== */
 
-            grid-template-columns:
-                1fr 1fr;
-
-            gap: 20px 22px;
-        }
-
-        .form-group {
+        .page-header {
             display: flex;
-            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+
+            gap: 30px;
+
+            margin-bottom: 32px;
         }
 
-        .form-group.full {
-            grid-column: 1 / -1;
+        .page-label {
+            color: #a94cff;
+
+            font-size: 10px;
+
+            letter-spacing: 4px;
+
+            margin-bottom: 12px;
         }
 
-        label {
-            color: #999;
-            font-size: 13px;
-            margin-bottom: 9px;
+        .page-header h1 {
+            margin: 0 0 10px;
+
+            font-size: 34px;
+
+            line-height: 1.2;
         }
 
-        input,
-        select {
+        .page-header p {
+            margin: 0;
 
-            width: 100%;
-            height: 53px;
-
-            background: #111;
-
-            color: #fff;
-
-            border: 1px solid #2b2b2b;
-
-            border-radius: 10px;
-
-            padding: 0 15px;
+            color: #707070;
 
             font-size: 14px;
 
-            outline: none;
+            line-height: 1.6;
         }
 
-        input:focus,
-        select:focus {
 
-            border-color: #8d3ee4;
-
-            box-shadow:
-                0 0 0 2px rgba(141, 62, 228, 0.10);
-        }
-
-        select {
-            cursor: pointer;
-        }
-
-        select option {
-            background: #111;
-            color: #fff;
-        }
-
-        input::placeholder {
-            color: #555;
-        }
-
-        .hint {
-            margin-top: 6px;
-
-            color: #555;
-
-            font-size: 11px;
-        }
-
-        /* =========================================
+        /* =====================================================
            CREATE BUTTON
-        ========================================== */
+        ===================================================== */
 
-        .create-button {
-
-            grid-column: 1 / -1;
-
-            height: 56px;
+        .create-btn {
+            flex-shrink: 0;
 
             border: none;
 
             border-radius: 10px;
 
+            padding: 15px 24px;
+
             background:
                 linear-gradient(100deg,
-                    #7430e9,
-                    #b047f0);
+                    #7832e8,
+                    #b04cf4);
 
-            color: white;
-
-            font-size: 15px;
-
-            font-weight: 700;
-
-            cursor: pointer;
-
-            margin-top: 5px;
-
-            box-shadow:
-                0 12px 30px rgba(125, 48, 230, 0.20);
-
-            transition: 0.2s;
-        }
-
-        .create-button:hover {
-            transform: translateY(-1px);
-
-            box-shadow:
-                0 15px 35px rgba(125, 48, 230, 0.30);
-        }
-
-        .create-button:disabled {
-            opacity: 0.6;
-            cursor: wait;
-            transform: none;
-        }
-
-        /* =========================================
-           MESSAGE
-        ========================================== */
-
-        .message {
-
-            display: none;
-
-            padding: 13px 15px;
-
-            border-radius: 9px;
-
-            font-size: 12px;
-
-            margin-bottom: 18px;
-
-            line-height: 1.5;
-        }
-
-        .message.success {
-
-            display: block;
-
-            background: rgba(34, 197, 94, 0.08);
-
-            border: 1px solid rgba(34, 197, 94, 0.25);
-
-            color: #72df94;
-        }
-
-        .message.error {
-
-            display: block;
-
-            background: rgba(239, 68, 68, 0.08);
-
-            border: 1px solid rgba(239, 68, 68, 0.25);
-
-            color: #ff7b7b;
-        }
-
-        /* =========================================
-           PREVIEW
-        ========================================== */
-
-        .preview-panel {
-            min-height: 610px;
-        }
-
-        .preview-box {
-
-            background: #0d0d0d;
-
-            border: 1px solid #292929;
-
-            border-radius: 13px;
-
-            padding: 21px;
-
-            margin-top: 32px;
-        }
-
-        .preview-label {
-
-            color: #777;
-
-            font-size: 10px;
-
-            font-weight: 700;
-
-            letter-spacing: 2px;
-
-            margin-bottom: 18px;
-        }
-
-        .preview-row {
-
-            display: flex;
-
-            align-items: center;
-            justify-content: space-between;
-
-            min-height: 48px;
-
-            border-bottom: 1px solid #1c1c1c;
-        }
-
-        .preview-row:last-child {
-            border-bottom: none;
-        }
-
-        .preview-row span:first-child {
-            color: #555;
-            font-size: 12px;
-        }
-
-        .preview-row span:last-child {
-            color: #ddd;
-            font-size: 12px;
-            font-weight: 600;
-            text-align: right;
-        }
-
-        /* =========================================
-           INTELLIGENCE CARD
-        ========================================== */
-
-        .intelligence {
-
-            margin-top: 20px;
-
-            padding: 20px;
-
-            border: 1px solid #34204c;
-
-            border-radius: 13px;
-
-            background:
-                linear-gradient(135deg,
-                    rgba(95, 35, 145, 0.10),
-                    rgba(15, 8, 22, 0.50));
-        }
-
-        .intelligence-title {
-
-            color: #b34fff;
+            color: #ffffff;
 
             font-size: 13px;
 
             font-weight: 700;
 
-            margin-bottom: 10px;
+            cursor: pointer;
+
+            text-decoration: none;
+
+            box-shadow:
+                0 12px 28px rgba(130, 50, 230, 0.20);
+
+            transition: 0.2s ease;
         }
 
-        .intelligence p {
+        .create-btn:hover {
+            transform: translateY(-1px);
 
+            box-shadow:
+                0 15px 35px rgba(130, 50, 230, 0.30);
+        }
+
+
+        /* =====================================================
+           STAT CARDS
+        ===================================================== */
+
+        .stats-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            min-height: 120px;
+
+            padding: 24px;
+
+            background: #090909;
+
+            border: 1px solid #252525;
+
+            border-radius: 14px;
+        }
+
+        .stat-label {
+            color: #777;
+
+            font-size: 11px;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 29px;
+
+            font-weight: 700;
+
+            color: #ffffff;
+        }
+
+        .stat-value.purple {
+            color: #b04cff;
+        }
+
+        .stat-value.red {
+            color: #ff3d4f;
+        }
+
+
+        /* =====================================================
+           SEARCH / FILTER
+        ===================================================== */
+
+        .filter-bar {
+            display: grid;
+
+            grid-template-columns: 1fr 180px;
+
+            gap: 15px;
+
+            margin-bottom: 22px;
+        }
+
+        .search-box,
+        .filter-select {
+            height: 50px;
+
+            width: 100%;
+
+            background: #090909;
+
+            color: #ffffff;
+
+            border: 1px solid #272727;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            padding: 0 16px;
+
+            font-size: 13px;
+        }
+
+        .search-box::placeholder {
+            color: #555;
+        }
+
+        .search-box:focus,
+        .filter-select:focus {
+            border-color: #863de0;
+
+            box-shadow:
+                0 0 0 2px rgba(134, 61, 224, 0.10);
+        }
+
+        .filter-select {
+            cursor: pointer;
+        }
+
+        .filter-select option {
+            background: #111;
+            color: #fff;
+        }
+
+
+        /* =====================================================
+           TABLE PANEL
+        ===================================================== */
+
+        .table-panel {
+            background: #080808;
+
+            border: 1px solid #272727;
+
+            border-radius: 16px;
+
+            overflow: hidden;
+        }
+
+        .table-header {
+            min-height: 64px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 24px;
+
+            border-bottom: 1px solid #222;
+        }
+
+        .table-title {
+            font-size: 17px;
+
+            font-weight: 700;
+        }
+
+        .task-count {
             color: #666;
 
             font-size: 12px;
-
-            line-height: 1.7;
-
-            margin: 0;
         }
 
-        /* =========================================
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-wrapper {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            min-width: 1050px;
+
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #0a0a0a;
+        }
+
+        th {
+            padding: 16px 14px;
+
+            text-align: left;
+
+            color: #777;
+
+            font-size: 10px;
+
+            letter-spacing: 1.2px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+
+            border-bottom: 1px solid #222;
+        }
+
+        td {
+            padding: 17px 14px;
+
+            color: #c4c4c4;
+
+            font-size: 12px;
+
+            border-bottom: 1px solid #171717;
+
+            white-space: nowrap;
+        }
+
+        tbody tr:hover {
+            background: #0d0d0d;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        /* =====================================================
+           BADGES
+        ===================================================== */
+
+        .badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-width: 70px;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 10px;
+
+            font-weight: 600;
+        }
+
+        .badge.high {
+            background: rgba(239, 68, 68, 0.10);
+
+            color: #ff6b75;
+
+            border: 1px solid rgba(239, 68, 68, 0.20);
+        }
+
+        .badge.medium {
+            background: rgba(245, 158, 11, 0.10);
+
+            color: #f5b942;
+
+            border: 1px solid rgba(245, 158, 11, 0.20);
+        }
+
+        .badge.low {
+            background: rgba(34, 197, 94, 0.10);
+
+            color: #65d58a;
+
+            border: 1px solid rgba(34, 197, 94, 0.20);
+        }
+
+
+        /* =====================================================
+           ACTION BUTTONS
+        ===================================================== */
+
+        .actions {
+            display: flex;
+
+            gap: 7px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 7px;
+
+            border: 1px solid #292929;
+
+            background: #101010;
+
+            color: #999;
+
+            cursor: pointer;
+
+            font-size: 12px;
+
+            transition: 0.2s;
+        }
+
+        .action-btn:hover {
+            color: #ffffff;
+
+            border-color: #8240c4;
+
+            background: #17101d;
+        }
+
+        .action-btn.delete:hover {
+            color: #ff6872;
+
+            border-color: #7d2930;
+
+            background: #1a0c0d;
+        }
+
+
+        /* =====================================================
+           EMPTY / LOADING
+        ===================================================== */
+
+        .empty-state {
+            min-height: 210px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-direction: column;
+
+            gap: 10px;
+
+            color: #666;
+
+            font-size: 13px;
+        }
+
+        .empty-icon {
+            font-size: 30px;
+
+            color: #6e36a1;
+        }
+
+
+        /* =====================================================
            RESPONSIVE
-        ========================================== */
+        ===================================================== */
 
-        @media (max-width: 1100px) {
+        @media (max-width: 1200px) {
 
-            .content-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .preview-panel {
-                min-height: auto;
+            .stats-grid {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
             }
 
         }
 
-        @media (max-width: 800px) {
+
+        @media (max-width: 900px) {
 
             .main-content {
+                margin-left: 240px;
 
+                width: calc(100% - 240px);
+            }
+
+            .page-container {
+                padding: 25px 20px 50px;
+            }
+
+            .page-header {
+                flex-direction: column;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .main-content {
                 margin-left: 0;
 
                 width: 100%;
             }
 
+            .topbar {
+                padding: 0 18px;
+            }
+
             .page-container {
-
-                padding:
-                    20px 15px;
+                padding: 20px 15px 40px;
             }
 
-            .form-grid {
-
-                grid-template-columns:
-                    1fr;
+            .stats-grid {
+                grid-template-columns: 1fr;
             }
 
-            .form-group.full,
-            .create-button {
-
-                grid-column: auto;
+            .filter-bar {
+                grid-template-columns: 1fr;
             }
 
-            .hero h1 {
-
-                font-size: 26px;
+            .page-header h1 {
+                font-size: 27px;
             }
 
         }
     </style>
-
 </head>
 
 
 <body>
 
-
-    <!-- =========================================
+    <!-- =====================================================
          SIDEBAR
-    ========================================== -->
+    ====================================================== -->
 
     {% include 'partials/sidebar.html' %}
 
 
-
-    <!-- =========================================
+    <!-- =====================================================
          MAIN
-    ========================================== -->
+    ====================================================== -->
 
     <main class="main-content">
 
 
-        <!-- =====================================
-             TOPBAR
-        ====================================== -->
+        <!-- TOPBAR -->
 
         <header class="topbar">
 
             <div class="topbar-title">
-
-                SYNQ / CREATE TASK
-
+                SYNQ / TASK MANAGEMENT
             </div>
-
 
             <div class="topbar-right">
 
-                <div class="topbar-date">
-
-                    Thursday, 10 September 2026
-
+                <div class="status">
+                    <span class="status-dot"></span>
+                    SYNQ Intelligence Active
                 </div>
 
             </div>
@@ -536,1365 +643,777 @@
         </header>
 
 
+        <!-- PAGE -->
 
         <div class="page-container">
 
 
-            <!-- =====================================
-                 HERO
-            ====================================== -->
+            <!-- HEADER -->
 
-            <section class="hero">
+            <section class="page-header">
 
-                <div class="hero-label">
+                <div>
 
-                    S Y N Q · T A S K M A N A G E M E N T
+                    <div class="page-label">
+                        S Y N Q · T A S K M A N A G E M E N T
+                    </div>
+
+                    <h1>
+                        Created Tasks
+                    </h1>
+
+                    <p>
+                        View and manage all tasks created through SYNQ.
+                    </p>
 
                 </div>
 
 
-                <h1>
-
-                    Create a new task.
-
-                </h1>
-
-
-                <p>
-
-                    Enter the task characteristics below.
-                    You can use this information later with
-                    SYNQ's employee prediction engine to find
-                    the most suitable employee.
-
-                </p>
+                <a href="/create-task" class="create-btn">
+                    + Create Task
+                </a>
 
             </section>
 
 
+            <!-- STATS -->
 
-            <!-- =====================================
-                 CONTENT GRID
-            ====================================== -->
+            <section class="stats-grid">
 
-            <div class="content-grid">
+                <div class="stat-card">
 
-
-                <!-- =================================
-                     FORM PANEL
-                ================================== -->
-
-                <section class="panel">
-
-
-                    <div class="panel-title">
-
-                        Task Information
-
+                    <div class="stat-label">
+                        TOTAL TASKS
                     </div>
 
-
-                    <div class="panel-subtitle">
-
-                        Provide the basic characteristics of the task.
-
+                    <div class="stat-value purple" id="totalTasks">
+                        0
                     </div>
 
+                </div>
 
-                    <div id="message" class="message"></div>
 
+                <div class="stat-card">
 
-
-                    <form id="taskForm">
-
-
-                        <div class="form-grid">
-
-
-                            <!-- TASK TYPE -->
-
-                            <div class="form-group">
-
-                                <label for="task_type">
-
-                                    Task Type
-
-                                </label>
-
-
-                                <select id="task_type" name="task_type" required>
-
-                                    <option value="">
-
-                                        Loading task types...
-
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-
-
-                            <!-- PRIORITY -->
-
-                            <div class="form-group">
-
-                                <label for="priority">
-
-                                    Priority
-
-                                </label>
-
-
-                                <select id="priority" name="priority" required>
-
-                                    <option value="">
-
-                                        Loading priorities...
-
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-
-
-                            <!-- DEADLINE -->
-
-                            <div class="form-group">
-
-                                <label for="days_to_deadline">
-
-                                    Days to Deadline
-
-                                </label>
-
-
-                                <input type="number" id="days_to_deadline" name="days_to_deadline" placeholder="e.g. 6"
-                                    min="0" step="1" required>
-
-                            </div>
-
-
-
-                            <!-- VOLUME -->
-
-                            <div class="form-group">
-
-                                <label for="volume_metric">
-
-                                    Volume Metric
-
-                                </label>
-
-
-                                <input type="number" id="volume_metric" name="volume_metric" placeholder="e.g. 0.14"
-                                    min="0" step="0.01" required>
-
-                            </div>
-
-
-
-                            <!-- DIFFICULTY -->
-
-                            <div class="form-group">
-
-                                <label for="perceived_difficulty">
-
-                                    Perceived Difficulty
-
-                                </label>
-
-
-                                <select id="perceived_difficulty" name="perceived_difficulty" required>
-
-                                    <option value="">
-
-                                        Select difficulty
-
-                                    </option>
-
-                                    <option value="Low">
-
-                                        Low
-
-                                    </option>
-
-                                    <option value="Medium">
-
-                                        Medium
-
-                                    </option>
-
-                                    <option value="High">
-
-                                        High
-
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-
-
-                            <!-- ERROR RISK -->
-
-                            <div class="form-group">
-
-                                <label for="error_risk">
-
-                                    Error Risk
-
-                                </label>
-
-
-                                <select id="error_risk" name="error_risk" required>
-
-                                    <option value="">
-
-                                        Select risk
-
-                                    </option>
-
-                                    <option value="0">
-
-                                        0 — Minimal
-
-                                    </option>
-
-                                    <option value="1">
-
-                                        1 — Very Low
-
-                                    </option>
-
-                                    <option value="2">
-
-                                        2 — Low
-
-                                    </option>
-
-                                    <option value="3">
-
-                                        3 — Moderate
-
-                                    </option>
-
-                                    <option value="4">
-
-                                        4 — High
-
-                                    </option>
-
-                                    <option value="5">
-
-                                        5 — Critical
-
-                                    </option>
-
-                                </select>
-
-                            </div>
-
-
-
-                            <!-- DEPENDENCY -->
-
-                            <div class="form-group">
-
-                                <label for="dependency_score">
-
-                                    Dependency Score
-
-                                </label>
-
-
-                                <input type="number" id="dependency_score" name="dependency_score"
-                                    placeholder="0.00 – 1.00" min="0" max="1" step="0.01" required>
-
-
-                                <div class="hint">
-
-                                    Enter a value between 0 and 1.
-
-                                </div>
-
-                            </div>
-
-
-
-                            <!-- DATE -->
-
-                            <div class="form-group">
-
-                                <label for="task_date">
-
-                                    Task Date
-
-                                </label>
-
-
-                                <input type="date" id="task_date" name="task_date" required>
-
-                            </div>
-
-
-
-                            <!-- BUTTON -->
-
-                            <button type="submit" class="create-button" id="createButton">
-
-                                CREATE TASK
-
-                            </button>
-
-
-                        </div>
-
-                    </form>
-
-                </section>
-
-
-
-                <!-- =================================
-                     PREVIEW PANEL
-                ================================== -->
-
-                <section class="panel preview-panel">
-
-
-                    <div class="panel-title">
-
-                        Task Preview
-
+                    <div class="stat-label">
+                        HIGH PRIORITY
                     </div>
 
-
-                    <div class="panel-subtitle">
-
-                        Review the task before creating it.
-
+                    <div class="stat-value" id="highPriority">
+                        0
                     </div>
 
+                </div>
 
 
-                    <div class="preview-box">
+                <div class="stat-card">
 
-
-                        <div class="preview-label">
-
-                            TASK DETAILS
-
-                        </div>
-
-
-
-                        <div class="preview-row">
-
-                            <span>
-                                Task Type
-                            </span>
-
-                            <span id="previewTaskType">
-                                —
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="preview-row">
-
-                            <span>
-                                Priority
-                            </span>
-
-                            <span id="previewPriority">
-                                —
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="preview-row">
-
-                            <span>
-                                Deadline
-                            </span>
-
-                            <span id="previewDeadline">
-                                —
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="preview-row">
-
-                            <span>
-                                Volume
-                            </span>
-
-                            <span id="previewVolume">
-                                —
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="preview-row">
-
-                            <span>
-                                Difficulty
-                            </span>
-
-                            <span id="previewDifficulty">
-                                —
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="preview-row">
-
-                            <span>
-                                Error Risk
-                            </span>
-
-                            <span id="previewRisk">
-                                —
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="preview-row">
-
-                            <span>
-                                Dependency
-                            </span>
-
-                            <span id="previewDependency">
-                                —
-                            </span>
-
-                        </div>
-
-
-
-                        <div class="preview-row">
-
-                            <span>
-                                Task Date
-                            </span>
-
-                            <span id="previewDate">
-                                —
-                            </span>
-
-                        </div>
-
-
+                    <div class="stat-label">
+                        AVG DEADLINE
                     </div>
 
-
-
-                    <div class="intelligence">
-
-
-                        <div class="intelligence-title">
-
-                            SYNQ Intelligence
-
-                        </div>
-
-
-                        <p>
-
-                            Task characteristics can be used
-                            by the prediction engine to evaluate
-                            employee suitability and expected
-                            performance.
-
-                        </p>
-
+                    <div class="stat-value" id="avgDeadline">
+                        0
                     </div>
 
+                </div>
 
-                </section>
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+                        AVG ERROR RISK
+                    </div>
+
+                    <div class="stat-value red" id="avgRisk">
+                        0
+                    </div>
+
+                </div>
+
+            </section>
 
 
-            </div>
+            <!-- SEARCH -->
+
+            <section class="filter-bar">
+
+                <input type="text" id="searchInput" class="search-box" placeholder="Search task ID or task type...">
+
+
+                <select id="priorityFilter" class="filter-select">
+
+                    <option value="">
+                        All Priorities
+                    </option>
+
+                    <option value="Low">
+                        Low
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="High">
+                        High
+                    </option>
+
+                </select>
+
+            </section>
+
+
+            <!-- TABLE -->
+
+            <section class="table-panel">
+
+
+                <div class="table-header">
+
+                    <div class="table-title">
+                        Task History
+                    </div>
+
+                    <div class="task-count" id="taskCount">
+                        0 tasks
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Task ID</th>
+
+                                <th>Task Type</th>
+
+                                <th>Priority</th>
+
+                                <th>Deadline</th>
+
+                                <th>Volume</th>
+
+                                <th>Difficulty</th>
+
+                                <th>Error Risk</th>
+
+                                <th>Dependency</th>
+
+                                <th>Date</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="taskTableBody">
+
+                            <tr>
+
+                                <td colspan="10">
+
+                                    <div class="empty-state">
+
+                                        <div>
+                                            Loading tasks...
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
 
         </div>
 
     </main>
 
 
-
-    <!-- =========================================
+    <!-- =====================================================
          JAVASCRIPT
-    ========================================== -->
+    ====================================================== -->
 
     <script>
 
-        /* =========================================
-           RISK NAMES
-        ========================================== */
-
-        const riskNames = {
-
-            0: "Minimal",
-            1: "Very Low",
-            2: "Low",
-            3: "Moderate",
-            4: "High",
-            5: "Critical"
-
-        };
+        let allTasks = [];
 
 
-        /* =========================================
-           LOAD TASK OPTIONS
-        ========================================== */
+        /* =====================================================
+           LOAD TASKS
+        ===================================================== */
 
-        async function loadTaskOptions() {
+        async function loadTasks() {
 
-            const taskType =
-                document.getElementById(
-                    "task_type"
+            const tableBody =
+                document.getElementById("taskTableBody");
+
+            try {
+
+                const response =
+                    await fetch("/api/tasks");
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Unable to load tasks"
+                    );
+
+                }
+
+
+                allTasks =
+                    Array.isArray(data)
+                        ? data
+                        : (
+                            data.tasks ||
+                            data.data ||
+                            []
+                        );
+
+
+                updateStats();
+
+                renderTasks();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Task loading error:",
+                    error
                 );
+
+
+                tableBody.innerHTML = `
+
+                    <tr>
+
+                        <td colspan="10">
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+                                    ⚠
+                                </div>
+
+                                <div>
+                                    Failed to load tasks.
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+
+        }
+
+
+        /* =====================================================
+           STATS
+        ====================================================== */
+
+        function updateStats() {
+
+            const total =
+                allTasks.length;
+
+
+            const high =
+                allTasks.filter(
+                    task =>
+                        String(
+                            task.priority || ""
+                        ).toLowerCase()
+                        === "high"
+                ).length;
+
+
+            const deadlines =
+                allTasks
+                    .map(task =>
+                        Number(
+                            task.days_to_deadline
+                        )
+                    )
+                    .filter(
+                        value =>
+                            !isNaN(value)
+                    );
+
+
+            const risks =
+                allTasks
+                    .map(task =>
+                        Number(
+                            task.error_risk
+                        )
+                    )
+                    .filter(
+                        value =>
+                            !isNaN(value)
+                    );
+
+
+            const avgDeadline =
+                deadlines.length
+                    ? (
+                        deadlines.reduce(
+                            (a, b) => a + b,
+                            0
+                        )
+                        / deadlines.length
+                    ).toFixed(1)
+                    : 0;
+
+
+            const avgRisk =
+                risks.length
+                    ? (
+                        risks.reduce(
+                            (a, b) => a + b,
+                            0
+                        )
+                        / risks.length
+                    ).toFixed(2)
+                    : 0;
+
+
+            document.getElementById(
+                "totalTasks"
+            ).textContent =
+                total.toLocaleString();
+
+
+            document.getElementById(
+                "highPriority"
+            ).textContent =
+                high.toLocaleString();
+
+
+            document.getElementById(
+                "avgDeadline"
+            ).textContent =
+                avgDeadline;
+
+
+            document.getElementById(
+                "avgRisk"
+            ).textContent =
+                avgRisk;
+
+
+            document.getElementById(
+                "taskCount"
+            ).textContent =
+                `${total} task${total === 1 ? "" : "s"}`;
+
+        }
+
+
+        /* =====================================================
+           RENDER TASKS
+        ====================================================== */
+
+        function renderTasks() {
+
+            const tableBody =
+                document.getElementById(
+                    "taskTableBody"
+                );
+
+
+            const search =
+                document.getElementById(
+                    "searchInput"
+                ).value
+                    .toLowerCase()
+                    .trim();
+
 
             const priority =
                 document.getElementById(
-                    "priority"
+                    "priorityFilter"
+                ).value
+                    .toLowerCase();
+
+
+            const filtered =
+                allTasks.filter(
+                    task => {
+
+                        const taskId =
+                            String(
+                                task.task_id ||
+                                task.id ||
+                                ""
+                            ).toLowerCase();
+
+
+                        const taskType =
+                            String(
+                                task.task_type ||
+                                ""
+                            ).toLowerCase();
+
+
+                        const taskPriority =
+                            String(
+                                task.priority ||
+                                ""
+                            ).toLowerCase();
+
+
+                        const matchesSearch =
+                            !search ||
+                            taskId.includes(search) ||
+                            taskType.includes(search);
+
+
+                        const matchesPriority =
+                            !priority ||
+                            taskPriority === priority;
+
+
+                        return (
+                            matchesSearch &&
+                            matchesPriority
+                        );
+
+                    }
                 );
+
+
+            document.getElementById(
+                "taskCount"
+            ).textContent =
+                `${filtered.length} task${filtered.length === 1 ? "" : "s"}`;
+
+
+            if (!filtered.length) {
+
+                tableBody.innerHTML = `
+
+                    <tr>
+
+                        <td colspan="10">
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+                                    ◇
+                                </div>
+
+                                <div>
+                                    No tasks found.
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+            tableBody.innerHTML =
+                filtered.map(
+                    task => {
+
+                        const id =
+                            task.task_id ||
+                            task.id ||
+                            "—";
+
+
+                        const type =
+                            task.task_type ||
+                            "—";
+
+
+                        const priorityValue =
+                            task.priority ||
+                            "—";
+
+
+                        const priorityClass =
+                            String(
+                                priorityValue
+                            ).toLowerCase();
+
+
+                        const deadline =
+                            task.days_to_deadline ??
+                            "—";
+
+
+                        const volume =
+                            task.volume_metric ??
+                            "—";
+
+
+                        const difficulty =
+                            task.perceived_difficulty ||
+                            "—";
+
+
+                        const risk =
+                            task.error_risk ??
+                            "—";
+
+
+                        const dependency =
+                            task.dependency_score ??
+                            "—";
+
+
+                        const date =
+                            task.task_date ||
+                            task.given_date ||
+                            task.task_given_date ||
+                            "—";
+
+
+                        return `
+
+                            <tr>
+
+                                <td>
+                                    <strong>
+                                        ${escapeHtml(id)}
+                                    </strong>
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(type)}
+                                </td>
+
+                                <td>
+
+                                    <span class="badge ${priorityClass}">
+
+                                        ${escapeHtml(
+                            priorityValue
+                        )}
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                            deadline
+                        )} day(s)
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                            volume
+                        )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                            difficulty
+                        )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                            risk
+                        )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                            dependency
+                        )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                            date
+                        )}
+                                </td>
+
+                                <td>
+
+                                    <div class="actions">
+
+                                        <button
+                                            class="action-btn delete"
+                                            onclick="deleteTask('${escapeJs(id)}')"
+                                            title="Delete"
+                                        >
+                                            ×
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        `;
+
+                    }
+                ).join("");
+
+        }
+
+
+        /* =====================================================
+           DELETE TASK
+        ====================================================== */
+
+        async function deleteTask(taskId) {
+
+            if (
+                !confirm(
+                    `Delete task ${taskId}?`
+                )
+            ) {
+                return;
+            }
 
 
             try {
 
                 const response =
                     await fetch(
-                        "/api/task-options"
+                        `/api/tasks/${encodeURIComponent(taskId)}`,
+                        {
+                            method: "DELETE"
+                        }
                     );
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        "Unable to load task options"
-                    );
-
-                }
 
 
                 const data =
                     await response.json();
 
 
-                /*
-                    Backend response:
+                if (!response.ok) {
 
-                    {
-                        success: true,
-                        options: {
-                            task_types: [],
-                            priorities: []
-                        }
-                    }
-                */
-
-
-                const options =
-                    data.options || data;
-
-
-                const taskTypes =
-                    Array.isArray(
-                        options.task_types
-                    )
-                        ? options.task_types
-                        : [];
-
-
-                const priorities =
-                    Array.isArray(
-                        options.priorities
-                    )
-                        ? options.priorities
-                        : [];
-
-
-                /* =====================================
-                   TASK TYPE
-                ====================================== */
-
-                taskType.innerHTML =
-                    '<option value="">Select task type</option>';
-
-
-                taskTypes.forEach(
-                    function (item) {
-
-                        const value =
-                            String(item).trim();
-
-
-                        if (!value) {
-
-                            return;
-
-                        }
-
-
-                        const option =
-                            document.createElement(
-                                "option"
-                            );
-
-
-                        option.value =
-                            value;
-
-
-                        option.textContent =
-                            value;
-
-
-                        taskType.appendChild(
-                            option
-                        );
-
-                    }
-                );
-
-
-                /* =====================================
-                   PRIORITY
-                ====================================== */
-
-                priority.innerHTML =
-                    '<option value="">Select priority</option>';
-
-
-                priorities.forEach(
-                    function (item) {
-
-                        const value =
-                            String(item).trim();
-
-
-                        if (!value) {
-
-                            return;
-
-                        }
-
-
-                        const option =
-                            document.createElement(
-                                "option"
-                            );
-
-
-                        option.value =
-                            value;
-
-
-                        option.textContent =
-                            value;
-
-
-                        priority.appendChild(
-                            option
-                        );
-
-                    }
-                );
-
-
-                /* =====================================
-                   DEFAULT TASK TYPE
-                ====================================== */
-
-                if (
-                    taskTypes.length > 0
-                ) {
-
-                    taskType.value =
-                        String(
-                            taskTypes[0]
-                        ).trim();
+                    throw new Error(
+                        data.error ||
+                        data.message ||
+                        "Unable to delete task"
+                    );
 
                 }
 
 
-                /* =====================================
-                   DEFAULT PRIORITY
-                ====================================== */
-
-                const mediumPriority =
-                    Array.from(
-                        priority.options
-                    ).find(
-                        function (option) {
-
-                            return (
-                                option.value
-                                    .toLowerCase()
-                                    .trim()
-                                ===
-                                "medium"
-                            );
-
-                        }
+                allTasks =
+                    allTasks.filter(
+                        task =>
+                            String(
+                                task.task_id ||
+                                task.id
+                            ) !==
+                            String(taskId)
                     );
 
 
-                if (mediumPriority) {
+                updateStats();
 
-                    priority.value =
-                        mediumPriority.value;
-
-                }
-                else if (
-                    priorities.length > 0
-                ) {
-
-                    priority.value =
-                        String(
-                            priorities[0]
-                        ).trim();
-
-                }
+                renderTasks();
 
 
-                console.log(
-                    "SYNQ Task Types:",
-                    taskTypes
+            } catch (error) {
+
+                alert(
+                    error.message
                 );
-
-
-                console.log(
-                    "SYNQ Priorities:",
-                    priorities
-                );
-
-
-                updatePreview();
-
-            }
-
-
-            catch (error) {
-
-                console.error(
-                    "Task options error:",
-                    error
-                );
-
-
-                taskType.innerHTML =
-                    '<option value="">Unable to load task types</option>';
-
-
-                priority.innerHTML =
-                    '<option value="">Unable to load priorities</option>';
 
             }
 
         }
 
 
-        /* =========================================
-           UPDATE PREVIEW
-        ========================================== */
+        /* =====================================================
+           SEARCH
+        ====================================================== */
 
-        function updatePreview() {
-
-            const taskType =
-                document.getElementById(
-                    "task_type"
-                ).value;
-
-
-            const priority =
-                document.getElementById(
-                    "priority"
-                ).value;
-
-
-            const deadline =
-                document.getElementById(
-                    "days_to_deadline"
-                ).value;
-
-
-            const volume =
-                document.getElementById(
-                    "volume_metric"
-                ).value;
-
-
-            const difficulty =
-                document.getElementById(
-                    "perceived_difficulty"
-                ).value;
-
-
-            const risk =
-                document.getElementById(
-                    "error_risk"
-                ).value;
-
-
-            const dependency =
-                document.getElementById(
-                    "dependency_score"
-                ).value;
-
-
-            const date =
-                document.getElementById(
-                    "task_date"
-                ).value;
-
-
-            document.getElementById(
-                "previewTaskType"
-            ).textContent =
-                taskType || "—";
-
-
-            document.getElementById(
-                "previewPriority"
-            ).textContent =
-                priority || "—";
-
-
-            document.getElementById(
-                "previewDeadline"
-            ).textContent =
-                deadline
-                    ? `${deadline} day(s)`
-                    : "—";
-
-
-            document.getElementById(
-                "previewVolume"
-            ).textContent =
-                volume || "—";
-
-
-            document.getElementById(
-                "previewDifficulty"
-            ).textContent =
-                difficulty || "—";
-
-
-            document.getElementById(
-                "previewRisk"
-            ).textContent =
-                risk !== ""
-                    ? `${risk} — ${riskNames[risk]}`
-                    : "—";
-
-
-            document.getElementById(
-                "previewDependency"
-            ).textContent =
-                dependency || "—";
-
-
-            document.getElementById(
-                "previewDate"
-            ).textContent =
-                date || "—";
-
-        }
-
-
-        /* =========================================
-           FORM LISTENERS
-        ========================================== */
-
-        const fields = [
-
-            "task_type",
-            "priority",
-            "days_to_deadline",
-            "volume_metric",
-            "perceived_difficulty",
-            "error_risk",
-            "dependency_score",
-            "task_date"
-
-        ];
-
-
-        fields.forEach(
-            function (id) {
-
-                const element =
-                    document.getElementById(id);
-
-
-                if (!element) {
-
-                    return;
-
-                }
-
-
-                element.addEventListener(
-                    "input",
-                    updatePreview
-                );
-
-
-                element.addEventListener(
-                    "change",
-                    updatePreview
-                );
-
-            }
+        document.getElementById(
+            "searchInput"
+        ).addEventListener(
+            "input",
+            renderTasks
         );
 
 
-        /* =========================================
-           CREATE TASK
-        ========================================== */
-
-        document
-            .getElementById(
-                "taskForm"
-            )
-            .addEventListener(
-                "submit",
-                async function (event) {
-
-                    event.preventDefault();
-
-
-                    const button =
-                        document.getElementById(
-                            "createButton"
-                        );
-
-
-                    const message =
-                        document.getElementById(
-                            "message"
-                        );
-
-
-                    /* =============================
-                       VALUES
-                    ============================== */
-
-                    const taskType =
-                        document.getElementById(
-                            "task_type"
-                        ).value;
-
-
-                    const priority =
-                        document.getElementById(
-                            "priority"
-                        ).value;
-
-
-                    const daysToDeadline =
-                        Number(
-                            document.getElementById(
-                                "days_to_deadline"
-                            ).value
-                        );
-
-
-                    const volumeMetric =
-                        Number(
-                            document.getElementById(
-                                "volume_metric"
-                            ).value
-                        );
-
-
-                    const difficulty =
-                        document.getElementById(
-                            "perceived_difficulty"
-                        ).value;
-
-
-                    const errorRisk =
-                        Number(
-                            document.getElementById(
-                                "error_risk"
-                            ).value
-                        );
-
-
-                    const dependency =
-                        Number(
-                            document.getElementById(
-                                "dependency_score"
-                            ).value
-                        );
-
-
-                    const taskDate =
-                        document.getElementById(
-                            "task_date"
-                        ).value;
-
-
-                    /* =============================
-                       VALIDATION
-                    ============================== */
-
-                    if (!taskType) {
-
-                        message.className =
-                            "message error";
-
-                        message.textContent =
-                            "Please select a task type.";
-
-                        return;
-
-                    }
-
-
-                    if (!priority) {
-
-                        message.className =
-                            "message error";
-
-                        message.textContent =
-                            "Please select a priority.";
-
-                        return;
-
-                    }
-
-
-                    if (
-                        isNaN(daysToDeadline)
-                        ||
-                        daysToDeadline < 0
-                    ) {
-
-                        message.className =
-                            "message error";
-
-                        message.textContent =
-                            "Please enter a valid deadline.";
-
-                        return;
-
-                    }
-
-
-                    if (
-                        isNaN(volumeMetric)
-                        ||
-                        volumeMetric < 0
-                    ) {
-
-                        message.className =
-                            "message error";
-
-                        message.textContent =
-                            "Please enter a valid volume metric.";
-
-                        return;
-
-                    }
-
-
-                    if (!difficulty) {
-
-                        message.className =
-                            "message error";
-
-                        message.textContent =
-                            "Please select difficulty.";
-
-                        return;
-
-                    }
-
-
-                    if (
-                        isNaN(errorRisk)
-                        ||
-                        errorRisk < 0
-                        ||
-                        errorRisk > 5
-                    ) {
-
-                        message.className =
-                            "message error";
-
-                        message.textContent =
-                            "Please select a valid error risk.";
-
-                        return;
-
-                    }
-
-
-                    if (
-                        isNaN(dependency)
-                        ||
-                        dependency < 0
-                        ||
-                        dependency > 1
-                    ) {
-
-                        message.className =
-                            "message error";
-
-                        message.textContent =
-                            "Dependency score must be between 0 and 1.";
-
-                        return;
-
-                    }
-
-
-                    if (!taskDate) {
-
-                        message.className =
-                            "message error";
-
-                        message.textContent =
-                            "Please select a task date.";
-
-                        return;
-
-                    }
-
-
-                    /* =============================
-                       PAYLOAD
-                    ============================== */
-
-                    const payload = {
-
-                        task_type:
-                            taskType,
-
-                        priority:
-                            priority,
-
-                        days_to_deadline:
-                            daysToDeadline,
-
-                        volume_metric:
-                            volumeMetric,
-
-                        perceived_difficulty:
-                            difficulty,
-
-                        error_risk:
-                            errorRisk,
-
-                        dependency_score:
-                            dependency,
-
-                        task_date:
-                            taskDate
-
-                    };
-
-
-                    /* =============================
-                       LOADING
-                    ============================== */
-
-                    button.disabled =
-                        true;
-
-
-                    button.textContent =
-                        "CREATING...";
-
-
-                    message.className =
-                        "message";
-
-
-                    message.textContent =
-                        "";
-
-
-                    try {
-
-
-                        const response =
-                            await fetch(
-                                "/create-task",
-                                {
-
-                                    method:
-                                        "POST",
-
-                                    headers: {
-
-                                        "Content-Type":
-                                            "application/json"
-
-                                    },
-
-                                    body:
-                                        JSON.stringify(
-                                            payload
-                                        )
-
-                                }
-                            );
-
-
-                        const data =
-                            await response.json();
-
-
-                        if (!response.ok) {
-
-                            throw new Error(
-                                data.message
-                                ||
-                                data.msg
-                                ||
-                                data.error
-                                ||
-                                "Unable to create task."
-                            );
-
-                        }
-
-
-                        /* =========================
-                           SUCCESS
-                        ========================== */
-
-                        message.className =
-                            "message success";
-
-
-                        message.textContent =
-                            data.message
-                            ||
-                            "Task created successfully.";
-
-
-                        updatePreview();
-
-                    }
-
-
-                    catch (error) {
-
-                        console.error(
-                            "Create task error:",
-                            error
-                        );
-
-
-                        message.className =
-                            "message error";
-
-
-                        message.textContent =
-                            error.message
-                            ||
-                            "Unable to connect to server.";
-
-                    }
-
-
-                    finally {
-
-                        button.disabled =
-                            false;
-
-
-                        button.textContent =
-                            "CREATE TASK";
-
-                    }
-
-                }
-            );
-
-
-        /* =========================================
-           DEFAULT DATE
-        ========================================== */
-
-        const dateInput =
-            document.getElementById(
-                "task_date"
-            );
-
-
-        if (
-            dateInput &&
-            !dateInput.value
-        ) {
-
-            const today =
-                new Date();
-
-
-            const year =
-                today.getFullYear();
-
-
-            const month =
-                String(
-                    today.getMonth() + 1
-                ).padStart(
-                    2,
-                    "0"
-                );
-
-
-            const day =
-                String(
-                    today.getDate()
-                ).padStart(
-                    2,
-                    "0"
-                );
-
-
-            dateInput.value =
-                `${year}-${month}-${day}`;
+        document.getElementById(
+            "priorityFilter"
+        ).addEventListener(
+            "change",
+            renderTasks
+        );
+
+
+        /* =====================================================
+           HTML ESCAPE
+        ====================================================== */
+
+        function escapeHtml(value) {
+
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#039;");
 
         }
 
 
-        /* =========================================
+        function escapeJs(value) {
+
+            return String(value)
+                .replaceAll("\\", "\\\\")
+                .replaceAll("'", "\\'");
+
+        }
+
+
+        /* =====================================================
            INITIALIZE
-        ========================================== */
+        ====================================================== */
 
-        loadTaskOptions();
-
-        updatePreview();
+        loadTasks();
 
     </script>
-
 
 </body>
 

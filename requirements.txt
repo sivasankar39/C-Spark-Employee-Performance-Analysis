@@ -7,3 +7,4 @@ flask-cors==6.0.5
 flask-sqlalchemy==3.1.1
 werkzeug==3.1.8
 flask-jwt-extended==4.7.4
+streamlit

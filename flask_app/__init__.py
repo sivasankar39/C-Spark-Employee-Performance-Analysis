@@ -18,10 +18,17 @@ def create_app():
     )
 
     # -----------------------------------------
+    # FLASK SESSION SECRET KEY
+    # -----------------------------------------
+
+    app.secret_key = "synq-secret-key-2026"
+
+    # -----------------------------------------
     # CONFIGURATION
     # -----------------------------------------
 
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///c_spark.db"
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # JWT secret key
@@ -42,6 +49,7 @@ def create_app():
     # -----------------------------------------
 
     with app.app_context():
+
         db.create_all()
 
     # -----------------------------------------

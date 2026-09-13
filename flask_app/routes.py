@@ -1,58 +1,42 @@
-from flask import render_template, request, jsonify
-import os
-import csv
+from flask import request, jsonify, redirect, session, render_template
 
 from flask_jwt_extended import (
     create_access_token,
     jwt_required
 )
 
-from werkzeug.security import (
-    generate_password_hash,
-    check_password_hash
-)
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from .database import db, User
+from .data_service import DATA_FILE, get_task_options, predict_employee
 
-from .data_service import (
-    predict_employee,
-    get_task_options,
-    DATA_FILE
-)
-
-
-# =========================================================
-# REGISTER ALL ROUTES
-# =========================================================
 
 def register_routes(app):
 
-    # =====================================================
-    # INSIGHTS PAGE
-    # =====================================================
-
-    @app.route("/insights")
-    def insights_page():
-        return render_template("insights.html")
-
-
-    # =====================================================
-    # LOGIN PAGE
-    # =====================================================
-
     @app.route("/")
-    def login_page():
+    def home():
         return render_template("login.html")
-
-
-    # =====================================================
-    # REGISTER PAGE
-    # =====================================================
 
     @app.route("/register")
     def register():
         return render_template("register.html")
 
+   
+
+
+    @app.route("/logout")
+    def logout():
+
+        session.clear()
+
+        return redirect("/")
+
+    @app.route("/insights")
+    def insights():
+        return render_template("insights.html")
+
+
+    # other routes...
 
     # =====================================================
     # DASHBOARD PAGE
@@ -864,12 +848,12 @@ def register_routes(app):
 
             if (
                 dependency_score < 0
-                or dependency_score > 1
+                or dependency_score > 5
             ):
                 return jsonify({
                     "success": False,
                     "error":
-                        "Dependency score must be between 0 and 1"
+                        "Dependency score must be between 0 and 5"
                 }), 400
 
             if (
@@ -1445,7 +1429,7 @@ def register_routes(app):
                         return jsonify({
                             "success": False,
                             "error":
-                                "Dependency score must be between 0 and 1"
+                                "Dependency score must be between 0 and 5"
                         }), 400
 
                     task["dependency_score"] = value
@@ -1886,103 +1870,73 @@ def register_routes(app):
                 "error": str(e)
             }), 500
 
-
     # =====================================================
     # LOGIN API
     # =====================================================
 
-    @app.route(
-        "/api/login",
-        methods=["POST"]
-    )
+    @app.route("/api/login", methods=["POST"])
     def login_api():
 
         try:
-
             data = request.get_json()
 
             if not data:
-
                 return jsonify({
                     "success": False,
-                    "error":
-                        "No login data received"
+                    "error": "No login data received"
                 }), 400
 
-            username = data.get(
-                "username"
-            )
-
-            password = data.get(
-                "password"
-            )
-
-            # =================================================
-            # VALIDATION
-            # =================================================
+            username = data.get("username")
+            password = data.get("password")
 
             if not username or not password:
-
                 return jsonify({
                     "success": False,
-                    "error":
-                        "Username and password are required"
+                    "error": "Username and password are required"
                 }), 400
-
-            # =================================================
-            # FIND USER
-            # =================================================
 
             user = User.query.filter_by(
                 username=username
             ).first()
 
             if not user:
-
                 return jsonify({
                     "success": False,
-                    "error":
-                        "Invalid username or password"
+                    "error": "Invalid username or password"
                 }), 401
-
-            # =================================================
-            # CHECK PASSWORD
-            # =================================================
 
             if not check_password_hash(
                 user.password_hash,
                 password
             ):
-
                 return jsonify({
                     "success": False,
-                    "error":
-                        "Invalid username or password"
+                    "error": "Invalid username or password"
                 }), 401
 
-            # =================================================
-            # CREATE JWT
-            # =================================================
-
             token = create_access_token(
-                identity=str(
-                    user.id
-                )
+                identity=str(user.id)
             )
+
+            session["user_id"] = user.id
+            session["username"] = user.username
+            session["role"] = user.role
 
             return jsonify({
                 "success": True,
+                "message": "Login successful",
                 "token": token,
                 "username": user.username,
                 "role": user.role
             })
 
         except Exception as e:
-
             return jsonify({
                 "success": False,
                 "error": str(e)
             }), 500
+
+
 
 
     # =====================================================

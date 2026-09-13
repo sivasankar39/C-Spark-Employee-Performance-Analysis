@@ -2,30 +2,30 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>SYNQ - Predict Employee</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
-        /* =====================================================
-           RESET
-        ===================================================== */
-
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             font-family: Arial, Helvetica, sans-serif;
             background: #050505;
-            color: #ffffff;
+            color: #fff;
             min-height: 100vh;
         }
 
@@ -34,22 +34,27 @@
             color: inherit;
         }
 
-
         /* =====================================================
-           MAIN
+           MAIN LAYOUT
         ===================================================== */
 
+        .app {
+            width: 100%;
+            min-width: 0;
+        }
+
         .main {
-            margin-left: 260px;
-            width: calc(100% - 260px);
+            margin-left: 300px;
+            width: calc(100% - 300px);
             min-height: 100vh;
+            min-width: 0;
+
             background:
                 radial-gradient(circle at 80% 5%,
                     rgba(106, 35, 172, 0.07),
                     transparent 22%),
                 #050505;
         }
-
 
         /* =====================================================
            TOPBAR
@@ -58,40 +63,55 @@
         .topbar {
             height: 70px;
             border-bottom: 1px solid #222;
+
             display: flex;
             align-items: center;
+
             padding: 0 38px;
             gap: 28px;
+
+            min-width: 0;
         }
 
         .menu-button {
             color: #a648ff;
             font-size: 25px;
+            flex-shrink: 0;
         }
 
         .search {
-            width: 535px;
+            width: min(535px, 45vw);
             height: 48px;
+
             border: 1px solid #292929;
             background: #0b0b0b;
             border-radius: 11px;
+
             display: flex;
             align-items: center;
+
             padding: 0 16px;
             gap: 12px;
+
+            min-width: 0;
         }
 
         .search-icon {
             color: #777;
             font-size: 15px;
+            flex-shrink: 0;
         }
 
         .search input {
             flex: 1;
+            min-width: 0;
+
             border: none;
             outline: none;
+
             background: transparent;
-            color: #ffffff;
+            color: #fff;
+
             font-size: 14px;
         }
 
@@ -101,9 +121,12 @@
 
         .top-right {
             margin-left: auto;
+
             display: flex;
             align-items: center;
             gap: 25px;
+
+            min-width: 0;
         }
 
         .notification {
@@ -114,8 +137,8 @@
         .date {
             color: #aaa;
             font-size: 14px;
+            white-space: nowrap;
         }
-
 
         /* =====================================================
            PAGE
@@ -123,8 +146,9 @@
 
         .page {
             padding: 31px 39px 50px;
+            width: 100%;
+            min-width: 0;
         }
-
 
         /* =====================================================
            HERO
@@ -133,8 +157,10 @@
         .hero {
             border: 1px solid #4b2770;
             border-radius: 20px;
+
             position: relative;
             overflow: hidden;
+
             padding: 29px 36px 32px;
 
             background:
@@ -144,10 +170,14 @@
                 #080808;
 
             margin-bottom: 24px;
+
+            width: 100%;
+            min-width: 0;
         }
 
         .hero::after {
             content: "";
+
             position: absolute;
 
             width: 235px;
@@ -171,6 +201,7 @@
             font-size: 34px;
             line-height: 1.2;
             margin-bottom: 13px;
+
             position: relative;
             z-index: 2;
         }
@@ -183,11 +214,12 @@
             color: #777;
             font-size: 14px;
             line-height: 1.7;
+
             max-width: 800px;
+
             position: relative;
             z-index: 2;
         }
-
 
         /* =====================================================
            CONTENT GRID
@@ -196,12 +228,24 @@
         .content-grid {
             display: grid;
 
+            /*
+             IMPORTANT:
+             minmax(0, ...) prevents the panels from
+             overflowing/cutting outside the screen.
+            */
+
             grid-template-columns:
-                minmax(500px, 1.55fr) minmax(390px, 0.90fr);
+                minmax(0, 1.55fr) minmax(0, 0.90fr);
 
             gap: 24px;
+
+            width: 100%;
+            min-width: 0;
         }
 
+        .content-grid>* {
+            min-width: 0;
+        }
 
         /* =====================================================
            PANEL
@@ -211,7 +255,11 @@
             background: #080808;
             border: 1px solid #282828;
             border-radius: 18px;
+
             padding: 29px;
+
+            width: 100%;
+            min-width: 0;
         }
 
         .panel-header {
@@ -228,20 +276,26 @@
             font-size: 13px;
         }
 
-
         /* =====================================================
            FORM
         ===================================================== */
 
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+
+            grid-template-columns:
+                minmax(0, 1fr) minmax(0, 1fr);
+
             gap: 19px 22px;
+
+            width: 100%;
+            min-width: 0;
         }
 
         .form-group {
             display: flex;
             flex-direction: column;
+            min-width: 0;
         }
 
         label {
@@ -252,12 +306,13 @@
 
         input,
         select {
-
             width: 100%;
+            min-width: 0;
+
             height: 54px;
 
-            background: #111111;
-            color: #ffffff;
+            background: #111;
+            color: #fff;
 
             border: 1px solid #292929;
             border-radius: 11px;
@@ -271,7 +326,6 @@
 
         input:focus,
         select:focus {
-
             border-color: #873bce;
 
             box-shadow:
@@ -283,19 +337,18 @@
         }
 
         select option {
-            background: #111111;
-            color: #ffffff;
+            background: #111;
+            color: #fff;
         }
-
 
         /* =====================================================
            PREDICT BUTTON
         ===================================================== */
 
         .predict-button {
-
             grid-column: 1 / -1;
 
+            width: 100%;
             height: 57px;
 
             margin-top: 7px;
@@ -303,7 +356,7 @@
             border: none;
             border-radius: 11px;
 
-            color: #ffffff;
+            color: #fff;
 
             font-size: 16px;
             font-weight: 700;
@@ -322,7 +375,6 @@
         }
 
         .predict-button:hover {
-
             transform: translateY(-1px);
 
             box-shadow:
@@ -330,27 +382,23 @@
         }
 
         .predict-button:disabled {
-
             opacity: 0.65;
             cursor: wait;
             transform: none;
         }
-
 
         /* =====================================================
            RESULT PANEL
         ===================================================== */
 
         .result-panel {
-
             min-height: 610px;
-
             display: flex;
             flex-direction: column;
+            min-width: 0;
         }
 
         .result-content {
-
             flex: 1;
 
             display: flex;
@@ -362,10 +410,11 @@
             text-align: center;
 
             padding: 20px;
+
+            min-width: 0;
         }
 
         .result-icon {
-
             width: 78px;
             height: 78px;
 
@@ -375,7 +424,6 @@
             color: #b14dff;
 
             display: flex;
-
             align-items: center;
             justify-content: center;
 
@@ -388,44 +436,31 @@
         }
 
         .result-content h2 {
-
             font-size: 21px;
             margin-bottom: 12px;
         }
 
         .result-content>p {
-
             color: #666;
-
             line-height: 1.7;
 
             max-width: 360px;
-
             font-size: 13px;
         }
 
         .ready-text {
-
             color: #aa48f5;
-
             font-size: 48px;
-
             font-weight: 800;
-
             margin-top: 30px;
         }
 
         .ready-label {
-
             color: #666;
-
             font-size: 12px;
-
             letter-spacing: 1px;
-
             margin-top: 7px;
         }
-
 
         /* =====================================================
            SUCCESS RESULT
@@ -434,53 +469,41 @@
         .prediction-result {
             width: 100%;
             height: 100%;
+            min-width: 0;
         }
 
         .success-result {
-
             width: 100%;
-
             text-align: center;
+            min-width: 0;
         }
 
         .success-result .result-icon {
-
-            margin:
-                5px auto 16px;
+            margin: 5px auto 16px;
         }
 
         .result-label {
-
             color: #777;
-
             font-size: 11px;
-
             letter-spacing: 2px;
-
             margin-bottom: 8px;
         }
 
         .employee-name {
-
             color: #b34fff;
-
             font-size: 36px;
-
             font-weight: 800;
-
             margin-bottom: 24px;
-
             word-break: break-word;
         }
 
         .result-grid {
-
             width: 100%;
 
             display: grid;
 
             grid-template-columns:
-                1fr 1fr;
+                minmax(0, 1fr) minmax(0, 1fr);
 
             gap: 11px;
 
@@ -488,44 +511,40 @@
         }
 
         .result-card {
-
             background: #0f0f0f;
 
             border: 1px solid #282828;
-
             border-radius: 11px;
 
             padding: 16px;
+
+            min-width: 0;
         }
 
         .result-card span {
-
             display: block;
 
             color: #666;
-
             font-size: 11px;
 
             margin-bottom: 8px;
         }
 
         .result-card strong {
-
             display: block;
 
-            color: #ffffff;
-
+            color: #fff;
             font-size: 15px;
+
+            word-break: break-word;
         }
 
         .model-status {
-
             margin-top: 18px;
 
             padding: 13px;
 
             border: 1px solid #3b2356;
-
             background: #100b16;
 
             color: #a77cc9;
@@ -533,49 +552,35 @@
             border-radius: 9px;
 
             font-size: 11px;
-
             line-height: 1.5;
         }
-
 
         /* =====================================================
            LOADING
         ===================================================== */
 
         .loading-result {
-
             text-align: center;
-
             width: 100%;
         }
 
         .loading-result .result-icon {
-
-            margin:
-                0 auto 20px;
-
-            animation:
-                pulse 1s infinite;
+            margin: 0 auto 20px;
+            animation: pulse 1s infinite;
         }
 
         .loading-result h2 {
-
             color: #b34fff;
-
             margin-bottom: 12px;
         }
 
         .loading-result p {
-
             color: #666;
-
             font-size: 13px;
-
             line-height: 1.6;
         }
 
         @keyframes pulse {
-
             0% {
                 transform: scale(1);
                 opacity: 0.7;
@@ -592,35 +597,26 @@
             }
         }
 
-
         /* =====================================================
            ERROR
         ===================================================== */
 
         .error-result {
-
             text-align: center;
-
             width: 100%;
         }
 
         .error-result .result-icon {
-
-            margin:
-                0 auto 20px;
-
+            margin: 0 auto 20px;
             color: #ff5c8a;
         }
 
         .error-result h2 {
-
             color: #ff5c8a;
-
             margin-bottom: 12px;
         }
 
         .error-result p {
-
             margin: 0 auto;
 
             color: #999;
@@ -628,50 +624,49 @@
             max-width: 400px;
 
             line-height: 1.6;
-
             font-size: 13px;
+
+            word-break: break-word;
         }
 
-
         /* =====================================================
-           RESPONSIVE
+           TABLET
         ===================================================== */
 
         @media (max-width: 1150px) {
 
             .sidebar {
-                width: 250px;
+                width: 300px;
             }
 
             .main {
-
-                margin-left: 250px;
-
-                width:
-                    calc(100% - 250px);
+                margin-left: 300px;
+                width: calc(100% - 300px);
             }
 
             .content-grid {
-
-                grid-template-columns:
-                    1fr;
+                grid-template-columns: 1fr;
             }
 
             .result-panel {
-
                 min-height: 500px;
+            }
+
+            .search {
+                width: min(450px, 40vw);
             }
         }
 
+        /* =====================================================
+           MOBILE
+        ===================================================== */
 
         @media (max-width: 750px) {
 
             .sidebar {
-
                 position: relative;
 
                 width: 100%;
-
                 min-width: 100%;
 
                 min-height: auto;
@@ -682,19 +677,16 @@
             }
 
             .main {
-
                 margin-left: 0;
-
                 width: 100%;
             }
 
             .topbar {
-
                 padding: 0 18px;
+                gap: 12px;
             }
 
             .search {
-
                 width: 100%;
             }
 
@@ -703,62 +695,56 @@
             }
 
             .page {
-
-                padding:
-                    22px 16px;
+                padding: 22px 16px;
             }
 
-            .form-grid {
-
-                grid-template-columns:
-                    1fr;
+            .hero {
+                padding: 25px 22px;
             }
 
-            .predict-button {
-
-                grid-column: auto;
+            .hero-small {
+                letter-spacing: 3px;
             }
 
             .hero h1 {
-
                 font-size: 28px;
             }
 
-            .result-grid {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
 
-                grid-template-columns:
-                    1fr;
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .predict-button {
+                grid-column: auto;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .employee-name {
+                font-size: 30px;
             }
         }
     </style>
-
 </head>
-
 
 <body>
 
-
     <div class="app">
 
-
-        <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
-
+        <!-- SIDEBAR -->
         {% include 'partials/sidebar.html' %}
 
 
-        <!-- =====================================================
-         MAIN
-    ====================================================== -->
-
+        <!-- MAIN -->
         <main class="main">
 
-
-            <!-- =================================================
-             TOPBAR
-        ================================================== -->
-
+            <!-- TOPBAR -->
             <header class="topbar">
 
                 <div class="menu-button">
@@ -775,7 +761,6 @@
 
                 </div>
 
-
                 <div class="top-right">
 
                     <div class="notification">
@@ -791,66 +776,37 @@
             </header>
 
 
-
-            <!-- =================================================
-             PAGE
-        ================================================== -->
-
+            <!-- PAGE -->
             <div class="page">
 
-
-                <!-- =================================================
-                 HERO
-            ================================================== -->
-
+                <!-- HERO -->
                 <section class="hero">
 
                     <div class="hero-small">
-
                         S Y N Q · P E R F O R M A N C E
                         &nbsp;
                         P R E D I C T I O N
-
                     </div>
 
-
                     <h1>
-
                         Find the right
-
-                        <span>
-                            employee
-                        </span>
-
+                        <span>employee</span>
                         for the task.
-
                     </h1>
 
-
                     <p>
-
                         Provide task information and SYNQ will analyze
                         employee performance data to generate a prediction.
-
                     </p>
 
                 </section>
 
 
-
-                <!-- =================================================
-                 CONTENT
-            ================================================== -->
-
+                <!-- CONTENT -->
                 <div class="content-grid">
 
-
-                    <!-- =================================================
-                     INPUT PANEL
-                ================================================== -->
-
+                    <!-- INPUT PANEL -->
                     <section class="panel">
-
 
                         <div class="panel-header">
 
@@ -865,14 +821,9 @@
                         </div>
 
 
-
                         <div class="form-grid">
 
-
-                            <!-- =========================================
-                             TASK TYPE
-                        ========================================== -->
-
+                            <!-- TASK TYPE -->
                             <div class="form-group">
 
                                 <label for="task_type">
@@ -890,11 +841,7 @@
                             </div>
 
 
-
-                            <!-- =========================================
-                             PRIORITY
-                        ========================================== -->
-
+                            <!-- PRIORITY -->
                             <div class="form-group">
 
                                 <label for="priority">
@@ -912,11 +859,7 @@
                             </div>
 
 
-
-                            <!-- =========================================
-                             DAYS TO DEADLINE
-                        ========================================== -->
-
+                            <!-- DAYS -->
                             <div class="form-group">
 
                                 <label for="days_to_deadline">
@@ -928,27 +871,19 @@
                             </div>
 
 
-
-                            <!-- =========================================
-                             VOLUME
-                        ========================================== -->
-
+                            <!-- VOLUME -->
                             <div class="form-group">
 
                                 <label for="volume_metric">
                                     Volume Metric
                                 </label>
 
-                                <input type="number" id="volume_metric" value="0.14" min="0" step="0.01">
+                                <input type="number" id="volume_metric" value="3" min="0" step="1">
 
                             </div>
 
 
-
-                            <!-- =========================================
-                             DIFFICULTY
-                        ========================================== -->
-
+                            <!-- DIFFICULTY -->
                             <div class="form-group">
 
                                 <label for="perceived_difficulty">
@@ -974,11 +909,7 @@
                             </div>
 
 
-
-                            <!-- =========================================
-                             ERROR RISK
-                        ========================================== -->
-
+                            <!-- ERROR RISK -->
                             <div class="form-group">
 
                                 <label for="error_risk">
@@ -1016,47 +947,30 @@
                             </div>
 
 
-
-                            <!-- =========================================
-                             DEPENDENCY
-                        ========================================== -->
-
+                            <!-- DEPENDENCY -->
                             <div class="form-group">
 
                                 <label for="dependency_score">
                                     Dependency Score
                                 </label>
 
-                                <input type="number" id="dependency_score" value="0.06" min="0" max="1" step="0.01">
+                                <input type="number" id="dependency_score" value="3" min="0" max="5" step="1">
 
                             </div>
 
 
-
-                            <!-- =========================================
-                             PREDICT BUTTON
-                        ========================================== -->
-
+                            <!-- BUTTON -->
                             <button type="button" class="predict-button" id="predictButton" onclick="predictEmployee()">
-
-                                ✦ &nbsp;
-                                PREDICT EMPLOYEE
-
+                                ✦ &nbsp; PREDICT EMPLOYEE
                             </button>
-
 
                         </div>
 
                     </section>
 
 
-
-                    <!-- =================================================
-                     RESULT PANEL
-                ================================================== -->
-
+                    <!-- RESULT PANEL -->
                     <section class="panel result-panel">
-
 
                         <div class="panel-header">
 
@@ -1071,43 +985,33 @@
                         </div>
 
 
-
                         <div class="result-content" id="predictionResult">
-
 
                             <div class="result-icon">
                                 ◎
                             </div>
 
-
                             <h2>
                                 Ready for prediction
                             </h2>
 
-
                             <p>
-
                                 Select the task characteristics
                                 and click Predict Employee to
                                 get the best-fit recommendation.
-
                             </p>
-
 
                             <div class="ready-text">
                                 READY
                             </div>
 
-
                             <div class="ready-label">
                                 PREDICTED EMPLOYEE
                             </div>
 
-
                         </div>
 
                     </section>
-
 
                 </div>
 
@@ -1118,13 +1022,7 @@
     </div>
 
 
-
-    <!-- =========================================================
-     JAVASCRIPT
-========================================================== -->
-
     <script>
-
 
         /* =====================================================
            LOAD TASK OPTIONS
@@ -1138,16 +1036,13 @@
             const prioritySelect =
                 document.getElementById("priority");
 
-
             try {
 
                 const response =
                     await fetch("/api/task-options");
 
-
                 const data =
                     await response.json();
-
 
                 if (!response.ok || !data.success) {
 
@@ -1158,99 +1053,53 @@
 
                 }
 
-
-                /*
-                =================================================
-                IMPORTANT
-    
-                Backend returns:
-    
-                {
-                    success: true,
-                    options: {
-                        task_types: [...],
-                        priorities: [...]
-                    }
-                }
-                =================================================
-                */
-
                 const options =
                     data.options || {};
 
-
                 const taskTypes =
                     options.task_types || [];
-
 
                 const priorities =
                     options.priorities || [];
 
 
-
-                /* =============================================
-                   TASK TYPE
-                ============================================== */
+                /* TASK TYPES */
 
                 taskTypeSelect.innerHTML =
                     '<option value="">Select task type</option>';
-
 
                 taskTypes.forEach(function (taskType) {
 
                     const option =
                         document.createElement("option");
 
+                    option.value = taskType;
+                    option.textContent = taskType;
 
-                    option.value =
-                        taskType;
-
-
-                    option.textContent =
-                        taskType;
-
-
-                    taskTypeSelect.appendChild(
-                        option
-                    );
+                    taskTypeSelect.appendChild(option);
 
                 });
 
 
-
-                /* =============================================
-                   PRIORITY
-                ============================================== */
+                /* PRIORITIES */
 
                 prioritySelect.innerHTML =
                     '<option value="">Select priority</option>';
-
 
                 priorities.forEach(function (priority) {
 
                     const option =
                         document.createElement("option");
 
+                    option.value = priority;
+                    option.textContent = priority;
 
-                    option.value =
-                        priority;
-
-
-                    option.textContent =
-                        priority;
-
-
-                    prioritySelect.appendChild(
-                        option
-                    );
+                    prioritySelect.appendChild(option);
 
                 });
 
 
-
-                /* =============================================
-                   DEFAULT TASK TYPE
-                ============================================== */
+                /* DEFAULT TASK */
 
                 if (taskTypes.length > 0) {
 
@@ -1260,10 +1109,7 @@
                 }
 
 
-
-                /* =============================================
-                   DEFAULT PRIORITY = MEDIUM
-                ============================================== */
+                /* DEFAULT MEDIUM */
 
                 const mediumOption =
                     Array.from(
@@ -1290,21 +1136,7 @@
 
                 }
 
-
-
-                console.log(
-                    "SYNQ Task Types:",
-                    taskTypes
-                );
-
-
-                console.log(
-                    "SYNQ Priorities:",
-                    priorities
-                );
-
             }
-
 
             catch (error) {
 
@@ -1313,10 +1145,8 @@
                     error
                 );
 
-
                 taskTypeSelect.innerHTML =
                     '<option value="">Unable to load task types</option>';
-
 
                 prioritySelect.innerHTML =
                     '<option value="">Unable to load priorities</option>';
@@ -1326,66 +1156,50 @@
         }
 
 
-
         /* =====================================================
            PREDICT EMPLOYEE
         ===================================================== */
 
         async function predictEmployee() {
 
-
             const button =
-                document.getElementById(
-                    "predictButton"
-                );
-
+                document.getElementById("predictButton");
 
             const resultBox =
-                document.getElementById(
-                    "predictionResult"
-                );
+                document.getElementById("predictionResult");
 
 
-
-            /* =============================================
-               INPUTS
-            ============================================== */
+            /* INPUTS */
 
             const taskType =
                 document.getElementById(
                     "task_type"
                 ).value;
 
-
             const priority =
                 document.getElementById(
                     "priority"
                 ).value;
-
 
             const daysToDeadline =
                 document.getElementById(
                     "days_to_deadline"
                 ).value;
 
-
             const volumeMetric =
                 document.getElementById(
                     "volume_metric"
                 ).value;
-
 
             const perceivedDifficulty =
                 document.getElementById(
                     "perceived_difficulty"
                 ).value;
 
-
             const errorRisk =
                 document.getElementById(
                     "error_risk"
                 ).value;
-
 
             const dependencyScore =
                 document.getElementById(
@@ -1393,10 +1207,7 @@
                 ).value;
 
 
-
-            /* =============================================
-               VALIDATION
-            ============================================== */
+            /* VALIDATION */
 
             if (!taskType) {
 
@@ -1468,11 +1279,11 @@
 
             if (
                 dependency < 0 ||
-                dependency > 1
+                dependency > 5
             ) {
 
                 showError(
-                    "Dependency Score must be between 0 and 1."
+                    "Dependency Score must be between 0 and 5."
                 );
 
                 return;
@@ -1480,13 +1291,9 @@
             }
 
 
-
-            /* =============================================
-               LOADING
-            ============================================== */
+            /* LOADING */
 
             button.disabled = true;
-
 
             button.innerHTML =
                 "◌ &nbsp; ANALYZING...";
@@ -1514,10 +1321,7 @@
         `;
 
 
-
-            /* =============================================
-               REQUEST DATA
-            ============================================== */
+            /* REQUEST */
 
             const requestData = {
 
@@ -1528,22 +1332,16 @@
                     priority,
 
                 days_to_deadline:
-                    parseFloat(
-                        daysToDeadline
-                    ),
+                    parseFloat(daysToDeadline),
 
                 volume_metric:
-                    parseFloat(
-                        volumeMetric
-                    ),
+                    parseFloat(volumeMetric),
 
                 perceived_difficulty:
                     perceivedDifficulty,
 
                 error_risk:
-                    parseFloat(
-                        errorRisk
-                    ),
+                    parseFloat(errorRisk),
 
                 dependency_score:
                     dependency
@@ -1551,41 +1349,29 @@
             };
 
 
-
             try {
-
-
-                /* =========================================
-                   API REQUEST
-                ========================================== */
 
                 const response =
                     await fetch(
                         "/api/predict",
                         {
-
                             method: "POST",
 
                             headers: {
-
                                 "Content-Type":
                                     "application/json"
-
                             },
 
                             body:
                                 JSON.stringify(
                                     requestData
                                 )
-
                         }
                     );
 
 
-
                 const result =
                     await response.json();
-
 
 
                 if (
@@ -1601,30 +1387,23 @@
                 }
 
 
-
-                /* =========================================
-                   RESULT VALUES
-                ========================================== */
+                /* RESULT */
 
                 const employee =
                     result.best_fit_employee ??
                     "N/A";
 
-
                 const rating =
                     result.predicted_rating ??
                     "N/A";
-
 
                 const category =
                     result.category ??
                     "N/A";
 
-
                 const risk =
                     result.error_risk ??
                     "N/A";
-
 
                 const riskLevel =
                     result.risk_level ??
@@ -1635,13 +1414,9 @@
                     );
 
 
-
-                /* =========================================
-                   MODEL STATUS
-                ========================================== */
+                /* MODEL STATUS */
 
                 let modelMessage;
-
 
                 if (result.model_available) {
 
@@ -1657,25 +1432,19 @@
                 }
 
 
-
-                /* =========================================
-                   DISPLAY RESULT
-                ========================================== */
+                /* DISPLAY */
 
                 resultBox.innerHTML = `
 
                 <div class="success-result">
 
-
                     <div class="result-icon">
                         ◎
                     </div>
 
-
                     <div class="result-label">
                         BEST FIT EMPLOYEE
                     </div>
-
 
                     <div class="employee-name">
                         ${escapeHtml(
@@ -1684,9 +1453,7 @@
                     </div>
 
 
-
                     <div class="result-grid">
-
 
                         <div class="result-card">
 
@@ -1701,7 +1468,6 @@
                             </strong>
 
                         </div>
-
 
 
                         <div class="result-card">
@@ -1719,7 +1485,6 @@
                         </div>
 
 
-
                         <div class="result-card">
 
                             <span>
@@ -1733,7 +1498,6 @@
                             </strong>
 
                         </div>
-
 
 
                         <div class="result-card">
@@ -1750,17 +1514,12 @@
 
                         </div>
 
-
                     </div>
-
 
 
                     <div class="model-status">
-
                         ${modelMessage}
-
                     </div>
-
 
                 </div>
 
@@ -1776,7 +1535,6 @@
                     error
                 );
 
-
                 showError(
                     error.message ||
                     "Something went wrong while predicting."
@@ -1789,14 +1547,12 @@
 
                 button.disabled = false;
 
-
                 button.innerHTML =
                     "✦ &nbsp; PREDICT EMPLOYEE";
 
             }
 
         }
-
 
 
         /* =====================================================
@@ -1808,19 +1564,13 @@
             const riskNames = {
 
                 0: "Minimal",
-
                 1: "Very Low",
-
                 2: "Low",
-
                 3: "Moderate",
-
                 4: "High",
-
                 5: "Critical"
 
             };
-
 
             return (
                 riskNames[value] ||
@@ -1830,50 +1580,40 @@
         }
 
 
-
         /* =====================================================
            SHOW ERROR
         ===================================================== */
 
         function showError(message) {
 
-
             const resultBox =
                 document.getElementById(
                     "predictionResult"
                 );
 
-
             resultBox.innerHTML = `
 
             <div class="error-result">
-
 
                 <div class="result-icon">
                     !
                 </div>
 
-
                 <h2>
                     PREDICTION FAILED
                 </h2>
 
-
                 <p>
-
                     ${escapeHtml(
                 String(message)
             )}
-
                 </p>
-
 
             </div>
 
         `;
 
         }
-
 
 
         /* =====================================================
@@ -1883,34 +1623,28 @@
         function escapeHtml(value) {
 
             return value
-
                 .replace(
                     /&/g,
                     "&amp;"
                 )
-
                 .replace(
                     /</g,
                     "&lt;"
                 )
-
                 .replace(
                     />/g,
                     "&gt;"
                 )
-
                 .replace(
                     /"/g,
                     "&quot;"
                 )
-
                 .replace(
                     /'/g,
                     "&#039;"
                 );
 
         }
-
 
 
         /* =====================================================
@@ -1927,7 +1661,6 @@
         );
 
     </script>
-
 
 </body>
 
