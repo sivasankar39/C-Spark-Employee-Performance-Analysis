@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SYNQ - Task History</title>
+    <title>SYNQ - Create Task</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
@@ -21,13 +21,12 @@
             width: 100%;
             min-height: 100%;
             background: #050505;
-            color: #ffffff;
+            color: #fff;
             font-family: Arial, Helvetica, sans-serif;
         }
 
-
         /* =====================================================
-           MAIN CONTENT
+           MAIN
         ===================================================== */
 
         .main-content {
@@ -37,71 +36,50 @@
             background: #050505;
         }
 
-
         /* =====================================================
            TOPBAR
         ===================================================== */
 
         .topbar {
             height: 72px;
-
             display: flex;
             align-items: center;
-
             padding: 0 38px;
-
             border-bottom: 1px solid #222;
-
             background: #070707;
         }
 
         .topbar-title {
             color: #777;
-
             font-size: 12px;
-
             letter-spacing: 2px;
-
             text-transform: uppercase;
         }
 
         .topbar-right {
             margin-left: auto;
-
             display: flex;
             align-items: center;
-
-            gap: 20px;
         }
 
         .status {
             display: flex;
             align-items: center;
-
             gap: 9px;
-
             padding: 10px 16px;
-
             border: 1px solid #292929;
-
             border-radius: 12px;
-
             color: #aaa;
-
             font-size: 12px;
         }
 
         .status-dot {
             width: 8px;
             height: 8px;
-
             border-radius: 50%;
-
             background: #a94cff;
-
             box-shadow: 0 0 10px #a94cff;
         }
-
 
         /* =====================================================
            PAGE
@@ -109,79 +87,161 @@
 
         .page-container {
             padding: 34px 38px 60px;
-        }
-
-
-        /* =====================================================
-           PAGE HEADER
-        ===================================================== */
-
-        .page-header {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-
-            gap: 30px;
-
-            margin-bottom: 32px;
+            max-width: 1200px;
         }
 
         .page-label {
             color: #a94cff;
-
             font-size: 10px;
-
             letter-spacing: 4px;
-
             margin-bottom: 12px;
         }
 
         .page-header h1 {
             margin: 0 0 10px;
-
             font-size: 34px;
-
             line-height: 1.2;
         }
 
         .page-header p {
-            margin: 0;
-
+            margin: 0 0 32px;
             color: #707070;
-
             font-size: 14px;
-
             line-height: 1.6;
         }
 
+        /* =====================================================
+           GRID
+        ===================================================== */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.8fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+        .card {
+            background: #090909;
+            border: 1px solid #272727;
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card-subtitle {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 28px;
+        }
+
+        /* =====================================================
+           FORM
+        ===================================================== */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            color: #aaa;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .required {
+            color: #a94cff;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+
+            background: #101010;
+            border: 1px solid #292929;
+            border-radius: 9px;
+
+            color: #fff;
+            outline: none;
+            font-size: 13px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #8b42d7;
+            box-shadow: 0 0 0 2px rgba(139, 66, 215, 0.12);
+        }
+
+        input::placeholder {
+            color: #555;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #111;
+            color: #fff;
+        }
+
+        .field-help {
+            color: #555;
+            font-size: 10px;
+            line-height: 1.4;
+        }
 
         /* =====================================================
            CREATE BUTTON
         ===================================================== */
 
-        .create-btn {
-            flex-shrink: 0;
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 28px;
+        }
+
+        .create-button {
+            min-width: 180px;
+            height: 48px;
 
             border: none;
+            border-radius: 9px;
 
-            border-radius: 10px;
-
-            padding: 15px 24px;
-
-            background:
-                linear-gradient(100deg,
+            background: linear-gradient(100deg,
                     #7832e8,
                     #b04cf4);
 
-            color: #ffffff;
-
-            font-size: 13px;
-
+            color: #fff;
+            font-size: 12px;
             font-weight: 700;
+            letter-spacing: 1px;
 
             cursor: pointer;
-
-            text-decoration: none;
 
             box-shadow:
                 0 12px 28px rgba(130, 50, 230, 0.20);
@@ -189,396 +249,165 @@
             transition: 0.2s ease;
         }
 
-        .create-btn:hover {
+        .create-button:hover {
             transform: translateY(-1px);
-
             box-shadow:
                 0 15px 35px rgba(130, 50, 230, 0.30);
         }
 
-
-        /* =====================================================
-           STAT CARDS
-        ===================================================== */
-
-        .stats-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(4, minmax(0, 1fr));
-
-            gap: 18px;
-
-            margin-bottom: 30px;
+        .create-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .stat-card {
-            min-height: 120px;
+        /* =====================================================
+           MESSAGE
+        ===================================================== */
 
-            padding: 24px;
+        .message {
+            margin-top: 18px;
+            padding: 13px 15px;
+            border-radius: 9px;
+            display: none;
+            font-size: 12px;
+        }
 
+        .message.success {
+            display: block;
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            color: #65d58a;
+        }
+
+        .message.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #ff6b75;
+        }
+
+        /* =====================================================
+           PREVIEW
+        ===================================================== */
+
+        .preview-card {
             background: #090909;
-
-            border: 1px solid #252525;
-
-            border-radius: 14px;
+            border: 1px solid #272727;
+            border-radius: 16px;
+            padding: 25px;
         }
 
-        .stat-label {
-            color: #777;
-
-            font-size: 11px;
-
-            letter-spacing: 1.5px;
-
-            margin-bottom: 15px;
-        }
-
-        .stat-value {
-            font-size: 29px;
-
+        .preview-title {
+            font-size: 17px;
             font-weight: 700;
-
-            color: #ffffff;
+            margin-bottom: 5px;
         }
 
-        .stat-value.purple {
-            color: #b04cff;
-        }
-
-        .stat-value.red {
-            color: #ff3d4f;
-        }
-
-
-        /* =====================================================
-           SEARCH / FILTER
-        ===================================================== */
-
-        .filter-bar {
-            display: grid;
-
-            grid-template-columns: 1fr 180px;
-
-            gap: 15px;
-
+        .preview-subtitle {
+            color: #666;
+            font-size: 11px;
             margin-bottom: 22px;
         }
 
-        .search-box,
-        .filter-select {
-            height: 50px;
-
-            width: 100%;
-
-            background: #090909;
-
-            color: #ffffff;
-
-            border: 1px solid #272727;
-
-            border-radius: 10px;
-
-            outline: none;
-
-            padding: 0 16px;
-
-            font-size: 13px;
-        }
-
-        .search-box::placeholder {
-            color: #555;
-        }
-
-        .search-box:focus,
-        .filter-select:focus {
-            border-color: #863de0;
-
-            box-shadow:
-                0 0 0 2px rgba(134, 61, 224, 0.10);
-        }
-
-        .filter-select {
-            cursor: pointer;
-        }
-
-        .filter-select option {
-            background: #111;
-            color: #fff;
-        }
-
-
-        /* =====================================================
-           TABLE PANEL
-        ===================================================== */
-
-        .table-panel {
-            background: #080808;
-
-            border: 1px solid #272727;
-
-            border-radius: 16px;
-
-            overflow: hidden;
-        }
-
-        .table-header {
-            min-height: 64px;
-
+        .preview-list {
             display: flex;
+            flex-direction: column;
+        }
 
+        .preview-item {
+            display: flex;
             align-items: center;
-
             justify-content: space-between;
+            gap: 15px;
 
-            padding: 0 24px;
-
-            border-bottom: 1px solid #222;
+            padding: 14px 0;
+            border-bottom: 1px solid #191919;
         }
 
-        .table-title {
-            font-size: 17px;
-
-            font-weight: 700;
-        }
-
-        .task-count {
-            color: #666;
-
-            font-size: 12px;
-        }
-
-
-        /* =====================================================
-           TABLE
-        ===================================================== */
-
-        .table-wrapper {
-            width: 100%;
-
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-
-            min-width: 1050px;
-
-            border-collapse: collapse;
-        }
-
-        thead {
-            background: #0a0a0a;
-        }
-
-        th {
-            padding: 16px 14px;
-
-            text-align: left;
-
-            color: #777;
-
-            font-size: 10px;
-
-            letter-spacing: 1.2px;
-
-            font-weight: 600;
-
-            white-space: nowrap;
-
-            border-bottom: 1px solid #222;
-        }
-
-        td {
-            padding: 17px 14px;
-
-            color: #c4c4c4;
-
-            font-size: 12px;
-
-            border-bottom: 1px solid #171717;
-
-            white-space: nowrap;
-        }
-
-        tbody tr:hover {
-            background: #0d0d0d;
-        }
-
-        tbody tr:last-child td {
+        .preview-item:last-child {
             border-bottom: none;
         }
 
-
-        /* =====================================================
-           BADGES
-        ===================================================== */
-
-        .badge {
-            display: inline-flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            min-width: 70px;
-
-            padding: 6px 10px;
-
-            border-radius: 20px;
-
-            font-size: 10px;
-
-            font-weight: 600;
-        }
-
-        .badge.high {
-            background: rgba(239, 68, 68, 0.10);
-
-            color: #ff6b75;
-
-            border: 1px solid rgba(239, 68, 68, 0.20);
-        }
-
-        .badge.medium {
-            background: rgba(245, 158, 11, 0.10);
-
-            color: #f5b942;
-
-            border: 1px solid rgba(245, 158, 11, 0.20);
-        }
-
-        .badge.low {
-            background: rgba(34, 197, 94, 0.10);
-
-            color: #65d58a;
-
-            border: 1px solid rgba(34, 197, 94, 0.20);
-        }
-
-
-        /* =====================================================
-           ACTION BUTTONS
-        ===================================================== */
-
-        .actions {
-            display: flex;
-
-            gap: 7px;
-        }
-
-        .action-btn {
-            width: 32px;
-            height: 32px;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 7px;
-
-            border: 1px solid #292929;
-
-            background: #101010;
-
-            color: #999;
-
-            cursor: pointer;
-
-            font-size: 12px;
-
-            transition: 0.2s;
-        }
-
-        .action-btn:hover {
-            color: #ffffff;
-
-            border-color: #8240c4;
-
-            background: #17101d;
-        }
-
-        .action-btn.delete:hover {
-            color: #ff6872;
-
-            border-color: #7d2930;
-
-            background: #1a0c0d;
-        }
-
-
-        /* =====================================================
-           EMPTY / LOADING
-        ===================================================== */
-
-        .empty-state {
-            min-height: 210px;
-
-            display: flex;
-
-            align-items: center;
-
-            justify-content: center;
-
-            flex-direction: column;
-
-            gap: 10px;
-
+        .preview-label {
             color: #666;
-
-            font-size: 13px;
+            font-size: 11px;
         }
 
-        .empty-icon {
-            font-size: 30px;
-
-            color: #6e36a1;
+        .preview-value {
+            color: #ddd;
+            font-size: 12px;
+            text-align: right;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
+        .preview-value.purple {
+            color: #b04cff;
+        }
+
+        .preview-value.red {
+            color: #ff5968;
+        }
+
+        /* =====================================================
+           QUICK INFO
+        ===================================================== */
+
+        .info-box {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid #252525;
+            background: #0d0d0d;
+        }
+
+        .info-title {
+            color: #a94cff;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            color: #666;
+            font-size: 11px;
+            line-height: 1.6;
+        }
 
         /* =====================================================
            RESPONSIVE
         ===================================================== */
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1100px) {
 
-            .stats-grid {
-                grid-template-columns:
-                    repeat(2, minmax(0, 1fr));
+            .content-grid {
+                grid-template-columns: 1fr;
             }
 
+            .preview-card {
+                order: 2;
+            }
         }
-
 
         @media (max-width: 900px) {
 
             .main-content {
                 margin-left: 240px;
-
                 width: calc(100% - 240px);
             }
 
             .page-container {
                 padding: 25px 20px 50px;
             }
-
-            .page-header {
-                flex-direction: column;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
         }
-
 
         @media (max-width: 650px) {
 
             .main-content {
                 margin-left: 0;
-
                 width: 100%;
             }
 
@@ -590,18 +419,21 @@
                 padding: 20px 15px 40px;
             }
 
-            .stats-grid {
+            .form-grid {
                 grid-template-columns: 1fr;
             }
 
-            .filter-bar {
-                grid-template-columns: 1fr;
+            .form-group.full {
+                grid-column: auto;
             }
 
             .page-header h1 {
                 font-size: 27px;
             }
 
+            .card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -622,13 +454,12 @@
 
     <main class="main-content">
 
-
         <!-- TOPBAR -->
 
         <header class="topbar">
 
             <div class="topbar-title">
-                SYNQ / TASK MANAGEMENT
+                SYNQ / TASK MANAGEMENT / CREATE
             </div>
 
             <div class="topbar-right">
@@ -647,104 +478,554 @@
 
         <div class="page-container">
 
-
-            <!-- HEADER -->
-
             <section class="page-header">
 
-                <div>
-
-                    <div class="page-label">
-                        S Y N Q · T A S K M A N A G E M E N T
-                    </div>
-
-                    <h1>
-                        Created Tasks
-                    </h1>
-
-                    <p>
-                        View and manage all tasks created through SYNQ.
-                    </p>
-
+                <div class="page-label">
+                    S Y N Q · T A S K M A N A G E M E N T
                 </div>
 
+                <h1>
+                    Create Task
+                </h1>
 
-                <a href="/create-task" class="create-btn">
-                    + Create Task
-                </a>
+                <p>
+                    Create a new task and add it to your SYNQ task history.
+                </p>
 
             </section>
 
 
-            <!-- STATS -->
+            <div class="content-grid">
 
-            <section class="stats-grid">
+                <!-- =================================================
+                     FORM CARD
+                ================================================== -->
 
-                <div class="stat-card">
+                <section class="card">
 
-                    <div class="stat-label">
-                        TOTAL TASKS
+                    <div class="card-title">
+                        Task Details
                     </div>
 
-                    <div class="stat-value purple" id="totalTasks">
-                        0
+                    <div class="card-subtitle">
+                        Enter the task information below.
                     </div>
 
-                </div>
+
+                    <form id="createTaskForm">
+
+                        <div class="form-grid">
+
+                            <!-- TASK TYPE -->
+
+                            <div class="form-group">
+
+                                <label for="task_type">
+                                    Task Type
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="task_type" required>
+
+                                    <option value="">
+                                        Loading task types...
+                                    </option>
+
+                                </select>
+
+                                <div class="field-help">
+                                    Select the type of work assigned.
+                                </div>
+
+                            </div>
 
 
-                <div class="stat-card">
+                            <!-- PRIORITY -->
 
-                    <div class="stat-label">
-                        HIGH PRIORITY
+                            <div class="form-group">
+
+                                <label for="priority">
+                                    Priority
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="priority" required>
+
+                                    <option value="">
+                                        Loading priorities...
+                                    </option>
+
+                                </select>
+
+                                <div class="field-help">
+                                    Select task priority.
+                                </div>
+
+                            </div>
+
+
+                            <!-- DEADLINE -->
+
+                            <div class="form-group">
+
+                                <label for="days_to_deadline">
+                                    Days to Deadline
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="number" id="days_to_deadline" min="0" step="1" value="5"
+                                    placeholder="Example: 5" required>
+
+                            </div>
+
+
+                            <!-- VOLUME -->
+
+                            <div class="form-group">
+
+                                <label for="volume_metric">
+                                    Volume Metric
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="number" id="volume_metric" min="0" step="0.01" value="0.14"
+                                    placeholder="Example: 0.14" required>
+
+                            </div>
+
+
+                            <!-- DIFFICULTY -->
+
+                            <div class="form-group">
+
+                                <label for="perceived_difficulty">
+                                    Perceived Difficulty
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="perceived_difficulty" required>
+
+                                    <option value="">
+                                        Select Difficulty
+                                    </option>
+
+                                    <option value="Low">
+                                        Low
+                                    </option>
+
+                                    <option value="Medium" selected>
+                                        Medium
+                                    </option>
+
+                                    <option value="High">
+                                        High
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- ERROR RISK -->
+
+                            <div class="form-group">
+
+                                <label for="error_risk">
+                                    Error Risk
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="number" id="error_risk" min="0" max="5" step="0.1" value="2"
+                                    placeholder="0 - 5" required>
+
+                                <div class="field-help">
+                                    Enter a value between 0 and 5.
+                                </div>
+
+                            </div>
+
+
+                            <!-- DEPENDENCY -->
+
+                            <div class="form-group">
+
+                                <label for="dependency_score">
+                                    Dependency Score
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="number" id="dependency_score" min="0" max="5" step="0.1" value="3"
+                                    placeholder="0 - 5" required>
+
+                                <div class="field-help">
+                                    Enter a value between 0 and 5.
+                                </div>
+
+                            </div>
+
+
+                            <!-- DATE -->
+
+                            <div class="form-group">
+
+                                <label for="task_date">
+                                    Task Date
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="date" id="task_date" required>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="button-row">
+
+                            <button type="submit" class="create-button" id="createButton">
+                                CREATE TASK
+                            </button>
+
+                        </div>
+
+
+                        <div id="message" class="message"></div>
+
+                    </form>
+
+                </section>
+
+
+                <!-- =================================================
+                     PREVIEW
+                ================================================== -->
+
+                <aside class="preview-card">
+
+                    <div class="preview-title">
+                        Task Preview
                     </div>
 
-                    <div class="stat-value" id="highPriority">
-                        0
+                    <div class="preview-subtitle">
+                        Review the task before creating it.
                     </div>
 
-                </div>
+
+                    <div class="preview-list">
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Task Type
+                            </span>
+
+                            <span class="preview-value purple" id="previewTaskType">
+                                —
+                            </span>
+
+                        </div>
 
 
-                <div class="stat-card">
+                        <div class="preview-item">
 
-                    <div class="stat-label">
-                        AVG DEADLINE
+                            <span class="preview-label">
+                                Priority
+                            </span>
+
+                            <span class="preview-value" id="previewPriority">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Deadline
+                            </span>
+
+                            <span class="preview-value" id="previewDeadline">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Volume
+                            </span>
+
+                            <span class="preview-value" id="previewVolume">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Difficulty
+                            </span>
+
+                            <span class="preview-value" id="previewDifficulty">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Error Risk
+                            </span>
+
+                            <span class="preview-value red" id="previewRisk">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Dependency
+                            </span>
+
+                            <span class="preview-value" id="previewDependency">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Task Date
+                            </span>
+
+                            <span class="preview-value" id="previewDate">
+                                —
+                            </span>
+
+                        </div>
+
                     </div>
 
-                    <div class="stat-value" id="avgDeadline">
-                        0
+
+                    <div class="info-box">
+
+                        <div class="info-title">
+                            SYNQ
+                        </div>
+
+                        <div class="info-text">
+                            Once created, this task will be saved
+                            and displayed automatically in
+                            Task History.
+                        </div>
+
                     </div>
 
-                </div>
+                </aside>
+
+            </div>
+
+        </div>
+
+    </main>
 
 
-                <div class="stat-card">
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
 
-                    <div class="stat-label">
-                        AVG ERROR RISK
-                    </div>
+    <script>
 
-                    <div class="stat-value red" id="avgRisk">
-                        0
-                    </div>
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
 
-                </div>
+        const form =
+            document.getElementById("createTaskForm");
 
-            </section>
+        const message =
+            document.getElementById("message");
 
-
-            <!-- SEARCH -->
-
-            <section class="filter-bar">
-
-                <input type="text" id="searchInput" class="search-box" placeholder="Search task ID or task type...">
+        const button =
+            document.getElementById("createButton");
 
 
-                <select id="priorityFilter" class="filter-select">
+        /* =====================================================
+           LOAD TASK OPTIONS
+        ===================================================== */
 
+        async function loadTaskOptions() {
+
+            const taskTypeSelect =
+                document.getElementById("task_type");
+
+            const prioritySelect =
+                document.getElementById("priority");
+
+
+            try {
+
+                const response =
+                    await fetch("/api/task-options");
+
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Unable to load task options"
+                    );
+
+                }
+
+
+                const options =
+                    data.options ||
+                    data;
+
+
+                /* ==========================
+                   TASK TYPES
+                =========================== */
+
+                const taskTypes =
+                    Array.isArray(
+                        options.task_types
+                    )
+                        ? options.task_types
+                        : [];
+
+
+                taskTypeSelect.innerHTML = `
                     <option value="">
-                        All Priorities
+                        Select Task Type
+                    </option>
+                `;
+
+
+                taskTypes.forEach(
+                    type => {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+                        option.value = type;
+                        option.textContent = type;
+
+                        taskTypeSelect.appendChild(
+                            option
+                        );
+
+                    }
+                );
+
+
+                /* ==========================
+                   PRIORITIES
+                =========================== */
+
+                const priorities =
+                    Array.isArray(
+                        options.priorities
+                    )
+                        ? options.priorities
+                        : [];
+
+
+                prioritySelect.innerHTML = `
+                    <option value="">
+                        Select Priority
+                    </option>
+                `;
+
+
+                priorities.forEach(
+                    priority => {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+                        option.value = priority;
+                        option.textContent = priority;
+
+                        prioritySelect.appendChild(
+                            option
+                        );
+
+                    }
+                );
+
+
+                /*
+                 * Fallback in case backend
+                 * does not return priorities.
+                 */
+
+                if (!priorities.length) {
+
+                    [
+                        "Low",
+                        "Medium",
+                        "High"
+                    ].forEach(
+                        priority => {
+
+                            const option =
+                                document.createElement(
+                                    "option"
+                                );
+
+                            option.value = priority;
+                            option.textContent = priority;
+
+                            prioritySelect.appendChild(
+                                option
+                            );
+
+                        }
+                    );
+
+                }
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Task option loading error:",
+                    error
+                );
+
+
+                taskTypeSelect.innerHTML = `
+                    <option value="">
+                        Unable to load task types
+                    </option>
+                `;
+
+
+                prioritySelect.innerHTML = `
+                    <option value="">
+                        Select Priority
                     </option>
 
                     <option value="Low">
@@ -758,177 +1039,6 @@
                     <option value="High">
                         High
                     </option>
-
-                </select>
-
-            </section>
-
-
-            <!-- TABLE -->
-
-            <section class="table-panel">
-
-
-                <div class="table-header">
-
-                    <div class="table-title">
-                        Task History
-                    </div>
-
-                    <div class="task-count" id="taskCount">
-                        0 tasks
-                    </div>
-
-                </div>
-
-
-                <div class="table-wrapper">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-
-                                <th>Task ID</th>
-
-                                <th>Task Type</th>
-
-                                <th>Priority</th>
-
-                                <th>Deadline</th>
-
-                                <th>Volume</th>
-
-                                <th>Difficulty</th>
-
-                                <th>Error Risk</th>
-
-                                <th>Dependency</th>
-
-                                <th>Date</th>
-
-                                <th>Actions</th>
-
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody id="taskTableBody">
-
-                            <tr>
-
-                                <td colspan="10">
-
-                                    <div class="empty-state">
-
-                                        <div>
-                                            Loading tasks...
-                                        </div>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </section>
-
-
-        </div>
-
-    </main>
-
-
-    <!-- =====================================================
-         JAVASCRIPT
-    ====================================================== -->
-
-    <script>
-
-        let allTasks = [];
-
-
-        /* =====================================================
-           LOAD TASKS
-        ===================================================== */
-
-        async function loadTasks() {
-
-            const tableBody =
-                document.getElementById("taskTableBody");
-
-            try {
-
-                const response =
-                    await fetch("/api/tasks");
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.error ||
-                        "Unable to load tasks"
-                    );
-
-                }
-
-
-                allTasks =
-                    Array.isArray(data)
-                        ? data
-                        : (
-                            data.tasks ||
-                            data.data ||
-                            []
-                        );
-
-
-                updateStats();
-
-                renderTasks();
-
-
-            } catch (error) {
-
-                console.error(
-                    "Task loading error:",
-                    error
-                );
-
-
-                tableBody.innerHTML = `
-
-                    <tr>
-
-                        <td colspan="10">
-
-                            <div class="empty-state">
-
-                                <div class="empty-icon">
-                                    ⚠
-                                </div>
-
-                                <div>
-                                    Failed to load tasks.
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
                 `;
 
             }
@@ -937,481 +1047,572 @@
 
 
         /* =====================================================
-           STATS
-        ====================================================== */
+           UPDATE PREVIEW
+        ===================================================== */
 
-        function updateStats() {
+        function updatePreview() {
 
-            const total =
-                allTasks.length;
-
-
-            const high =
-                allTasks.filter(
-                    task =>
-                        String(
-                            task.priority || ""
-                        ).toLowerCase()
-                        === "high"
-                ).length;
-
-
-            const deadlines =
-                allTasks
-                    .map(task =>
-                        Number(
-                            task.days_to_deadline
-                        )
-                    )
-                    .filter(
-                        value =>
-                            !isNaN(value)
-                    );
-
-
-            const risks =
-                allTasks
-                    .map(task =>
-                        Number(
-                            task.error_risk
-                        )
-                    )
-                    .filter(
-                        value =>
-                            !isNaN(value)
-                    );
-
-
-            const avgDeadline =
-                deadlines.length
-                    ? (
-                        deadlines.reduce(
-                            (a, b) => a + b,
-                            0
-                        )
-                        / deadlines.length
-                    ).toFixed(1)
-                    : 0;
-
-
-            const avgRisk =
-                risks.length
-                    ? (
-                        risks.reduce(
-                            (a, b) => a + b,
-                            0
-                        )
-                        / risks.length
-                    ).toFixed(2)
-                    : 0;
-
-
-            document.getElementById(
-                "totalTasks"
-            ).textContent =
-                total.toLocaleString();
-
-
-            document.getElementById(
-                "highPriority"
-            ).textContent =
-                high.toLocaleString();
-
-
-            document.getElementById(
-                "avgDeadline"
-            ).textContent =
-                avgDeadline;
-
-
-            document.getElementById(
-                "avgRisk"
-            ).textContent =
-                avgRisk;
-
-
-            document.getElementById(
-                "taskCount"
-            ).textContent =
-                `${total} task${total === 1 ? "" : "s"}`;
-
-        }
-
-
-        /* =====================================================
-           RENDER TASKS
-        ====================================================== */
-
-        function renderTasks() {
-
-            const tableBody =
+            const taskType =
                 document.getElementById(
-                    "taskTableBody"
-                );
-
-
-            const search =
-                document.getElementById(
-                    "searchInput"
-                ).value
-                    .toLowerCase()
-                    .trim();
+                    "task_type"
+                ).value || "—";
 
 
             const priority =
                 document.getElementById(
-                    "priorityFilter"
-                ).value
-                    .toLowerCase();
+                    "priority"
+                ).value || "—";
 
 
-            const filtered =
-                allTasks.filter(
-                    task => {
-
-                        const taskId =
-                            String(
-                                task.task_id ||
-                                task.id ||
-                                ""
-                            ).toLowerCase();
+            const deadline =
+                document.getElementById(
+                    "days_to_deadline"
+                ).value || "—";
 
 
-                        const taskType =
-                            String(
-                                task.task_type ||
-                                ""
-                            ).toLowerCase();
+            const volume =
+                document.getElementById(
+                    "volume_metric"
+                ).value || "—";
 
 
-                        const taskPriority =
-                            String(
-                                task.priority ||
-                                ""
-                            ).toLowerCase();
+            const difficulty =
+                document.getElementById(
+                    "perceived_difficulty"
+                ).value || "—";
 
 
-                        const matchesSearch =
-                            !search ||
-                            taskId.includes(search) ||
-                            taskType.includes(search);
+            const risk =
+                document.getElementById(
+                    "error_risk"
+                ).value || "—";
 
 
-                        const matchesPriority =
-                            !priority ||
-                            taskPriority === priority;
+            const dependency =
+                document.getElementById(
+                    "dependency_score"
+                ).value || "—";
 
 
-                        return (
-                            matchesSearch &&
-                            matchesPriority
-                        );
-
-                    }
-                );
+            const date =
+                document.getElementById(
+                    "task_date"
+                ).value || "—";
 
 
             document.getElementById(
-                "taskCount"
+                "previewTaskType"
             ).textContent =
-                `${filtered.length} task${filtered.length === 1 ? "" : "s"}`;
+                taskType;
 
 
-            if (!filtered.length) {
-
-                tableBody.innerHTML = `
-
-                    <tr>
-
-                        <td colspan="10">
-
-                            <div class="empty-state">
-
-                                <div class="empty-icon">
-                                    ◇
-                                </div>
-
-                                <div>
-                                    No tasks found.
-                                </div>
-
-                            </div>
-
-                        </td>
-
-                    </tr>
-
-                `;
-
-                return;
-
-            }
+            document.getElementById(
+                "previewPriority"
+            ).textContent =
+                priority;
 
 
-            tableBody.innerHTML =
-                filtered.map(
-                    task => {
-
-                        const id =
-                            task.task_id ||
-                            task.id ||
-                            "—";
+            document.getElementById(
+                "previewDeadline"
+            ).textContent =
+                deadline === "—"
+                    ? "—"
+                    : `${deadline} day(s)`;
 
 
-                        const type =
-                            task.task_type ||
-                            "—";
+            document.getElementById(
+                "previewVolume"
+            ).textContent =
+                volume;
 
 
-                        const priorityValue =
-                            task.priority ||
-                            "—";
+            document.getElementById(
+                "previewDifficulty"
+            ).textContent =
+                difficulty;
 
 
-                        const priorityClass =
-                            String(
-                                priorityValue
-                            ).toLowerCase();
+            document.getElementById(
+                "previewRisk"
+            ).textContent =
+                risk;
 
 
-                        const deadline =
-                            task.days_to_deadline ??
-                            "—";
+            document.getElementById(
+                "previewDependency"
+            ).textContent =
+                dependency;
 
 
-                        const volume =
-                            task.volume_metric ??
-                            "—";
-
-
-                        const difficulty =
-                            task.perceived_difficulty ||
-                            "—";
-
-
-                        const risk =
-                            task.error_risk ??
-                            "—";
-
-
-                        const dependency =
-                            task.dependency_score ??
-                            "—";
-
-
-                        const date =
-                            task.task_date ||
-                            task.given_date ||
-                            task.task_given_date ||
-                            "—";
-
-
-                        return `
-
-                            <tr>
-
-                                <td>
-                                    <strong>
-                                        ${escapeHtml(id)}
-                                    </strong>
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(type)}
-                                </td>
-
-                                <td>
-
-                                    <span class="badge ${priorityClass}">
-
-                                        ${escapeHtml(
-                            priorityValue
-                        )}
-
-                                    </span>
-
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                            deadline
-                        )} day(s)
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                            volume
-                        )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                            difficulty
-                        )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                            risk
-                        )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                            dependency
-                        )}
-                                </td>
-
-                                <td>
-                                    ${escapeHtml(
-                            date
-                        )}
-                                </td>
-
-                                <td>
-
-                                    <div class="actions">
-
-                                        <button
-                                            class="action-btn delete"
-                                            onclick="deleteTask('${escapeJs(id)}')"
-                                            title="Delete"
-                                        >
-                                            ×
-                                        </button>
-
-                                    </div>
-
-                                </td>
-
-                            </tr>
-
-                        `;
-
-                    }
-                ).join("");
+            document.getElementById(
+                "previewDate"
+            ).textContent =
+                date;
 
         }
 
 
         /* =====================================================
-           DELETE TASK
-        ====================================================== */
+           LIVE PREVIEW EVENTS
+        ===================================================== */
 
-        async function deleteTask(taskId) {
+        [
+            "task_type",
+            "priority",
+            "days_to_deadline",
+            "volume_metric",
+            "perceived_difficulty",
+            "error_risk",
+            "dependency_score",
+            "task_date"
+        ].forEach(
+            id => {
 
-            if (
-                !confirm(
-                    `Delete task ${taskId}?`
-                )
-            ) {
-                return;
+                const element =
+                    document.getElementById(id);
+
+                element.addEventListener(
+                    "input",
+                    updatePreview
+                );
+
+                element.addEventListener(
+                    "change",
+                    updatePreview
+                );
+
             }
+        );
 
 
-            try {
+        /* =====================================================
+           CREATE TASK
+        ===================================================== */
 
-                const response =
-                    await fetch(
-                        `/api/tasks/${encodeURIComponent(taskId)}`,
-                        {
-                            method: "DELETE"
-                        }
+        form.addEventListener(
+            "submit",
+            async function (event) {
+
+                event.preventDefault();
+
+
+                const taskType =
+                    document.getElementById(
+                        "task_type"
+                    ).value.trim();
+
+
+                const priority =
+                    document.getElementById(
+                        "priority"
+                    ).value.trim();
+
+
+                const days =
+                    parseFloat(
+                        document.getElementById(
+                            "days_to_deadline"
+                        ).value
                     );
 
 
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.error ||
-                        data.message ||
-                        "Unable to delete task"
+                const volume =
+                    parseFloat(
+                        document.getElementById(
+                            "volume_metric"
+                        ).value
                     );
+
+
+                const difficulty =
+                    document.getElementById(
+                        "perceived_difficulty"
+                    ).value;
+
+
+                const risk =
+                    parseFloat(
+                        document.getElementById(
+                            "error_risk"
+                        ).value
+                    );
+
+
+                const dependency =
+                    parseFloat(
+                        document.getElementById(
+                            "dependency_score"
+                        ).value
+                    );
+
+
+                const taskDate =
+                    document.getElementById(
+                        "task_date"
+                    ).value;
+
+
+                /* ==========================
+                   VALIDATION
+                =========================== */
+
+                if (!taskType) {
+
+                    showMessage(
+                        "Please select a Task Type.",
+                        "error"
+                    );
+
+                    return;
 
                 }
 
 
-                allTasks =
-                    allTasks.filter(
-                        task =>
-                            String(
-                                task.task_id ||
-                                task.id
-                            ) !==
-                            String(taskId)
+                if (!priority) {
+
+                    showMessage(
+                        "Please select a Priority.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    isNaN(days) ||
+                    days < 0
+                ) {
+
+                    showMessage(
+                        "Days to Deadline must be 0 or greater.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    isNaN(volume) ||
+                    volume < 0
+                ) {
+
+                    showMessage(
+                        "Volume Metric must be 0 or greater.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!difficulty) {
+
+                    showMessage(
+                        "Please select Perceived Difficulty.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    isNaN(risk) ||
+                    risk < 0 ||
+                    risk > 5
+                ) {
+
+                    showMessage(
+                        "Error Risk must be between 0 and 5.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    isNaN(dependency) ||
+                    dependency < 0 ||
+                    dependency > 5
+                ) {
+
+                    showMessage(
+                        "Dependency Score must be between 0 and 5.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!taskDate) {
+
+                    showMessage(
+                        "Please select Task Date.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ==========================
+                   PAYLOAD
+                =========================== */
+
+                const payload = {
+
+                    task_type:
+                        taskType,
+
+                    priority:
+                        priority,
+
+                    days_to_deadline:
+                        days,
+
+                    volume_metric:
+                        volume,
+
+                    perceived_difficulty:
+                        difficulty,
+
+                    error_risk:
+                        risk,
+
+                    dependency_score:
+                        dependency,
+
+                    task_date:
+                        taskDate
+
+                };
+
+
+                /* ==========================
+                   LOADING
+                =========================== */
+
+                button.disabled = true;
+
+                button.textContent =
+                    "CREATING...";
+
+
+                message.className =
+                    "message";
+
+                message.style.display =
+                    "none";
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "/create-task",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        payload
+                                    )
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.error ||
+                            data.message ||
+                            data.msg ||
+                            "Unable to create task."
+                        );
+
+                    }
+
+
+                    /* ==========================
+                       SUCCESS
+                    =========================== */
+
+                    showMessage(
+                        data.message ||
+                        "Task created successfully.",
+                        "success"
                     );
 
 
-                updateStats();
+                    /*
+                     * Reset form after
+                     * successful creation.
+                     */
 
-                renderTasks();
+                    form.reset();
 
 
-            } catch (error) {
+                    /*
+                     * Restore default values.
+                     */
 
-                alert(
-                    error.message
-                );
+                    document.getElementById(
+                        "days_to_deadline"
+                    ).value = "5";
+
+
+                    document.getElementById(
+                        "volume_metric"
+                    ).value = "0.14";
+
+
+                    document.getElementById(
+                        "perceived_difficulty"
+                    ).value = "Medium";
+
+
+                    document.getElementById(
+                        "error_risk"
+                    ).value = "2";
+
+
+                    document.getElementById(
+                        "dependency_score"
+                    ).value = "3";
+
+
+                    setToday();
+
+
+                    updatePreview();
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "Create task error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to connect to server.",
+                        "error"
+                    );
+
+                }
+                finally {
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        "CREATE TASK";
+
+                }
 
             }
+        );
+
+
+        /* =====================================================
+           SHOW MESSAGE
+        ===================================================== */
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            message.textContent =
+                text;
+
+            message.className =
+                `message ${type}`;
+
+            message.style.display =
+                "block";
 
         }
 
 
         /* =====================================================
-           SEARCH
-        ====================================================== */
+           TODAY
+        ===================================================== */
 
-        document.getElementById(
-            "searchInput"
-        ).addEventListener(
-            "input",
-            renderTasks
-        );
+        function setToday() {
 
-
-        document.getElementById(
-            "priorityFilter"
-        ).addEventListener(
-            "change",
-            renderTasks
-        );
+            const dateInput =
+                document.getElementById(
+                    "task_date"
+                );
 
 
-        /* =====================================================
-           HTML ESCAPE
-        ====================================================== */
+            if (!dateInput.value) {
 
-        function escapeHtml(value) {
-
-            return String(value)
-                .replaceAll("&", "&amp;")
-                .replaceAll("<", "&lt;")
-                .replaceAll(">", "&gt;")
-                .replaceAll('"', "&quot;")
-                .replaceAll("'", "&#039;");
-
-        }
+                const today =
+                    new Date();
 
 
-        function escapeJs(value) {
+                const year =
+                    today.getFullYear();
 
-            return String(value)
-                .replaceAll("\\", "\\\\")
-                .replaceAll("'", "\\'");
+
+                const month =
+                    String(
+                        today.getMonth() + 1
+                    ).padStart(
+                        2,
+                        "0"
+                    );
+
+
+                const day =
+                    String(
+                        today.getDate()
+                    ).padStart(
+                        2,
+                        "0"
+                    );
+
+
+                dateInput.value =
+                    `${year}-${month}-${day}`;
+
+            }
 
         }
 
 
         /* =====================================================
            INITIALIZE
-        ====================================================== */
+        ===================================================== */
 
-        loadTasks();
+        setToday();
+
+        loadTaskOptions();
+
+        updatePreview();
 
     </script>
 
