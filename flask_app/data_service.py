@@ -267,12 +267,11 @@ def load_model():
 
 def get_rating_category(rating):
     rating = float(rating)
-
-    if rating >= 8:
-        return "High Performer"
-    if rating >= 6:
-        return "Good Performer"
     if rating >= 4:
+        return "High Performer"
+    if rating >= 3:
+        return "Good Performer"
+    if rating >= 2:
         return "Average Performer"
     return "Needs Improvement"
 
@@ -297,12 +296,7 @@ def normalize_rating(value):
     except Exception:
         return 5.0
 
-    # The trained target is kept as-is when already on a 1-10 scale.
-    # If a model ever returns a 1-5 value, convert it to the UI's 1-10 scale.
-    if value <= 5:
-        value = value * 2
-
-    return float(np.clip(value, 1, 10))
+    return float(np.clip(value, 1, 5))
 
 
 # =========================================================

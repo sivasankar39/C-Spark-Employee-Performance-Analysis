@@ -863,13 +863,13 @@ def register_routes(app):
                 }), 400
 
             if (
-                dependency_score < 0
-                or dependency_score > 1
+                dependency_score <= 0
+                or dependency_score >= 5
             ):
                 return jsonify({
                     "success": False,
                     "error":
-                        "Dependency score must be between 0 and 1"
+                        "Dependency score must be between 0 and 5"
                 }), 400
 
             if (
@@ -1440,12 +1440,12 @@ def register_routes(app):
                                 "Invalid dependency score"
                         }), 400
 
-                    if value < 0 or value > 1:
+                    if value <= 0 or value >= 5:
 
                         return jsonify({
                             "success": False,
                             "error":
-                                "Dependency score must be between 0 and 1"
+                                "Dependency score must be between 0 and 5"
                         }), 400
 
                     task["dependency_score"] = value
