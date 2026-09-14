@@ -2,9 +2,7 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>SYNQ — Task History</title>
@@ -13,14 +11,45 @@
 
     <style>
         /* =====================================================
-           PAGE
+           GLOBAL
         ===================================================== */
 
-        .tasks-page {
-            padding: 35px 40px;
-            min-height: 100vh;
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
             background: #050505;
             color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+
+
+        /* =====================================================
+           MAIN CONTENT
+        ===================================================== */
+
+        .main-content {
+            margin-left: 300px !important;
+            width: calc(100% - 300px) !important;
+            min-height: 100vh;
+            background: #050505;
+            overflow-x: hidden;
+        }
+
+        .tasks-page {
+            width: 100%;
+            min-height: 100vh;
+            padding: 35px 40px;
         }
 
 
@@ -29,10 +58,16 @@
         ===================================================== */
 
         .topbar {
+            width: 100%;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 25px;
             margin-bottom: 30px;
+        }
+
+        .header-left {
+            min-width: 0;
         }
 
         .label {
@@ -47,6 +82,7 @@
             margin: 0;
             font-size: 30px;
             font-weight: 700;
+            color: #fff;
         }
 
         .subtitle {
@@ -56,13 +92,19 @@
         }
 
         .create-btn {
+            flex-shrink: 0;
+
             background: #a855f7;
             color: #fff;
             text-decoration: none;
+
             padding: 12px 18px;
+
             border-radius: 8px;
+
             font-size: 12px;
             font-weight: 600;
+
             transition: 0.2s;
         }
 
@@ -77,24 +119,37 @@
         ===================================================== */
 
         .stats {
+            width: 100%;
+
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+
+            gap: 18px;
+
             margin-bottom: 25px;
         }
 
         .stat {
+            min-width: 0;
+
             background: #0b0b0b;
+
             border: 1px solid #1c1c1c;
+
             border-radius: 10px;
+
             padding: 20px;
         }
 
         .stat-title {
             color: #666;
+
             font-size: 10px;
+
             letter-spacing: 1px;
+
             margin-bottom: 10px;
+
             text-transform: uppercase;
         }
 
@@ -117,26 +172,46 @@
         ===================================================== */
 
         .filters {
+            width: 100%;
+
             display: flex;
+
             gap: 12px;
+
             margin-bottom: 18px;
         }
 
         .filters input,
         .filters select {
+            height: 48px;
 
             background: #0b0b0b;
-            border: 1px solid #222;
-            color: #fff;
-            padding: 11px 13px;
-            border-radius: 8px;
-            outline: none;
-            font-size: 12px;
 
+            border: 1px solid #222;
+
+            color: #fff;
+
+            padding: 0 15px;
+
+            border-radius: 8px;
+
+            outline: none;
+
+            font-size: 12px;
         }
 
         .filters input {
             flex: 1;
+            min-width: 0;
+        }
+
+        .filters select {
+            width: 170px;
+            flex-shrink: 0;
+        }
+
+        .filters input::placeholder {
+            color: #666;
         }
 
         .filters input:focus,
@@ -146,21 +221,30 @@
 
 
         /* =====================================================
-           TABLE
+           TABLE CARD
         ===================================================== */
 
         .table-card {
+            width: 100%;
+
             background: #0b0b0b;
+
             border: 1px solid #1c1c1c;
+
             border-radius: 10px;
+
             overflow: hidden;
         }
 
         .table-top {
             padding: 17px 20px;
+
             border-bottom: 1px solid #1c1c1c;
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
         }
 
@@ -175,37 +259,60 @@
         }
 
         .table-wrap {
+            width: 100%;
             overflow-x: auto;
         }
 
         table {
             width: 100%;
+
             min-width: 1150px;
+
             border-collapse: collapse;
         }
 
         th {
             color: #555;
+
             font-size: 10px;
+
             text-align: left;
+
             padding: 14px 18px;
+
             border-bottom: 1px solid #1c1c1c;
+
             text-transform: uppercase;
+
             letter-spacing: 1px;
+
             white-space: nowrap;
         }
 
         td {
             color: #aaa;
+
             font-size: 12px;
+
             padding: 15px 18px;
+
             border-bottom: 1px solid #151515;
+
             white-space: nowrap;
         }
 
         tbody tr:hover {
             background: #101010;
         }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        /* =====================================================
+           TASK COLORS
+        ===================================================== */
 
         .task-id {
             color: #a855f7;
@@ -219,14 +326,18 @@
 
 
         /* =====================================================
-           PRIORITY BADGES
+           PRIORITY
         ===================================================== */
 
         .badge {
             display: inline-block;
+
             padding: 5px 9px;
+
             border-radius: 5px;
+
             font-size: 10px;
+
             font-weight: 600;
         }
 
@@ -257,15 +368,19 @@
 
         .edit-btn,
         .delete-btn {
-
             border: 1px solid #252525;
-            background: #111;
-            padding: 7px 11px;
-            border-radius: 6px;
-            font-size: 10px;
-            cursor: pointer;
-            transition: 0.2s;
 
+            background: #111;
+
+            padding: 7px 11px;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
         }
 
         .edit-btn {
@@ -273,11 +388,9 @@
         }
 
         .edit-btn:hover {
-
             color: #c084fc;
             border-color: #7c3aed;
             background: #171020;
-
         }
 
         .delete-btn {
@@ -285,16 +398,14 @@
         }
 
         .delete-btn:hover {
-
             color: #f87171;
             border-color: #ef4444;
             background: #1c0d0d;
-
         }
 
 
         /* =====================================================
-           EMPTY / ERROR
+           EMPTY
         ===================================================== */
 
         .empty {
@@ -309,8 +420,8 @@
         ===================================================== */
 
         .modal-overlay {
-
             position: fixed;
+
             inset: 0;
 
             background: rgba(0, 0, 0, 0.78);
@@ -323,18 +434,19 @@
             z-index: 5000;
 
             padding: 20px;
-
         }
 
         .modal-overlay.active {
             display: flex;
         }
 
-
         .modal {
-
             width: 100%;
             max-width: 600px;
+
+            max-height: 90vh;
+
+            overflow-y: auto;
 
             background: #0b0b0b;
 
@@ -344,45 +456,34 @@
 
             box-shadow:
                 0 25px 80px rgba(0, 0, 0, 0.65);
-
-            overflow: hidden;
-
         }
 
-
         .modal-header {
-
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
 
             padding: 20px 22px;
 
             border-bottom: 1px solid #1d1d1d;
-
         }
-
 
         .modal-title {
-
             font-size: 16px;
             font-weight: 600;
-
         }
 
-
         .modal-task-id {
-
             color: #a855f7;
             font-size: 11px;
             margin-top: 4px;
-
         }
 
-
         .close-modal {
-
             border: none;
+
             background: transparent;
 
             color: #666;
@@ -390,44 +491,34 @@
             font-size: 22px;
 
             cursor: pointer;
-
         }
 
         .close-modal:hover {
             color: #fff;
         }
 
-
         .modal-body {
             padding: 22px;
         }
 
-
         .form-grid {
-
             display: grid;
 
-            grid-template-columns:
-                repeat(2, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
 
             gap: 16px;
-
         }
-
 
         .form-group {
             display: flex;
             flex-direction: column;
         }
 
-
         .form-group.full {
             grid-column: 1 / -1;
         }
 
-
         .form-group label {
-
             color: #777;
 
             font-size: 10px;
@@ -437,16 +528,11 @@
             letter-spacing: 1px;
 
             margin-bottom: 7px;
-
         }
-
 
         .form-group input,
         .form-group select {
-
             width: 100%;
-
-            box-sizing: border-box;
 
             background: #070707;
 
@@ -461,20 +547,14 @@
             outline: none;
 
             font-size: 12px;
-
         }
-
 
         .form-group input:focus,
         .form-group select:focus {
-
             border-color: #7c3aed;
-
         }
 
-
         .modal-footer {
-
             display: flex;
 
             justify-content: flex-end;
@@ -484,13 +564,10 @@
             padding: 16px 22px;
 
             border-top: 1px solid #1d1d1d;
-
         }
-
 
         .cancel-btn,
         .save-btn {
-
             padding: 10px 17px;
 
             border-radius: 7px;
@@ -498,31 +575,23 @@
             font-size: 11px;
 
             cursor: pointer;
-
         }
 
-
         .cancel-btn {
-
             background: #111;
 
             border: 1px solid #252525;
 
             color: #999;
-
         }
 
-
         .save-btn {
-
             background: #a855f7;
 
             border: 1px solid #a855f7;
 
             color: #fff;
-
         }
-
 
         .save-btn:hover {
             background: #9333ea;
@@ -533,20 +602,49 @@
            RESPONSIVE
         ===================================================== */
 
-        @media (max-width: 900px) {
+        @media (max-width: 1150px) {
 
-            .stats {
-                grid-template-columns:
-                    repeat(2, 1fr);
+            .main-content {
+                margin-left: 300px !important;
+                width: calc(100% - 300px) !important;
             }
 
+            .tasks-page {
+                padding: 30px 25px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+
+        @media (max-width: 850px) {
+
+            .main-content {
+                margin-left: 240px !important;
+                width: calc(100% - 240px) !important;
+            }
+
+            .tasks-page {
+                padding: 25px 20px;
+            }
+
+            .topbar {
+                align-items: flex-start;
+            }
         }
 
 
         @media (max-width: 650px) {
 
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
             .tasks-page {
-                padding: 25px 15px;
+                padding: 22px 15px;
             }
 
             .topbar {
@@ -563,6 +661,10 @@
                 flex-direction: column;
             }
 
+            .filters select {
+                width: 100%;
+            }
+
             .form-grid {
                 grid-template-columns: 1fr;
             }
@@ -570,7 +672,6 @@
             .form-group.full {
                 grid-column: auto;
             }
-
         }
     </style>
 
@@ -580,21 +681,30 @@
 <body>
 
 
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
     {% include 'partials/sidebar.html' %}
 
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
 
     <main class="main-content">
 
         <div class="tasks-page">
 
 
-            <!-- =====================================================
-         HEADER
-    ===================================================== -->
+            <!-- =================================================
+                 HEADER
+            ================================================== -->
 
             <div class="topbar">
 
-                <div>
+                <div class="header-left">
 
                     <div class="label">
                         TASK MANAGEMENT
@@ -618,9 +728,10 @@
             </div>
 
 
-            <!-- =====================================================
-         STATS
-    ===================================================== -->
+
+            <!-- =================================================
+                 STATS
+            ================================================== -->
 
             <div class="stats">
 
@@ -678,9 +789,10 @@
             </div>
 
 
-            <!-- =====================================================
-         FILTERS
-    ===================================================== -->
+
+            <!-- =================================================
+                 FILTERS
+            ================================================== -->
 
             <div class="filters">
 
@@ -710,9 +822,10 @@
             </div>
 
 
-            <!-- =====================================================
-         TABLE
-    ===================================================== -->
+
+            <!-- =================================================
+                 TABLE
+            ================================================== -->
 
             <div class="table-card">
 
@@ -780,15 +893,15 @@
 
             </div>
 
-
         </div>
 
     </main>
 
 
-    <!-- =========================================================
-     EDIT MODAL
-========================================================= -->
+
+    <!-- =====================================================
+         EDIT MODAL
+    ====================================================== -->
 
     <div class="modal-overlay" id="editModal">
 
@@ -815,6 +928,7 @@
                 </button>
 
             </div>
+
 
 
             <div class="modal-body">
@@ -936,7 +1050,7 @@
                         </div>
 
 
-                        <!-- DEPENDENCY -->
+                        <!-- DEPENDENCY SCORE -->
 
                         <div class="form-group">
 
@@ -944,7 +1058,7 @@
                                 Dependency Score
                             </label>
 
-                            <input type="number" id="editDependency" min="0" max="1" step="0.01" required>
+                            <input type="number" id="editDependency" min="0" max="5" step="1" value="0" required>
 
                         </div>
 
@@ -969,6 +1083,7 @@
             </div>
 
 
+
             <div class="modal-footer">
 
                 <button class="cancel-btn" onclick="closeEditModal()">
@@ -988,6 +1103,7 @@
     </div>
 
 
+
     <script>
 
         let allTasks = [];
@@ -1005,7 +1121,6 @@
 
                 const response =
                     await fetch("/api/tasks");
-
 
                 const data =
                     await response.json();
@@ -1027,18 +1142,11 @@
                         : [];
 
 
-                updateStats(
-                    allTasks
-                );
-
+                updateStats(allTasks);
 
                 populateTaskTypes();
 
-
-                renderTasks(
-                    allTasks
-                );
-
+                renderTasks(allTasks);
 
             }
 
@@ -1046,29 +1154,27 @@
 
                 console.error(error);
 
-
                 document.getElementById(
                     "taskBody"
                 ).innerHTML = `
 
-            <tr>
+                    <tr>
 
-                <td
-                    colspan="10"
-                    class="empty"
-                >
+                        <td
+                            colspan="10"
+                            class="empty"
+                        >
+                            Failed to load tasks.
+                        </td>
 
-                    Failed to load tasks.
+                    </tr>
 
-                </td>
-
-            </tr>
-
-        `;
+                `;
 
             }
 
         }
+
 
 
         /* =====================================================
@@ -1109,36 +1215,27 @@
 
                 select.innerHTML = `
 
-            <option value="">
-                Select Task Type
-            </option>
+                    <option value="">
+                        Select Task Type
+                    </option>
 
-        `;
-
-
-                taskTypes.forEach(
-                    type => {
-
-                        const option =
-                            document.createElement(
-                                "option"
-                            );
+                `;
 
 
-                        option.value =
-                            type;
+                taskTypes.forEach(type => {
 
-                        option.textContent =
-                            type;
-
-
-                        select.appendChild(
-                            option
+                    const option =
+                        document.createElement(
+                            "option"
                         );
 
-                    }
-                );
+                    option.value = type;
 
+                    option.textContent = type;
+
+                    select.appendChild(option);
+
+                });
 
             }
 
@@ -1154,6 +1251,7 @@
         }
 
 
+
         /* =====================================================
            UPDATE STATS
         ===================================================== */
@@ -1167,12 +1265,10 @@
 
 
             const high =
-                tasks.filter(
-                    task =>
-                        String(
-                            task.priority || ""
-                        ).toLowerCase()
-                        === "high"
+                tasks.filter(task =>
+                    String(
+                        task.priority || ""
+                    ).toLowerCase() === "high"
                 ).length;
 
 
@@ -1206,7 +1302,6 @@
             document.getElementById(
                 "avgDeadline"
             ).textContent =
-
                 tasks.length
                     ? (
                         deadlineTotal /
@@ -1218,7 +1313,6 @@
             document.getElementById(
                 "avgRisk"
             ).textContent =
-
                 tasks.length
                     ? (
                         riskTotal /
@@ -1227,6 +1321,7 @@
                     : "0";
 
         }
+
 
 
         /* =====================================================
@@ -1254,167 +1349,18 @@
 
                 body.innerHTML = `
 
-            <tr>
-
-                <td
-                    colspan="10"
-                    class="empty"
-                >
-
-                    No tasks created yet.
-
-                    <br><br>
-
-                    Create your first task.
-
-                </td>
-
-            </tr>
-
-        `;
-
-                return;
-
-            }
-
-
-            body.innerHTML =
-                tasks.map(
-                    task => {
-
-                        const priority =
-                            String(
-                                task.priority || ""
-                            );
-
-
-                        const priorityClass =
-                            priority.toLowerCase();
-
-
-                        return `
-
                     <tr>
 
-                        <td>
+                        <td
+                            colspan="10"
+                            class="empty"
+                        >
 
-                            <span class="task-id">
+                            No tasks created yet.
 
-                                ${escapeHTML(
-                            task.task_id
-                        )}
+                            <br><br>
 
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <span class="task-type">
-
-                                ${escapeHTML(
-                            task.task_type
-                        )}
-
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            <span
-                                class="badge ${priorityClass}"
-                            >
-
-                                ${escapeHTML(
-                            priority
-                        )}
-
-                            </span>
-
-                        </td>
-
-
-                        <td>
-
-                            ${formatNumber(
-                            task.days_to_deadline
-                        )}
-
-                            days
-
-                        </td>
-
-
-                        <td>
-
-                            ${formatNumber(
-                            task.volume_metric
-                        )}
-
-                        </td>
-
-
-                        <td>
-
-                            ${escapeHTML(
-                            task.perceived_difficulty
-                            || "-"
-                        )}
-
-                        </td>
-
-
-                        <td>
-
-                            ${formatNumber(
-                            task.error_risk
-                        )}
-
-                        </td>
-
-
-                        <td>
-
-                            ${formatNumber(
-                            task.dependency_score
-                        )}
-
-                        </td>
-
-
-                        <td>
-
-                            ${escapeHTML(
-                            task.task_date
-                            || "-"
-                        )}
-
-                        </td>
-
-
-                        <td>
-
-                            <div class="action-buttons">
-
-                                <button
-                                    class="edit-btn"
-                                    onclick="openEditModal('${task.task_id}')"
-                                >
-                                    Edit
-                                </button>
-
-
-                                <button
-                                    class="delete-btn"
-                                    onclick="deleteTask('${task.task_id}')"
-                                >
-                                    Delete
-                                </button>
-
-                            </div>
+                            Create your first task.
 
                         </td>
 
@@ -1422,14 +1368,148 @@
 
                 `;
 
-                    }
-                ).join("");
+                return;
+
+            }
+
+
+            body.innerHTML =
+                tasks.map(task => {
+
+                    const priority =
+                        String(
+                            task.priority || ""
+                        );
+
+
+                    const priorityClass =
+                        priority.toLowerCase();
+
+
+                    return `
+
+                        <tr>
+
+                            <td>
+
+                                <span class="task-id">
+
+                                    ${escapeHTML(
+                        task.task_id
+                    )}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span class="task-type">
+
+                                    ${escapeHTML(
+                        task.task_type
+                    )}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="badge ${priorityClass}"
+                                >
+
+                                    ${escapeHTML(
+                        priority
+                    )}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+                                ${formatNumber(
+                        task.days_to_deadline
+                    )}
+                                days
+                            </td>
+
+
+                            <td>
+                                ${formatNumber(
+                        task.volume_metric
+                    )}
+                            </td>
+
+
+                            <td>
+                                ${escapeHTML(
+                        task.perceived_difficulty ||
+                        "-"
+                    )}
+                            </td>
+
+
+                            <td>
+                                ${formatNumber(
+                        task.error_risk
+                    )}
+                            </td>
+
+
+                            <td>
+                                ${formatNumber(
+                        task.dependency_score
+                    )}
+                            </td>
+
+
+                            <td>
+                                ${escapeHTML(
+                        task.task_date || "-"
+                    )}
+                            </td>
+
+
+                            <td>
+
+                                <div class="action-buttons">
+
+                                    <button
+                                        class="edit-btn"
+                                        onclick="openEditModal('${task.task_id}')"
+                                    >
+                                        Edit
+                                    </button>
+
+
+                                    <button
+                                        class="delete-btn"
+                                        onclick="deleteTask('${task.task_id}')"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }).join("");
 
         }
 
 
+
         /* =====================================================
-           EDIT MODAL
+           OPEN EDIT MODAL
         ===================================================== */
 
         function openEditModal(taskId) {
@@ -1443,17 +1523,14 @@
 
             if (!task) {
 
-                alert(
-                    "Task not found."
-                );
+                alert("Task not found.");
 
                 return;
 
             }
 
 
-            editingTaskId =
-                taskId;
+            editingTaskId = taskId;
 
 
             document.getElementById(
@@ -1477,13 +1554,13 @@
             document.getElementById(
                 "editDeadline"
             ).value =
-                task.days_to_deadline || "";
+                task.days_to_deadline ?? "";
 
 
             document.getElementById(
                 "editVolume"
             ).value =
-                task.volume_metric || "";
+                task.volume_metric ?? "";
 
 
             document.getElementById(
@@ -1495,13 +1572,13 @@
             document.getElementById(
                 "editRisk"
             ).value =
-                task.error_risk || 0;
+                task.error_risk ?? 0;
 
 
             document.getElementById(
                 "editDependency"
             ).value =
-                task.dependency_score || 0;
+                task.dependency_score ?? 0;
 
 
             document.getElementById(
@@ -1512,29 +1589,26 @@
 
             document.getElementById(
                 "editModal"
-            ).classList.add(
-                "active"
-            );
+            ).classList.add("active");
 
         }
 
 
+
         /* =====================================================
-           CLOSE EDIT MODAL
+           CLOSE MODAL
         ===================================================== */
 
         function closeEditModal() {
 
             editingTaskId = null;
 
-
             document.getElementById(
                 "editModal"
-            ).classList.remove(
-                "active"
-            );
+            ).classList.remove("active");
 
         }
+
 
 
         /* =====================================================
@@ -1544,9 +1618,7 @@
         async function saveEditedTask() {
 
             if (!editingTaskId) {
-
                 return;
-
             }
 
 
@@ -1563,15 +1635,19 @@
 
 
             const deadline =
-                document.getElementById(
-                    "editDeadline"
-                ).value;
+                Number(
+                    document.getElementById(
+                        "editDeadline"
+                    ).value
+                );
 
 
             const volume =
-                document.getElementById(
-                    "editVolume"
-                ).value;
+                Number(
+                    document.getElementById(
+                        "editVolume"
+                    ).value
+                );
 
 
             const difficulty =
@@ -1581,15 +1657,19 @@
 
 
             const risk =
-                document.getElementById(
-                    "editRisk"
-                ).value;
+                Number(
+                    document.getElementById(
+                        "editRisk"
+                    ).value
+                );
 
 
             const dependency =
-                document.getElementById(
-                    "editDependency"
-                ).value;
+                Number(
+                    document.getElementById(
+                        "editDependency"
+                    ).value
+                );
 
 
             const date =
@@ -1601,12 +1681,12 @@
             if (
                 !taskType ||
                 !priority ||
-                !deadline ||
-                !volume ||
                 !difficulty ||
-                !risk ||
-                !dependency ||
-                !date
+                !date ||
+                isNaN(deadline) ||
+                isNaN(volume) ||
+                isNaN(risk) ||
+                isNaN(dependency)
             ) {
 
                 alert(
@@ -1618,17 +1698,19 @@
             }
 
 
+            /* Dependency = 0 to 5 */
+
             if (
-                Number(deadline) < 0 ||
-                Number(volume) < 0 ||
-                Number(risk) < 0 ||
-                Number(risk) > 5 ||
-                Number(dependency) < 0 ||
-                Number(dependency) > 1
+                deadline < 0 ||
+                volume < 0 ||
+                risk < 0 ||
+                risk > 5 ||
+                dependency < 0 ||
+                dependency > 5
             ) {
 
                 alert(
-                    "Please enter valid numeric values."
+                    "Please enter valid values. Dependency Score must be between 0 and 5."
                 );
 
                 return;
@@ -1642,44 +1724,40 @@
                     await fetch(
                         `/api/tasks/${editingTaskId}`,
                         {
-
                             method: "PUT",
 
                             headers: {
-
                                 "Content-Type":
                                     "application/json"
-
                             },
 
-                            body:
-                                JSON.stringify({
+                            body: JSON.stringify({
 
-                                    task_type:
-                                        taskType,
+                                task_type:
+                                    taskType,
 
-                                    priority:
-                                        priority,
+                                priority:
+                                    priority,
 
-                                    days_to_deadline:
-                                        deadline,
+                                days_to_deadline:
+                                    deadline,
 
-                                    volume_metric:
-                                        volume,
+                                volume_metric:
+                                    volume,
 
-                                    perceived_difficulty:
-                                        difficulty,
+                                perceived_difficulty:
+                                    difficulty,
 
-                                    error_risk:
-                                        risk,
+                                error_risk:
+                                    risk,
 
-                                    dependency_score:
-                                        dependency,
+                                dependency_score:
+                                    dependency,
 
-                                    task_date:
-                                        date
+                                task_date:
+                                    date
 
-                                })
+                            })
 
                         }
                     );
@@ -1703,9 +1781,7 @@
 
                 closeEditModal();
 
-
                 await loadTasks();
-
 
                 alert(
                     `${editingTaskId} updated successfully.`
@@ -1726,6 +1802,7 @@
         }
 
 
+
         /* =====================================================
            DELETE TASK
         ===================================================== */
@@ -1734,17 +1811,13 @@
 
             const confirmed =
                 confirm(
-
                     `Delete ${taskId}?\n\n` +
                     `This task will be permanently removed.`
-
                 );
 
 
             if (!confirmed) {
-
                 return;
-
             }
 
 
@@ -1754,9 +1827,7 @@
                     await fetch(
                         `/api/tasks/${taskId}`,
                         {
-
                             method: "DELETE"
-
                         }
                     );
 
@@ -1779,7 +1850,6 @@
 
                 await loadTasks();
 
-
                 alert(
                     `${taskId} deleted successfully.`
                 );
@@ -1797,6 +1867,7 @@
             }
 
         }
+
 
 
         /* =====================================================
@@ -1821,52 +1892,49 @@
 
 
             const filtered =
-                allTasks.filter(
-                    task => {
+                allTasks.filter(task => {
 
-                        const id =
-                            String(
-                                task.task_id || ""
-                            ).toLowerCase();
-
-
-                        const type =
-                            String(
-                                task.task_type || ""
-                            ).toLowerCase();
+                    const id =
+                        String(
+                            task.task_id || ""
+                        ).toLowerCase();
 
 
-                        const taskPriority =
-                            String(
-                                task.priority || ""
-                            ).toLowerCase();
+                    const type =
+                        String(
+                            task.task_type || ""
+                        ).toLowerCase();
 
 
-                        const searchMatch =
-                            !search ||
-                            id.includes(search) ||
-                            type.includes(search);
+                    const taskPriority =
+                        String(
+                            task.priority || ""
+                        ).toLowerCase();
 
 
-                        const priorityMatch =
-                            priority === "all" ||
-                            taskPriority === priority;
+                    const searchMatch =
+                        !search ||
+                        id.includes(search) ||
+                        type.includes(search);
 
 
-                        return (
-                            searchMatch &&
-                            priorityMatch
-                        );
-
-                    }
-                );
+                    const priorityMatch =
+                        priority === "all" ||
+                        taskPriority === priority;
 
 
-            renderTasks(
-                filtered
-            );
+                    return (
+                        searchMatch &&
+                        priorityMatch
+                    );
+
+                });
+
+
+            renderTasks(filtered);
 
         }
+
 
 
         /* =====================================================
@@ -1880,9 +1948,7 @@
 
 
             if (isNaN(number)) {
-
                 return "-";
-
             }
 
 
@@ -1893,6 +1959,7 @@
         }
 
 
+
         /* =====================================================
            ESCAPE HTML
         ===================================================== */
@@ -1900,7 +1967,7 @@
         function escapeHTML(value) {
 
             return String(
-                value || ""
+                value ?? ""
             )
                 .replace(
                     /&/g,
@@ -1926,14 +1993,13 @@
         }
 
 
+
         /* =====================================================
            EVENTS
         ===================================================== */
 
         document
-            .getElementById(
-                "search"
-            )
+            .getElementById("search")
             .addEventListener(
                 "input",
                 filterTasks
@@ -1941,9 +2007,7 @@
 
 
         document
-            .getElementById(
-                "priority"
-            )
+            .getElementById("priority")
             .addEventListener(
                 "change",
                 filterTasks
@@ -1951,9 +2015,7 @@
 
 
         document
-            .getElementById(
-                "editModal"
-            )
+            .getElementById("editModal")
             .addEventListener(
                 "click",
                 function (event) {
@@ -1971,9 +2033,7 @@
 
 
         document
-            .getElementById(
-                "editForm"
-            )
+            .getElementById("editForm")
             .addEventListener(
                 "submit",
                 function (event) {
@@ -1986,6 +2046,7 @@
             );
 
 
+
         /* =====================================================
            INITIAL LOAD
         ===================================================== */
@@ -1993,7 +2054,6 @@
         loadTasks();
 
     </script>
-
 
 </body>
 

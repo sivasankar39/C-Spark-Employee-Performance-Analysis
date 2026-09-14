@@ -1,554 +1,1237 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SYNQ — Login</title>
-
-    <!-- Main CSS -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
+    <title>SYNQ | Login</title>
 
     <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        min-height: 100vh;
-        background:
-          radial-gradient(
-            circle at 50% 0%,
-            rgba(126, 34, 206, 0.12),
-            transparent 35%
-          ),
-          #050505;
-        color: #ffffff;
-        font-family: Arial, Helvetica, sans-serif;
-        overflow-x: hidden;
-      }
-
-      /* =========================
-           LOGIN PAGE
-        ========================== */
-
-      .login-page {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 30px 20px;
-        position: relative;
-      }
-
-      .login-page::before {
-        content: "";
-        position: absolute;
-        width: 500px;
-        height: 500px;
-        border-radius: 50%;
-        background: rgba(124, 58, 237, 0.06);
-        filter: blur(100px);
-        top: -250px;
-        left: 50%;
-        transform: translateX(-50%);
-        pointer-events: none;
-      }
-
-      .login-container {
-        width: 100%;
-        max-width: 430px;
-        position: relative;
-        z-index: 2;
-      }
-
-      /* =========================
-           LOGO
-        ========================== */
-
-      .logo-area {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 28px;
-      }
-
-      .synq-logo {
-        width: 210px;
-        height: auto;
-        display: block;
-        object-fit: contain;
-      }
-
-      /* =========================
-           LOGIN CARD
-        ========================== */
-
-      .login-card {
-        width: 100%;
-        background: rgba(12, 12, 12, 0.96);
-        border: 1px solid #242424;
-        border-radius: 18px;
-        padding: 36px;
-        box-shadow:
-          0 25px 70px rgba(0, 0, 0, 0.55),
-          0 0 50px rgba(124, 58, 237, 0.04);
-      }
-
-      .login-heading {
-        text-align: center;
-        margin-bottom: 30px;
-      }
-
-      .login-heading h1 {
-        font-size: 24px;
-        font-weight: 700;
-        letter-spacing: -0.5px;
-        margin-bottom: 8px;
-      }
-
-      .login-heading p {
-        color: #777;
-        font-size: 13px;
-        line-height: 1.5;
-      }
-
-      /* =========================
-           FORM
-        ========================== */
-
-      .form-group {
-        margin-bottom: 20px;
-      }
-
-      .form-label {
-        display: block;
-        color: #aaa;
-        font-size: 12px;
-        font-weight: 600;
-        margin-bottom: 8px;
-      }
-
-      .input-wrapper {
-        position: relative;
-      }
-
-      .form-input {
-        width: 100%;
-        height: 48px;
-        padding: 0 14px;
-        border-radius: 9px;
-        border: 1px solid #292929;
-        background: #090909;
-        color: #ffffff;
-        outline: none;
-        font-size: 13px;
-        transition: all 0.2s ease;
-      }
-
-      .form-input::placeholder {
-        color: #4f4f4f;
-      }
-
-      .form-input:focus {
-        border-color: #7c3aed;
-        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
-      }
-
-      /* Password input */
-
-      .password-input {
-        padding-right: 48px;
-      }
-
-      .password-toggle {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        border: none;
-        background: transparent;
-        color: #666;
-        cursor: pointer;
-        font-size: 16px;
-        padding: 5px;
-      }
-
-      .password-toggle:hover {
-        color: #a855f7;
-      }
-
-      /* =========================
-           ERROR MESSAGE
-        ========================== */
-
-      .error-message {
-        display: none;
-        background: rgba(239, 68, 68, 0.08);
-        border: 1px solid rgba(239, 68, 68, 0.25);
-        color: #f87171;
-        border-radius: 8px;
-        padding: 11px 13px;
-        margin-bottom: 18px;
-        font-size: 12px;
-        line-height: 1.4;
-      }
-
-      .error-message.show {
-        display: block;
-      }
-
-      /* =========================
-           LOGIN BUTTON
-        ========================== */
-
-      .login-button {
-        width: 100%;
-        height: 48px;
-        border: none;
-        border-radius: 9px;
-        background: linear-gradient(135deg, #7c3aed, #9333ea);
-        color: #ffffff;
-        font-size: 13px;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        box-shadow: 0 8px 25px rgba(124, 58, 237, 0.18);
-      }
-
-      .login-button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 12px 30px rgba(124, 58, 237, 0.28);
-      }
-
-      .login-button:active {
-        transform: translateY(0);
-      }
-
-      .login-button:disabled {
-        opacity: 0.65;
-        cursor: not-allowed;
-        transform: none;
-      }
-
-      /* =========================
-           REGISTER
-        ========================== */
-
-      .register-section {
-        text-align: center;
-        margin-top: 25px;
-        padding-top: 23px;
-        border-top: 1px solid #1e1e1e;
-      }
-
-      .register-section p {
-        color: #666;
-        font-size: 12px;
-      }
-
-      .register-link {
-        color: #a855f7;
-        text-decoration: none;
-        font-weight: 600;
-        margin-left: 4px;
-      }
-
-      .register-link:hover {
-        color: #c084fc;
-      }
-
-      /* =========================
-           FOOTER
-        ========================== */
-
-      .login-footer {
-        text-align: center;
-        margin-top: 22px;
-      }
-
-      .login-footer span {
-        color: #444;
-        font-size: 10px;
-        letter-spacing: 1px;
-      }
-
-      /* =========================
-           LOADING
-        ========================== */
-
-      .loading-text {
-        display: none;
-      }
-
-      .login-button.loading .button-text {
-        display: none;
-      }
-
-      .login-button.loading .loading-text {
-        display: inline;
-      }
-
-      /* =========================
-           MOBILE
-        ========================== */
-
-      @media (max-width: 520px) {
-        .login-page {
-          padding: 20px 15px;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
         }
 
-        .login-card {
-          padding: 28px 22px;
-          border-radius: 15px;
+        body {
+            min-height: 100vh;
+            background: #050505;
+            color: #ffffff;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: hidden;
+        }
+
+        /* =========================
+           BACKGROUND
+        ========================= */
+
+        body::before {
+            content: "";
+            position: fixed;
+
+            width: 500px;
+            height: 500px;
+
+            background: #7c3aed;
+
+            filter: blur(180px);
+
+            opacity: 0.16;
+
+            top: -180px;
+            left: -150px;
+
+            pointer-events: none;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+
+            width: 450px;
+            height: 450px;
+
+            background: #a855f7;
+
+            filter: blur(180px);
+
+            opacity: 0.10;
+
+            bottom: -200px;
+            right: -150px;
+
+            pointer-events: none;
+        }
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+
+        .container {
+            width: 100%;
+            max-width: 1050px;
+
+            min-height: 620px;
+
+            display: grid;
+
+            grid-template-columns:
+                1.05fr 0.95fr;
+
+            background:
+                rgba(12, 12, 12, 0.96);
+
+            border:
+                1px solid #242424;
+
+            border-radius: 24px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 0 60px rgba(124, 58, 237, 0.12);
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+        /* =========================
+           LEFT BRAND SECTION
+        ========================= */
+
+        .brand-section {
+            position: relative;
+
+            padding: 55px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: space-between;
+
+            border-right:
+                1px solid #222;
+
+            background:
+                radial-gradient(circle at 20% 20%,
+                    rgba(124, 58, 237, 0.16),
+                    transparent 38%),
+                #070707;
+        }
+
+        /* =========================
+           SYNQ LOGO
+        ========================= */
+
+        .logo-area {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: flex-start;
+
+            width: 100%;
         }
 
         .synq-logo {
-          width: 180px;
+            width: 285px;
+
+            height: auto;
+
+            display: block;
+
+            object-fit: contain;
+
+            object-position: left center;
+
+            border-radius: 10px;
+
+            filter:
+                drop-shadow(0 0 18px rgba(139, 92, 246, 0.18));
         }
 
-        .login-heading h1 {
-          font-size: 21px;
+        /* =========================
+           BRAND CONTENT
+        ========================= */
+        .brand-content {
+            margin-top: 0;
+            padding-top: 70px;
         }
-      }
+
+        .brand-content h1 {
+            font-size: 150px;
+            line-height: 0.9;
+            font-weight: 800;
+            letter-spacing: -8px;
+
+            background: linear-gradient(90deg,
+                    #ffffff 0%,
+                    #e8d9ff 45%,
+                    #a855f7 100%);
+
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+
+            margin: 0 0 32px 0;
+        }
+
+        .brand-content .tagline {
+            color: #aaa;
+            font-size: 17px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .brand-content p {
+            margin-top: 28px;
+            max-width: 590px;
+            color: #666;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        /* =========================
+           RIGHT LOGIN SECTION
+        ========================= */
+
+        .login-section {
+            padding: 65px 60px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+        .login-box {
+            width: 100%;
+
+            max-width: 380px;
+        }
+
+        .login-box h2 {
+            font-size: 32px;
+
+            margin-bottom: 10px;
+        }
+
+        .login-box .subtitle {
+            color: #777;
+
+            font-size: 14px;
+
+            margin-bottom: 38px;
+        }
+
+        /* =========================
+           INPUT
+        ========================= */
+
+        .input-group {
+            margin-bottom: 22px;
+        }
+
+        .input-group label {
+            display: block;
+
+            margin-bottom: 9px;
+
+            color: #aaa;
+
+            font-size: 13px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+
+            padding: 15px 16px;
+
+            background: #101010;
+
+            color: #fff;
+
+            border:
+                1px solid #292929;
+
+            border-radius: 10px;
+
+            outline: none;
+
+            font-size: 14px;
+
+            transition: 0.25s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #8b5cf6;
+
+            box-shadow:
+                0 0 0 3px rgba(139, 92, 246, 0.10);
+        }
+
+        /* =========================
+           PASSWORD TOGGLE
+        ========================= */
+
+        .password-toggle {
+            position: absolute;
+
+            right: 14px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color: #777;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+            user-select: none;
+        }
+
+        .password-toggle:hover {
+            color: #a855f7;
+        }
+
+        /* =========================
+           LOGIN BUTTON
+        ========================= */
+
+        .login-btn {
+            width: 100%;
+
+            margin-top: 12px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(135deg,
+                    #7c3aed,
+                    #9333ea);
+
+            color: white;
+
+            font-weight: 700;
+
+            font-size: 14px;
+
+            letter-spacing: 1px;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+            box-shadow:
+                0 8px 25px rgba(124, 58, 237, 0.22);
+        }
+
+        .login-btn:hover {
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 12px 32px rgba(124, 58, 237, 0.35);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+
+            cursor: not-allowed;
+
+            transform: none;
+        }
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        .message {
+            margin-top: 18px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            display: none;
+        }
+
+        .message.error {
+            display: block;
+
+            color: #fca5a5;
+
+            background:
+                rgba(239, 68, 68, 0.08);
+
+            border:
+                1px solid rgba(239, 68, 68, 0.20);
+        }
+
+        .message.success {
+            display: block;
+
+            color: #86efac;
+
+            background:
+                rgba(34, 197, 94, 0.08);
+
+            border:
+                1px solid rgba(34, 197, 94, 0.20);
+        }
+
+        /* =========================
+           REGISTER
+        ========================= */
+
+        .register-link {
+            text-align: center;
+
+            margin-top: 28px;
+
+            color: #666;
+
+            font-size: 13px;
+        }
+
+        .register-link a {
+            color: #a855f7;
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            color: #c084fc;
+        }
+
+        /* =========================
+           SECURITY
+        ========================= */
+
+        .secure-text {
+            text-align: center;
+
+            margin-top: 35px;
+
+            color: #3f3f3f;
+
+            font-size: 10px;
+
+            letter-spacing: 1px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 800px) {
+
+            body {
+                padding: 20px;
+
+                overflow: auto;
+            }
+
+            .container {
+                grid-template-columns: 1fr;
+
+                min-height: auto;
+            }
+
+            .brand-section {
+                padding: 35px;
+
+                min-height: 350px;
+
+                border-right: none;
+
+                border-bottom:
+                    1px solid #222;
+            }
+
+            .synq-logo {
+                width: 360px;
+                height: auto;
+                display: block;
+                object-fit: contain;
+                object-position: left center;
+                border-radius: 10px;
+                filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.22));
+            }
+
+            .brand-content {
+                margin-top: 25px;
+            }
+
+            .login-section {
+                padding: 45px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .container {
+                border-radius: 18px;
+            }
+
+            .brand-section {
+                padding: 28px;
+            }
+
+            .synq-logo {
+                width: 220px;
+            }
+
+            .login-section {
+                padding: 35px 22px;
+            }
+
+            .login-box h2 {
+                font-size: 28px;
+            }
+        }
+
+        /* =========================================
+   FINAL LOGIN PAGE ARRANGEMENT
+========================================= */
+
+        body {
+            min-height: 100vh;
+            width: 100%;
+            margin: 0;
+            padding: 20px;
+            background: #050505;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            overflow: auto;
+        }
+
+
+        /* MAIN CONTAINER */
+
+        .container {
+            width: min(1150px, calc(100vw - 40px));
+            height: 680px;
+            min-height: 680px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            background: rgba(12, 12, 12, 0.97);
+
+            border: 1px solid #242424;
+            border-radius: 24px;
+
+            overflow: hidden;
+
+            position: relative;
+            z-index: 2;
+
+            box-shadow:
+                0 0 60px rgba(124, 58, 237, 0.12);
+        }
+
+
+        /* =========================================
+   LEFT SIDE
+========================================= */
+
+        .brand-section {
+            padding: 55px 65px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            border-right: 1px solid #222;
+
+            background:
+                radial-gradient(circle at 15% 15%,
+                    rgba(124, 58, 237, 0.16),
+                    transparent 40%),
+                #070707;
+        }
+
+
+        /* LOGO */
+
+        .logo-area {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+        .synq-logo {
+            width: 310px;
+            height: auto;
+
+            display: block;
+
+            object-fit: contain;
+            object-position: left center;
+
+            border-radius: 10px;
+
+            filter:
+                drop-shadow(0 0 20px rgba(139, 92, 246, 0.22));
+        }
+
+
+        /* LEFT CONTENT */
+
+        .brand-content {
+            margin-top: 0;
+            margin-bottom: auto;
+            padding-top: 100px;
+        }
+
+        .brand-content .tagline {
+            margin-top: 0;
+
+            color: #999;
+
+            font-size: 14px;
+            letter-spacing: 3px;
+
+            text-transform: uppercase;
+        }
+
+        .brand-content p {
+            margin-top: 24px;
+
+            max-width: 480px;
+
+            color: #666;
+
+            line-height: 1.8;
+
+            font-size: 15px;
+        }
+
+
+        /* BOTTOM TEXT */
+
+        .bottom-text {
+            color: #444;
+
+            font-size: 11px;
+
+            letter-spacing: 2px;
+        }
+
+
+        /* =========================================
+   RIGHT LOGIN
+========================================= */
+
+        .login-section {
+            padding: 55px 70px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 0;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 430px;
+        }
+
+
+        /* TITLE */
+
+        .login-box h2 {
+            font-size: 38px;
+            line-height: 1.2;
+
+            margin-bottom: 10px;
+        }
+
+        .login-box .subtitle {
+            color: #777;
+
+            font-size: 15px;
+
+            margin-bottom: 40px;
+        }
+
+
+        /* INPUTS */
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .input-group label {
+            display: block;
+
+            margin-bottom: 10px;
+
+            color: #aaa;
+
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+
+            padding: 17px 16px;
+
+            background: #101010;
+
+            color: #fff;
+
+            border: 1px solid #292929;
+
+            border-radius: 11px;
+
+            outline: none;
+
+            font-size: 15px;
+
+            transition: 0.25s;
+
+            box-sizing: border-box;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #8b5cf6;
+
+            box-shadow:
+                0 0 0 3px rgba(139, 92, 246, 0.10);
+        }
+
+
+        /* LOGIN BUTTON */
+
+        .login-btn {
+            width: 100%;
+
+            margin-top: 12px;
+
+            padding: 17px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(135deg,
+                    #7c3aed,
+                    #9333ea);
+
+            color: white;
+
+            font-weight: 700;
+
+            font-size: 15px;
+
+            letter-spacing: 1px;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+            box-shadow:
+                0 8px 25px rgba(124, 58, 237, 0.22);
+        }
+
+
+        /* REGISTER */
+
+        .register-link {
+            text-align: center;
+
+            margin-top: 30px;
+
+            color: #666;
+
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #a855f7;
+
+            text-decoration: none;
+
+            font-weight: 600;
+        }
+
+
+        /* SECURITY */
+
+        .secure-text {
+            text-align: center;
+
+            margin-top: 38px;
+
+            color: #3f3f3f;
+
+            font-size: 10px;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================================
+   TABLET
+========================================= */
+
+        @media (max-width: 900px) {
+
+            .container {
+                width: calc(100vw - 30px);
+                height: auto;
+                min-height: auto;
+
+                grid-template-columns: 1fr;
+            }
+
+            .brand-section {
+                padding: 40px;
+                min-height: 400px;
+
+                border-right: none;
+                border-bottom: 1px solid #222;
+            }
+
+            .synq-logo {
+                width: 300px;
+            }
+
+            .brand-content {
+                padding-top: 50px;
+            }
+
+            .login-section {
+                padding: 50px 40px;
+            }
+        }
+
+
+        /* =========================================
+   MOBILE
+========================================= */
+
+        @media (max-width: 480px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                width: 100%;
+                border-radius: 18px;
+            }
+
+            .brand-section {
+                padding: 30px;
+                min-height: 350px;
+            }
+
+            .synq-logo {
+                width: 260px;
+            }
+
+            .brand-content {
+                padding-top: 35px;
+            }
+
+            .brand-content .tagline {
+                font-size: 11px;
+                letter-spacing: 2px;
+            }
+
+            .brand-content p {
+                font-size: 13px;
+            }
+
+            .login-section {
+                padding: 40px 28px;
+            }
+
+            .login-box h2 {
+                font-size: 30px;
+            }
+        }
     </style>
-  </head>
 
-  <body>
-    <main class="login-page">
-      <div class="login-container">
-        <!-- =========================
-                 SYNQ LOGO
-            ========================== -->
+</head>
 
-        <div class="logo-area">
-          <img
-            src="{{ url_for('static', filename='css/images/synq-logo.png') }}"
-            alt="SYNQ"
-            class="synq-logo"
-          />
-        </div>
+<body>
 
-        <!-- =========================
-                 LOGIN CARD
-            ========================== -->
+    <div class="container">
 
-        <div class="login-card">
-          <div class="login-heading">
-            <h1>Welcome Back</h1>
+        <!-- =================================
+             LEFT SIDE
+        ================================== -->
 
-            <p>Sign in to access the SYNQ intelligence dashboard</p>
-          </div>
+        <div class="brand-section">
 
-          <!-- ERROR -->
+            <!-- ONLY SYNQ LOGO -->
 
-          <div id="errorMessage" class="error-message"></div>
+            <div class="logo-area">
+                <img src="{{ url_for('static', filename='css/images/synq-logo.png') }}" alt="SYNQ" class="synq-logo">
 
-          <!-- LOGIN FORM -->
+            </div>
+            <div class="brand-content">
 
-          <form id="loginForm">
-            <!-- Username -->
+                <h1>SYNQ</h1>
 
-            <div class="form-group">
-              <label for="username" class="form-label"> Username </label>
+                <div class="tagline">
+                    PEOPLE · DATA · PERFORMANCE
+                </div>
 
-              <div class="input-wrapper">
-                <input
-                  type="text"
-                  id="username"
-                  name="username"
-                  class="form-input"
-                  placeholder="Enter your username"
-                  autocomplete="username"
-                  required
-                />
-              </div>
+                <p>
+                    AI-powered employee performance intelligence
+                    for a smarter and more efficient workplace.
+                </p>
+
+            </div>
+            <div class="bottom-text">
+                SMART PEOPLE • SMARTER PERFORMANCE
             </div>
 
-            <!-- Password -->
+        </div>
 
-            <div class="form-group">
-              <label for="password" class="form-label"> Password </label>
 
-              <div class="input-wrapper">
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  class="form-input password-input"
-                  placeholder="Enter your password"
-                  autocomplete="current-password"
-                  required
-                />
+        <!-- =================================
+             RIGHT SIDE
+        ================================== -->
 
-                <button
-                  type="button"
-                  id="passwordToggle"
-                  class="password-toggle"
-                  aria-label="Show password"
-                >
-                  ◉
-                </button>
-              </div>
+        <div class="login-section">
+
+            <div class="login-box">
+
+                <h2>
+                    Welcome back
+                </h2>
+
+                <div class="subtitle">
+                    Sign in to continue to your
+                    SYNQ dashboard.
+                </div>
+
+
+                <!-- LOGIN FORM -->
+
+                <form id="loginForm">
+
+                    <!-- USERNAME -->
+
+                    <div class="input-group">
+
+                        <label for="username">
+                            Username
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input type="text" id="username" placeholder="Enter your username" autocomplete="username"
+                                required>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="input-group">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input type="password" id="password" placeholder="Enter your password"
+                                autocomplete="current-password" required>
+
+                            <span class="password-toggle" onclick="togglePassword()">
+                                Show
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LOGIN BUTTON -->
+
+                    <button type="submit" class="login-btn" id="loginBtn">
+                        LOGIN
+                    </button>
+
+                </form>
+
+
+                <!-- MESSAGE -->
+
+                <div id="message" class="message"></div>
+
+
+                <!-- REGISTER -->
+
+                <div class="register-link">
+
+                    Don't have an account?
+
+                    <a href="/register">
+                        Create account
+                    </a>
+
+                </div>
+
+
+                <!-- SECURITY -->
+
+                <div class="secure-text">
+                    🔒 SECURE AUTHENTICATION
+                </div>
+
             </div>
 
-            <!-- Login Button -->
-
-            <button type="submit" id="loginButton" class="login-button">
-              <span class="button-text"> Sign In </span>
-
-              <span class="loading-text"> Signing in... </span>
-            </button>
-          </form>
-
-          <!-- Register -->
-
-          <div class="register-section">
-            <p>
-              Don't have an account?
-
-              <a href="/register" class="register-link"> Create account </a>
-            </p>
-          </div>
         </div>
 
-        <!-- Footer -->
+    </div>
 
-        <div class="login-footer">
-          <span> SYNQ • INTELLIGENT WORKFORCE ANALYTICS </span>
-        </div>
-      </div>
-    </main>
 
-    <!-- =========================
+    <!-- =================================
          JAVASCRIPT
-    ========================== -->
+    ================================== -->
 
     <script>
-      const loginForm = document.getElementById("loginForm");
 
-      const loginButton = document.getElementById("loginButton");
+        /* PASSWORD SHOW / HIDE */
 
-      const errorMessage = document.getElementById("errorMessage");
+        function togglePassword() {
 
-      const passwordInput = document.getElementById("password");
+            const password =
+                document.getElementById("password");
 
-      const passwordToggle = document.getElementById("passwordToggle");
+            const toggle =
+                document.querySelector(
+                    ".password-toggle"
+                );
 
-      /* =========================
-           PASSWORD SHOW / HIDE
-        ========================== */
+            if (
+                password.type === "password"
+            ) {
 
-      passwordToggle.addEventListener("click", function () {
-        if (passwordInput.type === "password") {
-          passwordInput.type = "text";
+                password.type = "text";
 
-          passwordToggle.textContent = "◉";
+                toggle.textContent = "Hide";
 
-          passwordToggle.setAttribute("aria-label", "Hide password");
-        } else {
-          passwordInput.type = "password";
+            }
 
-          passwordToggle.textContent = "◉";
+            else {
 
-          passwordToggle.setAttribute("aria-label", "Show password");
-        }
-      });
+                password.type = "password";
 
-      /* =========================
-           SHOW ERROR
-        ========================== */
+                toggle.textContent = "Show";
 
-      function showError(message) {
-        errorMessage.textContent = message;
+            }
 
-        errorMessage.classList.add("show");
-      }
-
-      /* =========================
-           HIDE ERROR
-        ========================== */
-
-      function hideError() {
-        errorMessage.textContent = "";
-
-        errorMessage.classList.remove("show");
-      }
-
-      /* =========================
-           LOGIN
-        ========================== */
-
-      loginForm.addEventListener("submit", async function (event) {
-        event.preventDefault();
-
-        hideError();
-
-        const username = document.getElementById("username").value.trim();
-
-        const password = document.getElementById("password").value;
-
-        if (!username || !password) {
-          showError("Please enter username and password.");
-
-          return;
         }
 
-        loginButton.disabled = true;
 
-        loginButton.classList.add("loading");
+        /* LOGIN */
 
-        try {
-          const response = await fetch("/api/login", {
-            method: "POST",
+        document
+            .getElementById("loginForm")
+            .addEventListener(
+                "submit",
+                async function (event) {
 
-            headers: {
-              "Content-Type": "application/json",
-            },
+                    event.preventDefault();
 
-            body: JSON.stringify({
-              username: username,
-              password: password,
-            }),
-          });
 
-          const data = await response.json();
+                    const username =
+                        document
+                            .getElementById("username")
+                            .value
+                            .trim();
 
-          if (!response.ok) {
-            throw new Error(
-              data.message || data.error || "Invalid username or password.",
+
+                    const password =
+                        document
+                            .getElementById("password")
+                            .value;
+
+
+                    const button =
+                        document.getElementById(
+                            "loginBtn"
+                        );
+
+
+                    const message =
+                        document.getElementById(
+                            "message"
+                        );
+
+
+                    /* RESET MESSAGE */
+
+                    message.className =
+                        "message";
+
+                    message.textContent = "";
+
+
+                    /* LOADING */
+
+                    button.disabled = true;
+
+                    button.textContent =
+                        "SIGNING IN...";
+
+
+                    try {
+
+                        const response =
+                            await fetch(
+                                "/api/login",
+                                {
+                                    method: "POST",
+
+                                    headers: {
+                                        "Content-Type":
+                                            "application/json"
+                                    },
+
+                                    body:
+                                        JSON.stringify({
+                                            username:
+                                                username,
+
+                                            password:
+                                                password
+                                        })
+                                }
+                            );
+
+
+                        const data =
+                            await response.json();
+
+
+                        /* SUCCESS */
+
+                        if (response.ok) {
+
+                            localStorage.setItem(
+                                "synq_token",
+                                data.access_token
+                            );
+
+
+                            message.className =
+                                "message success";
+
+
+                            message.textContent =
+                                "Login successful. Opening SYNQ...";
+
+
+                            setTimeout(
+                                function () {
+
+                                    window.location.href =
+                                        "/dashboard";
+
+                                },
+                                700
+                            );
+
+                        }
+
+
+                        /* ERROR */
+
+                        else {
+
+                            message.className =
+                                "message error";
+
+
+                            message.textContent =
+                                data.message ||
+                                data.msg ||
+                                "Invalid username or password.";
+
+
+                            button.disabled = false;
+
+                            button.textContent =
+                                "LOGIN";
+
+                        }
+
+                    }
+
+
+                    catch (error) {
+
+                        console.error(error);
+
+
+                        message.className =
+                            "message error";
+
+
+                        message.textContent =
+                            "Unable to connect to server.";
+
+
+                        button.disabled = false;
+
+                        button.textContent =
+                            "LOGIN";
+
+                    }
+
+                }
             );
-          }
 
-          /* =========================
-                       SAVE JWT TOKEN
-                    ========================== */
-
-          if (data.access_token) {
-            localStorage.setItem("synq_token", data.access_token);
-          }
-
-          /* =========================
-                       REDIRECT
-                    ========================== */
-
-          window.location.href = "/dashboard";
-        } catch (error) {
-          console.error("Login error:", error);
-
-          showError(error.message || "Login failed. Please try again.");
-
-          loginButton.disabled = false;
-
-          loginButton.classList.remove("loading");
-        }
-      });
     </script>
-  </body>
+
+</body>
+
 </html>

@@ -4,102 +4,204 @@
 <head>
 
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>SYNQ Intelligence — Dashboard</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
+
     <style>
         /* =====================================================
-           SYNQ DASHBOARD
+           GLOBAL RESET
         ===================================================== */
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
 
         html,
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0 !important;
+            padding: 0 !important;
+
+            width: 100% !important;
+            min-height: 100vh !important;
+
             background: #07080d !important;
+
             color: #ffffff;
-            font-family: Arial, Helvetica, sans-serif;
-        }
 
-        body {
-            min-height: 100vh;
-        }
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
 
-        .main-content {
-            background: #07080d !important;
-            min-height: 100vh;
-        }
-
-        .dashboard-page {
-            padding: 28px 34px 45px;
-            max-width: 1600px;
-            margin: 0 auto;
+            overflow-x: hidden !important;
         }
 
 
         /* =====================================================
-           TOP HEADER
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            position: fixed !important;
+
+            top: 0 !important;
+            left: 0 !important;
+
+            width: 300px !important;
+            min-width: 300px !important;
+            max-width: 300px !important;
+
+            height: 100vh !important;
+
+            z-index: 9999 !important;
+
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+
+
+        /* =====================================================
+           MAIN CONTENT
+        ===================================================== */
+
+        .main-content {
+            position: relative !important;
+
+            margin-left: 300px !important;
+
+            width: calc(100% - 300px) !important;
+
+            min-height: 100vh !important;
+
+            padding: 0 !important;
+
+            background: #07080d !important;
+
+            box-sizing: border-box !important;
+
+            overflow-x: hidden !important;
+        }
+
+
+        /* =====================================================
+           DASHBOARD PAGE
+        ===================================================== */
+
+        .dashboard-page {
+            width: 100% !important;
+
+            max-width: none !important;
+
+            margin: 0 !important;
+
+            padding: 28px 34px 45px !important;
+
+            box-sizing: border-box !important;
+        }
+
+
+        /* =====================================================
+           HEADER
         ===================================================== */
 
         .dashboard-top {
+            width: 100%;
+
             display: flex;
+
             align-items: center;
+
             justify-content: space-between;
+
+            gap: 20px;
+
             margin-bottom: 28px;
+        }
+
+        .dashboard-heading {
+            min-width: 0;
         }
 
         .dashboard-heading h1 {
             margin: 0;
-            font-size: 30px;
-            font-weight: 700;
+
             color: #ffffff;
+
+            font-size: 30px;
+
+            font-weight: 700;
+
             letter-spacing: -0.8px;
         }
 
         .dashboard-heading p {
             margin: 6px 0 0;
+
             color: #70717a;
+
             font-size: 13px;
         }
 
         .top-right {
             display: flex;
+
             align-items: center;
+
             gap: 14px;
+
+            flex-shrink: 0;
         }
 
         .ai-status {
             display: flex;
+
             align-items: center;
+
             gap: 9px;
+
             padding: 11px 17px;
 
             background: #0d0e14;
+
             border: 1px solid #272832;
+
             border-radius: 11px;
 
             color: #c4c4cc;
+
             font-size: 12px;
         }
 
         .ai-dot {
             width: 7px;
             height: 7px;
+
+            flex-shrink: 0;
+
             border-radius: 50%;
 
             background: #a855f7;
-            box-shadow: 0 0 13px #a855f7;
+
+            box-shadow:
+                0 0 13px #a855f7;
         }
 
         .date-box {
             padding-left: 16px;
+
             border-left: 1px solid #272832;
 
             color: #777984;
+
             font-size: 11px;
+
             line-height: 1.6;
         }
 
@@ -110,14 +212,19 @@
 
         .hero {
             position: relative;
-            overflow: hidden;
+
+            width: 100%;
 
             min-height: 185px;
 
             padding: 32px 38px;
+
             margin-bottom: 22px;
 
+            overflow: hidden;
+
             border: 1px solid #3a2453;
+
             border-radius: 18px;
 
             background:
@@ -131,6 +238,7 @@
 
         .hero-grid {
             position: absolute;
+
             inset: 0;
 
             opacity: .12;
@@ -147,9 +255,10 @@
 
         .hero-content {
             position: relative;
+
             z-index: 2;
 
-            max-width: 650px;
+            max-width: 700px;
         }
 
         .hero-label {
@@ -158,8 +267,11 @@
             margin-bottom: 13px;
 
             color: #9f6cff;
+
             font-size: 10px;
+
             font-weight: 700;
+
             letter-spacing: 1.5px;
         }
 
@@ -167,6 +279,7 @@
             margin: 0;
 
             font-size: 34px;
+
             letter-spacing: -1px;
         }
 
@@ -180,18 +293,23 @@
             margin: 10px 0 18px;
 
             color: #767783;
+
             font-size: 13px;
+
             line-height: 1.65;
         }
 
         .hero-buttons {
             display: flex;
+
             gap: 10px;
         }
 
         .hero-btn {
             display: inline-flex;
+
             align-items: center;
+
             gap: 8px;
 
             padding: 10px 17px;
@@ -201,11 +319,12 @@
             text-decoration: none;
 
             font-size: 11px;
+
             font-weight: 600;
         }
 
         .hero-btn.primary {
-            color: white;
+            color: #ffffff;
 
             background:
                 linear-gradient(135deg,
@@ -220,19 +339,26 @@
             color: #bbbcc5;
 
             background: #14151d;
+
             border: 1px solid #2a2b35;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-1px);
         }
 
         .hero-orbit {
             position: absolute;
 
             right: -65px;
+
             top: -100px;
 
             width: 390px;
             height: 390px;
 
             border: 1px solid rgba(168, 85, 247, .35);
+
             border-radius: 50%;
         }
 
@@ -247,7 +373,9 @@
             width: 300px;
             height: 300px;
 
-            border: 1px solid rgba(168, 85, 247, .22);
+            border:
+                1px solid rgba(168, 85, 247, .22);
+
             border-radius: 50%;
         }
 
@@ -256,25 +384,30 @@
 
             position: absolute;
 
-            width: 8px;
-            height: 8px;
-
             top: 78px;
             left: 78px;
 
+            width: 8px;
+            height: 8px;
+
             background: #b96cff;
+
             border-radius: 50%;
 
-            box-shadow: 0 0 20px #a855f7;
+            box-shadow:
+                0 0 20px #a855f7;
         }
 
 
         /* =====================================================
-           KPI CARDS
+           KPI
         ===================================================== */
 
         .kpi-grid {
+            width: 100%;
+
             display: grid;
+
             grid-template-columns:
                 repeat(4, minmax(0, 1fr));
 
@@ -285,15 +418,20 @@
 
         .kpi-card {
             position: relative;
-            overflow: hidden;
+
+            min-width: 0;
 
             min-height: 108px;
 
             padding: 20px;
 
+            overflow: hidden;
+
             background: #0c0d12;
 
-            border: 1px solid #252630;
+            border:
+                1px solid #252630;
+
             border-radius: 15px;
 
             transition: .25s ease;
@@ -318,6 +456,7 @@
             height: 40px;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
@@ -351,8 +490,11 @@
 
         .kpi-label {
             color: #777984;
+
             font-size: 10px;
+
             font-weight: 700;
+
             letter-spacing: 1.1px;
         }
 
@@ -360,13 +502,17 @@
             margin-top: 8px;
 
             color: #ffffff;
+
             font-size: 28px;
+
             font-weight: 700;
         }
 
         .kpi-value small {
             color: #696b76;
+
             font-size: 12px;
+
             font-weight: 400;
         }
 
@@ -374,6 +520,7 @@
             margin-top: 5px;
 
             color: #5a5c67;
+
             font-size: 10px;
         }
 
@@ -381,38 +528,59 @@
             position: absolute;
 
             right: 18px;
+
             bottom: 14px;
 
             width: 82px;
+
             height: 30px;
         }
 
         .spark-line {
             fill: none;
+
             stroke: #a855f7;
+
             stroke-width: 2;
         }
 
 
         /* =====================================================
-           DASHBOARD CARDS
+           CONTENT GRID
         ===================================================== */
 
         .content-grid {
+            width: 100%;
+
             display: grid;
 
             grid-template-columns:
-                1.1fr .9fr;
+                minmax(0, 1.1fr) minmax(0, .9fr);
 
             gap: 18px;
 
             margin-bottom: 18px;
         }
 
+        .lower-grid {
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.1fr) minmax(0, .9fr);
+
+            gap: 18px;
+        }
+
         .card {
+            min-width: 0;
+
             background: #0c0d12;
 
-            border: 1px solid #252630;
+            border:
+                1px solid #252630;
+
             border-radius: 15px;
 
             overflow: hidden;
@@ -420,8 +588,12 @@
 
         .card-header {
             display: flex;
+
             align-items: flex-start;
+
             justify-content: space-between;
+
+            gap: 15px;
 
             padding: 19px 21px 10px;
         }
@@ -430,7 +602,9 @@
             margin: 0;
 
             color: #eeeeef;
+
             font-size: 15px;
+
             font-weight: 700;
         }
 
@@ -438,29 +612,37 @@
             margin-top: 5px;
 
             color: #60626d;
+
             font-size: 10px;
         }
 
         .card-tag {
+            flex-shrink: 0;
+
             padding: 5px 9px;
 
-            border: 1px solid #4a2c68;
+            border:
+                1px solid #4a2c68;
+
             border-radius: 6px;
 
             color: #ad70ef;
+
             background: #15101d;
 
             font-size: 9px;
+
             font-weight: 700;
         }
 
 
         /* =====================================================
-           PERFORMANCE HEALTH
+           PERFORMANCE
         ===================================================== */
 
         .health-body {
             display: flex;
+
             align-items: center;
 
             gap: 27px;
@@ -477,6 +659,7 @@
             flex-shrink: 0;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
@@ -504,6 +687,7 @@
 
         .health-value {
             position: relative;
+
             z-index: 2;
 
             text-align: center;
@@ -513,6 +697,7 @@
             display: block;
 
             color: #fff;
+
             font-size: 27px;
         }
 
@@ -520,11 +705,14 @@
             color: #666875;
 
             font-size: 9px;
+
             letter-spacing: 1px;
         }
 
         .health-bars {
             flex: 1;
+
+            min-width: 0;
         }
 
         .health-row {
@@ -537,11 +725,15 @@
 
         .health-row-head {
             display: flex;
+
             justify-content: space-between;
+
+            gap: 10px;
 
             margin-bottom: 7px;
 
             color: #777984;
+
             font-size: 10px;
         }
 
@@ -574,11 +766,12 @@
 
 
         /* =====================================================
-           TASK COMPLETION
+           COMPLETION
         ===================================================== */
 
         .completion-body {
             display: flex;
+
             align-items: center;
 
             gap: 25px;
@@ -592,7 +785,10 @@
             width: 125px;
             height: 125px;
 
+            flex-shrink: 0;
+
             display: flex;
+
             align-items: center;
             justify-content: center;
 
@@ -614,11 +810,13 @@
             height: 98px;
 
             background: #0c0d12;
+
             border-radius: 50%;
         }
 
         .completion-value {
             position: relative;
+
             z-index: 2;
 
             text-align: center;
@@ -628,6 +826,7 @@
             display: block;
 
             color: #fff;
+
             font-size: 25px;
         }
 
@@ -635,21 +834,29 @@
             color: #676975;
 
             font-size: 9px;
+
             letter-spacing: 1px;
         }
 
         .completion-stats {
             flex: 1;
+
+            min-width: 0;
         }
 
         .completion-stat {
             display: flex;
+
             align-items: center;
+
             justify-content: space-between;
+
+            gap: 10px;
 
             margin-bottom: 15px;
 
             color: #777984;
+
             font-size: 11px;
         }
 
@@ -659,13 +866,17 @@
 
         .completion-left {
             display: flex;
+
             align-items: center;
+
             gap: 8px;
         }
 
         .legend-dot {
             width: 8px;
             height: 8px;
+
+            flex-shrink: 0;
 
             border-radius: 50%;
         }
@@ -688,11 +899,12 @@
 
 
         /* =====================================================
-           RISK DISTRIBUTION
+           RISK
         ===================================================== */
 
         .risk-chart {
             display: flex;
+
             align-items: flex-end;
 
             gap: 18px;
@@ -705,24 +917,32 @@
         .risk-column {
             flex: 1;
 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
+            min-width: 0;
 
             height: 100%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            justify-content: flex-end;
         }
 
         .risk-percent {
             margin-bottom: 6px;
 
             color: #ccc;
+
             font-size: 10px;
+
             font-weight: 700;
         }
 
         .risk-bar {
             width: 100%;
+
             max-width: 48px;
 
             border-radius: 6px 6px 0 0;
@@ -758,21 +978,10 @@
             margin-top: 8px;
 
             color: #686a75;
+
             font-size: 9px;
-        }
 
-
-        /* =====================================================
-           LOWER GRID
-        ===================================================== */
-
-        .lower-grid {
-            display: grid;
-
-            grid-template-columns:
-                1.1fr .9fr;
-
-            gap: 18px;
+            white-space: nowrap;
         }
 
 
@@ -780,11 +989,20 @@
            EMPLOYEE TABLE
         ===================================================== */
 
+        .employee-table-wrap {
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
         .employee-table {
             width: 100%;
+
+            min-width: 520px;
+
             border-collapse: collapse;
 
-            padding: 0 20px;
+            table-layout: fixed;
         }
 
         .employee-table th {
@@ -795,7 +1013,9 @@
             color: #777984;
 
             font-size: 9px;
+
             font-weight: 700;
+
             letter-spacing: .7px;
 
             text-align: left;
@@ -804,7 +1024,8 @@
         .employee-table td {
             padding: 12px 10px;
 
-            border-bottom: 1px solid #191a21;
+            border-bottom:
+                1px solid #191a21;
 
             color: #c7c8ce;
 
@@ -820,12 +1041,14 @@
             height: 22px;
 
             display: inline-flex;
+
             align-items: center;
             justify-content: center;
 
             border-radius: 50%;
 
             color: #b56cff;
+
             background: #181025;
 
             font-size: 9px;
@@ -833,11 +1056,13 @@
 
         .employee-id {
             color: #eee;
+
             font-weight: 600;
         }
 
         .rating {
             color: #ddd;
+
             font-weight: 700;
         }
 
@@ -867,7 +1092,7 @@
 
 
         /* =====================================================
-           AI INSIGHTS
+           INSIGHTS
         ===================================================== */
 
         .insights {
@@ -883,7 +1108,9 @@
 
             margin-bottom: 8px;
 
-            border: 1px solid #1f2028;
+            border:
+                1px solid #1f2028;
+
             border-radius: 9px;
 
             background: #111219;
@@ -900,12 +1127,14 @@
             flex-shrink: 0;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
             border-radius: 8px;
 
             color: #a855f7;
+
             background: #1b1127;
         }
 
@@ -923,6 +1152,7 @@
             color: #666873;
 
             font-size: 9px;
+
             line-height: 1.5;
         }
 
@@ -935,7 +1165,7 @@
 
             .kpi-grid {
                 grid-template-columns:
-                    repeat(2, 1fr);
+                    repeat(2, minmax(0, 1fr));
             }
 
             .content-grid,
@@ -944,15 +1174,67 @@
             }
         }
 
-        @media (max-width: 700px) {
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 240px !important;
+
+                min-width: 240px !important;
+
+                max-width: 240px !important;
+            }
+
+            .main-content {
+                margin-left: 240px !important;
+
+                width:
+                    calc(100% - 240px) !important;
+            }
 
             .dashboard-page {
-                padding: 20px 15px;
+                padding:
+                    25px 22px 40px !important;
+            }
+
+            .hero {
+                padding: 28px;
+            }
+
+            .hero-orbit {
+                right: -120px;
+            }
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                width: 0 !important;
+
+                min-width: 0 !important;
+
+                max-width: 0 !important;
+
+                overflow: hidden !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+
+                width: 100% !important;
+            }
+
+            .dashboard-page {
+                padding:
+                    20px 15px 35px !important;
             }
 
             .dashboard-top {
                 flex-direction: column;
+
                 align-items: flex-start;
+
                 gap: 15px;
             }
 
@@ -961,20 +1243,30 @@
             }
 
             .hero {
-                padding: 27px;
+                padding: 25px;
             }
 
             .hero h2 {
                 font-size: 27px;
             }
 
+            .hero-orbit {
+                display: none;
+            }
+
             .kpi-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content-grid,
+            .lower-grid {
                 grid-template-columns: 1fr;
             }
 
             .health-body,
             .completion-body {
                 flex-direction: column;
+
                 align-items: flex-start;
             }
 
@@ -986,6 +1278,12 @@
             .risk-chart {
                 gap: 9px;
             }
+
+            .date-box {
+                padding-left: 0;
+
+                border-left: none;
+            }
         }
     </style>
 
@@ -995,8 +1293,17 @@
 <body class="synq-dashboard">
 
 
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
     {% include 'partials/sidebar.html' %}
 
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
 
     <main class="main-content">
 
@@ -1033,6 +1340,7 @@
 
                     </div>
 
+
                     <div class="date-box">
 
                         Wed, 10 Sep 2026<br>
@@ -1046,6 +1354,7 @@
             </div>
 
 
+
             <!-- =================================================
                  HERO
             ================================================== -->
@@ -1054,43 +1363,48 @@
 
                 <div class="hero-grid"></div>
 
+
                 <div class="hero-content">
 
                     <div class="hero-label">
                         AI-POWERED WORKFORCE INTELLIGENCE
                     </div>
 
+
                     <h2>
-                        Welcome to <span>SYNQ.</span>
+                        Welcome to
+                        <span>SYNQ.</span>
                     </h2>
 
+
                     <p>
-                        Monitor employee performance, evaluate task risk,
-                        identify high-performing employees and make smarter
-                        workforce decisions using data-driven intelligence.
+                        Monitor employee performance, evaluate
+                        task risk, identify high-performing employees
+                        and make smarter workforce decisions using
+                        data-driven intelligence.
                     </p>
+
 
                     <div class="hero-buttons">
 
                         <a href="{{ url_for('create_task') }}" class="hero-btn primary">
-
                             → &nbsp; Get Started
-
                         </a>
 
-                        <a href="/insights" class="hero-btn secondary">
 
+                        <a href="/analytics" class="hero-btn secondary">
                             View Insights
-
                         </a>
 
                     </div>
 
                 </div>
 
+
                 <div class="hero-orbit"></div>
 
             </section>
+
 
 
             <!-- =================================================
@@ -1100,7 +1414,7 @@
             <section class="kpi-grid">
 
 
-                <!-- EMPLOYEES -->
+                <!-- TOTAL EMPLOYEES -->
 
                 <div class="kpi-card">
 
@@ -1108,15 +1422,22 @@
                         👥
                     </div>
 
+
                     <div class="kpi-info">
 
                         <div class="kpi-label">
                             TOTAL EMPLOYEES
                         </div>
 
+
                         <div class="kpi-value">
-                            {{ "{:,}".format(stats.total_employees) }}
+
+                            {{ "{:,}".format(
+                            stats.total_employees
+                            ) }}
+
                         </div>
+
 
                         <div class="kpi-description">
                             Employees in dataset
@@ -1124,17 +1445,26 @@
 
                     </div>
 
+
                     <svg class="kpi-spark" viewBox="0 0 100 40">
 
-                        <polyline class="spark-line" points="0,35 15,22 30,27 45,13 60,19 75,7 100,13">
-                        </polyline>
+                        <polyline class="spark-line" points="
+                                0,35
+                                15,22
+                                30,27
+                                45,13
+                                60,19
+                                75,7
+                                100,13
+                            "></polyline>
 
                     </svg>
 
                 </div>
 
 
-                <!-- TASKS -->
+
+                <!-- TOTAL TASKS -->
 
                 <div class="kpi-card">
 
@@ -1142,15 +1472,22 @@
                         ▤
                     </div>
 
+
                     <div class="kpi-info">
 
                         <div class="kpi-label">
                             TOTAL TASKS
                         </div>
 
+
                         <div class="kpi-value">
-                            {{ "{:,}".format(stats.total_tasks) }}
+
+                            {{ "{:,}".format(
+                            stats.total_tasks
+                            ) }}
+
                         </div>
+
 
                         <div class="kpi-description">
                             Recorded task activities
@@ -1158,17 +1495,26 @@
 
                     </div>
 
+
                     <svg class="kpi-spark" viewBox="0 0 100 40">
 
-                        <polyline class="spark-line" points="0,35 15,25 30,28 45,15 60,19 75,9 100,14">
-                        </polyline>
+                        <polyline class="spark-line" points="
+                                0,35
+                                15,25
+                                30,28
+                                45,15
+                                60,19
+                                75,9
+                                100,14
+                            "></polyline>
 
                     </svg>
 
                 </div>
 
 
-                <!-- RATING -->
+
+                <!-- AVERAGE RATING -->
 
                 <div class="kpi-card">
 
@@ -1176,19 +1522,24 @@
                         ★
                     </div>
 
+
                     <div class="kpi-info">
 
                         <div class="kpi-label">
                             AVERAGE RATING
                         </div>
 
+
                         <div class="kpi-value">
 
-                            {{ "%.2f"|format(stats.avg_rating) }}
+                            {{ "%.2f"|format(
+                            stats.avg_rating
+                            ) }}
 
                             <small>/ 10</small>
 
                         </div>
+
 
                         <div class="kpi-description">
                             Historical performance
@@ -1196,17 +1547,26 @@
 
                     </div>
 
+
                     <svg class="kpi-spark" viewBox="0 0 100 40">
 
-                        <polyline class="spark-line" points="0,35 15,27 30,29 45,17 60,22 75,10 100,15">
-                        </polyline>
+                        <polyline class="spark-line" points="
+                                0,35
+                                15,27
+                                30,29
+                                45,17
+                                60,22
+                                75,10
+                                100,15
+                            "></polyline>
 
                     </svg>
 
                 </div>
 
 
-                <!-- RISK -->
+
+                <!-- ERROR RISK -->
 
                 <div class="kpi-card">
 
@@ -1214,15 +1574,22 @@
                         !
                     </div>
 
+
                     <div class="kpi-info">
 
                         <div class="kpi-label">
                             ERROR RISK
                         </div>
 
+
                         <div class="kpi-value">
-                            {{ "%.2f"|format(stats.avg_error_risk) }}
+
+                            {{ "%.2f"|format(
+                            stats.avg_error_risk
+                            ) }}
+
                         </div>
+
 
                         <div class="kpi-description">
                             Average recorded risk
@@ -1230,16 +1597,26 @@
 
                     </div>
 
+
                     <svg class="kpi-spark" viewBox="0 0 100 40">
 
-                        <polyline class="spark-line" points="0,35 15,25 30,29 45,16 60,22 75,11 100,16">
-                        </polyline>
+                        <polyline class="spark-line" points="
+                                0,35
+                                15,25
+                                30,29
+                                45,16
+                                60,22
+                                75,11
+                                100,16
+                            "></polyline>
 
                     </svg>
 
                 </div>
 
+
             </section>
+
 
 
             <!-- =================================================
@@ -1267,6 +1644,7 @@
 
                         </div>
 
+
                         <div class="card-tag">
                             LIVE DATA
                         </div>
@@ -1277,22 +1655,14 @@
                     <div class="health-body">
 
 
-                        <div class="health-ring" style="
-                                background:
-                                conic-gradient(
-                                    #a855f7 0deg,
-                                    #8b5cf6
-                                    {{ stats.avg_rating * 36 }}deg,
-                                    #242632
-                                    {{ stats.avg_rating * 36 }}deg,
-                                    #242632 360deg
-                                );
-                            ">
+                        <div class="health-ring" id="healthRing">
 
                             <div class="health-value">
 
                                 <strong>
-                                    {{ "%.0f"|format(stats.avg_rating * 10) }}%
+                                    {{ "%.0f"|format(
+                                    stats.avg_rating * 10
+                                    ) }}%
                                 </strong>
 
                                 <span>
@@ -1307,6 +1677,8 @@
                         <div class="health-bars">
 
 
+                            <!-- PERFORMANCE -->
+
                             <div class="health-row">
 
                                 <div class="health-row-head">
@@ -1316,23 +1688,28 @@
                                     </span>
 
                                     <strong>
-                                        {{ "%.2f"|format(stats.avg_rating) }}/10
+                                        {{ "%.2f"|format(
+                                        stats.avg_rating
+                                        ) }}/10
                                     </strong>
 
                                 </div>
+
 
                                 <div class="bar">
 
                                     <span style="
                                             width:
                                             {{ stats.avg_rating * 10 }}%;
-                                        ">
-                                    </span>
+                                        "></span>
 
                                 </div>
 
                             </div>
 
+
+
+                            <!-- RISK -->
 
                             <div class="health-row">
 
@@ -1343,25 +1720,35 @@
                                     </span>
 
                                     <strong>
+
                                         {{ "%.1f"|format(
-                                        100 - stats.avg_error_risk * 10
+                                        100 -
+                                        stats.avg_error_risk * 10
                                         ) }}%
+
                                     </strong>
 
                                 </div>
+
 
                                 <div class="bar">
 
                                     <span style="
                                             width:
-                                            {{ 100 - stats.avg_error_risk * 10 }}%;
-                                        ">
-                                    </span>
+                                            {{ [
+                                                100 -
+                                                stats.avg_error_risk * 10,
+                                                0
+                                            ] | max }}%;
+                                        "></span>
 
                                 </div>
 
                             </div>
 
+
+
+                            <!-- COVERAGE -->
 
                             <div class="health-row">
 
@@ -1377,6 +1764,7 @@
 
                                 </div>
 
+
                                 <div class="bar">
 
                                     <span style="width:100%;"></span>
@@ -1391,6 +1779,7 @@
                     </div>
 
                 </div>
+
 
 
                 <!-- TASK COMPLETION -->
@@ -1417,7 +1806,7 @@
                     <div class="completion-body">
 
 
-                        <div class="completion-ring">
+                        <div class="completion-ring" id="completionRing">
 
                             <div class="completion-value">
 
@@ -1504,8 +1893,9 @@
             </section>
 
 
+
             <!-- =================================================
-                 RISK + TOP EMPLOYEES
+                 RISK + WORKFORCE SUMMARY
             ================================================== -->
 
             <section class="content-grid">
@@ -1541,8 +1931,7 @@
                                 32%
                             </div>
 
-                            <div class="risk-bar" style="height:85px;">
-                            </div>
+                            <div class="risk-bar" style="height:85px;"></div>
 
                             <div class="risk-name">
                                 Low
@@ -1557,8 +1946,7 @@
                                 28%
                             </div>
 
-                            <div class="risk-bar" style="height:73px;">
-                            </div>
+                            <div class="risk-bar" style="height:73px;"></div>
 
                             <div class="risk-name">
                                 Moderate
@@ -1573,8 +1961,7 @@
                                 24%
                             </div>
 
-                            <div class="risk-bar" style="height:63px;">
-                            </div>
+                            <div class="risk-bar" style="height:63px;"></div>
 
                             <div class="risk-name">
                                 High
@@ -1589,8 +1976,7 @@
                                 16%
                             </div>
 
-                            <div class="risk-bar" style="height:43px;">
-                            </div>
+                            <div class="risk-bar" style="height:43px;"></div>
 
                             <div class="risk-name">
                                 Critical
@@ -1604,7 +1990,8 @@
                 </div>
 
 
-                <!-- PERFORMANCE SUMMARY -->
+
+                <!-- WORKFORCE SUMMARY -->
 
                 <div class="card">
 
@@ -1621,6 +2008,7 @@
                             </div>
 
                         </div>
+
 
                         <div class="card-tag">
                             ANALYTICS
@@ -1643,18 +2031,20 @@
                                     </span>
 
                                     <strong>
-                                        {{ "%.2f"|format(stats.avg_rating) }}/10
+                                        {{ "%.2f"|format(
+                                        stats.avg_rating
+                                        ) }}/10
                                     </strong>
 
                                 </div>
+
 
                                 <div class="bar">
 
                                     <span style="
                                             width:
                                             {{ stats.avg_rating * 10 }}%;
-                                        ">
-                                    </span>
+                                        "></span>
 
                                 </div>
 
@@ -1670,18 +2060,23 @@
                                     </span>
 
                                     <strong>
-                                        {{ "%.2f"|format(stats.avg_error_risk) }}
+                                        {{ "%.2f"|format(
+                                        stats.avg_error_risk
+                                        ) }}
                                     </strong>
 
                                 </div>
+
 
                                 <div class="bar">
 
                                     <span style="
                                             width:
-                                            {{ stats.avg_error_risk * 20 }}%;
-                                        ">
-                                    </span>
+                                            {{ [
+                                                stats.avg_error_risk * 20,
+                                                100
+                                            ] | min }}%;
+                                        "></span>
 
                                 </div>
 
@@ -1702,6 +2097,7 @@
 
                                 </div>
 
+
                                 <div class="bar">
 
                                     <span style="width:100%;"></span>
@@ -1721,8 +2117,9 @@
             </section>
 
 
+
             <!-- =================================================
-                 LOWER GRID
+                 TOP EMPLOYEES + AI INSIGHTS
             ================================================== -->
 
             <section class="lower-grid">
@@ -1746,6 +2143,7 @@
 
                         </div>
 
+
                         <div class="card-tag">
                             TOP 5
                         </div>
@@ -1753,47 +2151,61 @@
                     </div>
 
 
-                    <table class="employee-table">
+                    <div class="employee-table-wrap">
 
-                        <thead>
+                        <table class="employee-table">
 
-                            <tr>
+                            <thead>
 
-                                <th>#</th>
+                                <tr>
 
-                                <th>EMPLOYEE ID</th>
+                                    <th>
+                                        #
+                                    </th>
 
-                                <th>TASKS</th>
+                                    <th>
+                                        EMPLOYEE ID
+                                    </th>
 
-                                <th>AVG RATING</th>
+                                    <th>
+                                        TASKS
+                                    </th>
 
-                                <th>COMPLETION</th>
+                                    <th>
+                                        AVG RATING
+                                    </th>
 
-                            </tr>
+                                    <th>
+                                        COMPLETION
+                                    </th>
 
-                        </thead>
+                                </tr>
 
-                        <tbody id="employeeRows">
+                            </thead>
 
-                            <tr>
 
-                                <td colspan="5" style="
-                                        text-align:center;
-                                        color:#555;
-                                        padding:25px;
-                                    ">
+                            <tbody id="employeeRows">
 
-                                    Loading employee data...
+                                <tr>
 
-                                </td>
+                                    <td colspan="5" style="
+                                            text-align:center;
+                                            color:#555;
+                                            padding:25px;
+                                        ">
+                                        Loading employee data...
+                                    </td>
 
-                            </tr>
+                                </tr>
 
-                        </tbody>
+                            </tbody>
 
-                    </table>
+                        </table>
+
+                    </div>
 
                 </div>
+
 
 
                 <!-- SYNQ INTELLIGENCE -->
@@ -1813,6 +2225,7 @@
                             </div>
 
                         </div>
+
 
                         <div class="card-tag">
                             AI INSIGHTS
@@ -1838,9 +2251,13 @@
 
                                 <p>
                                     SYNQ is currently analyzing
-                                    {{ "{:,}".format(stats.total_employees) }}
+                                    {{ "{:,}".format(
+                                    stats.total_employees
+                                    ) }}
                                     employees across
-                                    {{ "{:,}".format(stats.total_tasks) }}
+                                    {{ "{:,}".format(
+                                    stats.total_tasks
+                                    ) }}
                                     recorded tasks.
                                 </p>
 
@@ -1862,8 +2279,11 @@
                                 </h4>
 
                                 <p>
-                                    Current average employee rating is
-                                    {{ "%.2f"|format(stats.avg_rating) }}
+                                    Current average employee
+                                    rating is
+                                    {{ "%.2f"|format(
+                                    stats.avg_rating
+                                    ) }}
                                     out of 10.
                                 </p>
 
@@ -1886,7 +2306,9 @@
 
                                 <p>
                                     Average recorded error risk is
-                                    {{ "%.2f"|format(stats.avg_error_risk) }}.
+                                    {{ "%.2f"|format(
+                                    stats.avg_error_risk
+                                    ) }}.
                                     Use Predict Employee for
                                     task-level evaluation.
                                 </p>
@@ -1909,8 +2331,8 @@
                                 </h4>
 
                                 <p>
-                                    Use employee-level analytics and
-                                    prediction tools to support
+                                    Use employee-level analytics
+                                    and prediction tools to support
                                     workforce allocation decisions.
                                 </p>
 
@@ -1923,6 +2345,7 @@
 
                 </div>
 
+
             </section>
 
 
@@ -1931,8 +2354,9 @@
     </main>
 
 
+
     <!-- =====================================================
-         DASHBOARD JAVASCRIPT
+         JAVASCRIPT
     ====================================================== -->
 
     <script>
@@ -1942,15 +2366,24 @@
             try {
 
                 const response =
-                    await fetch("/api/employee-data");
+                    await fetch(
+                        "/api/employee-data"
+                    );
+
 
                 const data =
                     await response.json();
+
 
                 if (
                     !data.success ||
                     !data.employees
                 ) {
+
+                    console.error(
+                        "Employee data unavailable"
+                    );
+
                     return;
                 }
 
@@ -1959,14 +2392,18 @@
                     [...data.employees]
                         .sort(
                             (a, b) =>
-                                Number(b.avg_rating) -
-                                Number(a.avg_rating)
+                                Number(
+                                    b.avg_rating
+                                ) -
+                                Number(
+                                    a.avg_rating
+                                )
                         );
 
 
-                /* ---------------------------------------------
-                   TOP 5
-                --------------------------------------------- */
+                /* =================================================
+                   TOP 5 EMPLOYEES
+                ================================================== */
 
                 const topEmployees =
                     employees.slice(0, 5);
@@ -1978,79 +2415,138 @@
                     );
 
 
-                rows.innerHTML =
-                    topEmployees.map(
-                        (employee, index) => `
+                if (!topEmployees.length) {
+
+                    rows.innerHTML = `
 
                         <tr>
 
-                            <td>
-                                <span class="rank">
-                                    ${index + 1}
-                                </span>
-                            </td>
-
-                            <td>
-                                <span class="employee-id">
-                                    ${employee.employee_id}
-                                </span>
-                            </td>
-
-                            <td>
-                                ${Number(
-                            employee.tasks
-                        ).toLocaleString()}
-                            </td>
-
-                            <td>
-                                <span class="rating">
-                                    ${Number(
-                            employee.avg_rating
-                        ).toFixed(2)}
-                                </span>
-                            </td>
-
-                            <td>
-
-                                <div style="
-                                    display:flex;
-                                    align-items:center;
-                                    gap:8px;
-                                ">
-
-                                    <div class="mini-progress">
-
-                                        <span
-                                            style="
-                                                width:
-                                                ${Math.min(
-                            employee.completion,
-                            100
-                        )}%;
-                                            ">
-                                        </span>
-
-                                    </div>
-
-                                    ${Number(
-                            employee.completion
-                        ).toFixed(0)}%
-
-                                </div>
-
+                            <td
+                                colspan="5"
+                                style="
+                                    text-align:center;
+                                    color:#555;
+                                    padding:25px;
+                                "
+                            >
+                                No employee data available.
                             </td>
 
                         </tr>
 
-                    `
-                    ).join("");
+                    `;
+
+                } else {
+
+                    rows.innerHTML =
+                        topEmployees
+                            .map(
+                                (employee, index) => `
+
+                                    <tr>
+
+                                        <td>
+
+                                            <span class="rank">
+
+                                                ${index + 1}
+
+                                            </span>
+
+                                        </td>
 
 
-                /* ---------------------------------------------
-                   COMPLETION
-                --------------------------------------------- */
+                                        <td>
+
+                                            <span
+                                                class="employee-id"
+                                            >
+
+                                                ${employee.employee_id
+                                    }
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            ${Number(
+                                        employee.tasks
+                                    ).toLocaleString()
+                                    }
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <span class="rating">
+
+                                                ${Number(
+                                        employee.avg_rating
+                                    ).toFixed(2)
+                                    }
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <div
+                                                style="
+                                                    display:flex;
+                                                    align-items:center;
+                                                    gap:8px;
+                                                "
+                                            >
+
+                                                <div
+                                                    class="mini-progress"
+                                                >
+
+                                                    <span
+                                                        style="
+                                                            width:
+                                                            ${Math.min(
+                                        Number(
+                                            employee.completion
+                                        ) || 0,
+                                        100
+                                    )}%;
+                                                        "
+                                                    ></span>
+
+                                                </div>
+
+
+                                                ${Number(
+                                        employee.completion
+                                    ).toFixed(0)
+                                    }%
+
+                                            </div>
+
+                                        </td>
+
+                                    </tr>
+
+                                `
+                            )
+                            .join("");
+
+                }
+
+
+                /* =================================================
+                   COMPLETION CALCULATION
+                ================================================== */
 
                 let totalTasks = 0;
+
                 let completedTasks = 0;
 
 
@@ -2058,15 +2554,25 @@
                     employee => {
 
                         const tasks =
-                            Number(employee.tasks) || 0;
+                            Number(
+                                employee.tasks
+                            ) || 0;
+
 
                         const completion =
-                            Number(employee.completion) || 0;
+                            Number(
+                                employee.completion
+                            ) || 0;
+
 
                         totalTasks += tasks;
 
+
                         completedTasks +=
-                            tasks * (completion / 100);
+                            tasks *
+                            (
+                                completion / 100
+                            );
 
                     }
                 );
@@ -2084,7 +2590,8 @@
                     document.getElementById(
                         "completionPercent"
                     ).textContent =
-                        completionRate.toFixed(0) + "%";
+                        completionRate.toFixed(0) +
+                        "%";
 
 
                     document.getElementById(
@@ -2105,13 +2612,19 @@
 
 
                     const ring =
-                        document.querySelector(
-                            ".completion-ring"
+                        document.getElementById(
+                            "completionRing"
                         );
 
 
                     const degree =
-                        completionRate * 3.6;
+                        Math.min(
+                            Math.max(
+                                completionRate,
+                                0
+                            ),
+                            100
+                        ) * 3.6;
 
 
                     ring.style.background =
@@ -2126,7 +2639,9 @@
 
                 }
 
-            } catch (error) {
+            }
+
+            catch (error) {
 
                 console.error(
                     "Dashboard employee loading error:",
@@ -2138,9 +2653,62 @@
         }
 
 
+
+        /* =====================================================
+           HEALTH RING
+        ===================================================== */
+
+        function updateHealthRing() {
+
+            const rating =
+                Number(
+                    "{{ stats.avg_rating }}"
+                ) || 0;
+
+
+            const degree =
+                Math.min(
+                    Math.max(
+                        rating,
+                        0
+                    ),
+                    10
+                ) * 36;
+
+
+            const ring =
+                document.getElementById(
+                    "healthRing"
+                );
+
+
+            ring.style.background =
+                `
+                conic-gradient(
+                    #a855f7 0deg,
+                    #8b5cf6 ${degree}deg,
+                    #242632 ${degree}deg,
+                    #242632 360deg
+                )
+                `;
+
+        }
+
+
+
+        /* =====================================================
+           START
+        ===================================================== */
+
         document.addEventListener(
             "DOMContentLoaded",
-            loadDashboardEmployees
+            function () {
+
+                updateHealthRing();
+
+                loadDashboardEmployees();
+
+            }
         );
 
     </script>

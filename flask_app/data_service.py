@@ -4,7 +4,6 @@ import pickle
 import numpy as np
 import pandas as pd
 
-from src.pipeline import run_pipeline
 
 # =========================================================
 # PATHS
@@ -24,6 +23,7 @@ MODEL_DIR = os.path.join(
     "models",
     "regression"
 )
+
 
 # Exact feature order used when the Random Forest models were trained.
 RANDOM_FOREST_FEATURES = [
@@ -49,6 +49,7 @@ RANDOM_FOREST_FEATURES = [
 def load_dataset():
     if not os.path.exists(DATA_FILE):
         raise FileNotFoundError(f"Dataset not found:\n{DATA_FILE}")
+
     return pd.read_csv(DATA_FILE)
 
 
@@ -61,12 +62,14 @@ def get_task_options():
 
     task_types = (
         df["task_type"].dropna().astype(str).unique().tolist()
-        if "task_type" in df.columns else []
+        if "task_type" in df.columns
+        else []
     )
 
     priorities = (
         df["priority"].dropna().astype(str).unique().tolist()
-        if "priority" in df.columns else []
+        if "priority" in df.columns
+        else []
     )
 
     return {
@@ -152,9 +155,9 @@ def get_date_features(data, df=None):
     given_day_of_week, given_month, given_year.
 
     If task_given_date is supplied by the request, use it.
-    Otherwise use today's date. This keeps the prediction endpoint
-    usable when the frontend does not send a date.
+    Otherwise use today's date.
     """
+
     date_value = data.get("task_given_date") or data.get("task_date")
 
     if date_value:
@@ -179,15 +182,16 @@ def get_date_features(data, df=None):
 def get_employee_model_path(employee_id):
     text = str(employee_id).strip()
 
-    # Dataset IDs are expected to be EMP_001 ... EMP_020.
     if text.upper().startswith("EMP_"):
         filename = text.upper()
+
     elif text.lower().startswith("emp"):
         try:
             number = int(text[3:].replace("_", ""))
             filename = f"EMP_{number:03d}"
         except Exception:
             filename = text.upper()
+
     else:
         try:
             filename = f"EMP_{int(float(text)):03d}"
@@ -242,12 +246,6 @@ def find_model_file():
 
 
 def load_model():
-    """
-    Backward-compatible helper.
-
-    The real prediction flow uses load_employee_model() because
-    each employee has a separate trained model.
-    """
     model_path = find_model_file()
 
     if model_path is None:
@@ -267,12 +265,16 @@ def load_model():
 
 def get_rating_category(rating):
     rating = float(rating)
-    if rating >= 4:
+
+    if rating >= 8:
         return "High Performer"
-    if rating >= 3:
+
+    if rating >= 6:
         return "Good Performer"
-    if rating >= 2:
+
+    if rating >= 4:
         return "Average Performer"
+
     return "Needs Improvement"
 
 
@@ -281,12 +283,16 @@ def get_risk_level(error_risk):
 
     if value <= 1:
         return "Low Risk"
+
     if value <= 2:
         return "Medium Risk"
+
     if value <= 3:
         return "Moderate Risk"
+
     if value <= 4:
         return "High Risk"
+
     return "Critical Risk"
 
 
@@ -296,185 +302,96 @@ def normalize_rating(value):
     except Exception:
         return 5.0
 
-    return float(np.clip(value, 1, 5))
+    # Dataset/model target is on a 1-10 scale.
+    # Only convert if a future model actually returns a 1-5 score.
+    if value <= 5:
+        value = value * 2
+
+    return float(np.clip(value, 1, 10))
 
 
 # =========================================================
-# BEST FIT EMPLOYEE
+# BUILD MODEL INPUT
 # =========================================================
 
-def find_best_employee(df, data):
-    if "employee_id" not in df.columns:
-        return "EMP_001"
+def build_model_input(model_data, data):
+    """
+    Build exactly the 12 features used by the trained
+    employee-specific Random Forest models.
+    """
 
-    requested_task = str(
+    task_encoder = model_data["task_encoder"]
+    scaler = model_data["scaler"]
+
+    task_type = str(
         data.get("task_type", "")
-    ).strip().lower()
+    ).strip()
 
-    requested_priority = str(
-        data.get("priority", "")
-    ).strip().lower()
+    if not task_type:
+        raise ValueError("Task type is required")
 
-    employee_scores = []
+    known_tasks = list(task_encoder.classes_)
 
-    for employee_id, group in df.groupby("employee_id"):
-        score = 0.0
+    matched_task = None
 
-        # Rating performance: 50%
-        if "rating" in group.columns:
-            ratings = pd.to_numeric(
-                group["rating"], errors="coerce"
-            ).dropna()
+    for task in known_tasks:
+        if str(task).strip().lower() == task_type.lower():
+            matched_task = task
+            break
 
-            avg_rating = float(ratings.mean()) if len(ratings) else 5.0
-        else:
-            avg_rating = 5.0
+    if matched_task is None:
+        raise ValueError(
+            f"Unknown task type '{task_type}'. "
+            f"Expected one of: {known_tasks}"
+        )
 
-        score += (avg_rating / 10.0) * 0.50
+    # Training used LabelEncoder followed by +1.
+    task_type_encoded = int(
+        task_encoder.transform([matched_task])[0]
+    ) + 1
 
-        # Task type experience: 25%
-        experience_score = 0.0
-
-        if "task_type" in group.columns and requested_task:
-            task_matches = (
-                group["task_type"]
-                .astype(str)
-                .str.strip()
-                .str.lower()
-                .eq(requested_task)
-                .sum()
-            )
-            experience_score = min(task_matches / 20.0, 1.0)
-
-        score += experience_score * 0.25
-
-        # Priority experience: 5%
-        priority_score = 0.0
-
-        if "priority" in group.columns and requested_priority:
-            priority_matches = (
-                group["priority"]
-                .astype(str)
-                .str.strip()
-                .str.lower()
-                .eq(requested_priority)
-                .sum()
-            )
-            priority_score = min(priority_matches / 20.0, 1.0)
-
-        score += priority_score * 0.05
-
-        # Completion performance: 20%
-        speed_score = 0.5
-
-        if "is_completed" in group.columns:
-            completed = pd.to_numeric(
-                group["is_completed"], errors="coerce"
-            ).dropna()
-
-            if len(completed):
-                speed_score = float(completed.mean())
-
-        score += speed_score * 0.20
-
-        employee_scores.append((str(employee_id), score))
-
-    if not employee_scores:
-        return "EMP_001"
-
-    employee_scores.sort(
-        key=lambda item: item[1],
-        reverse=True
+    priority_encoded = priority_to_number(
+        data.get("priority", "Medium")
     )
 
-    return employee_scores[0][0]
+    volume_metric = safe_float(
+        data.get("volume_metric"),
+        0.5
+    )
 
+    dependency_score = safe_float(
+        data.get("dependency_score"),
+        0.0
+    )
 
-# =========================================================
-# TRAINED MODEL PREDICTION
-# =========================================================
+    error_risk = safe_float(
+        data.get("error_risk"),
+        1.0
+    )
 
-def model_rating_prediction(model_data, data):
-    """
-    Predict with the saved employee-specific RandomForest model.
+    perceived_difficulty = difficulty_to_number(
+        data.get("perceived_difficulty", "Medium")
+    )
 
-    Training architecture:
-      - task_type -> LabelEncoder, then +1
-      - priority -> numeric mapping
-      - days_to_deadline -> saved MinMaxScaler
-      - remaining numeric features unchanged
-    """
-    if not model_data:
-        return None
+    primary_skill_matching = safe_float(
+        data.get("primary_skill_matching"),
+        0.0
+    )
 
-    try:
-        model = model_data["model"]
-        scaler = model_data["scaler"]
-        task_encoder = model_data["task_encoder"]
+    secondary_skill_matching = safe_float(
+        data.get("secondary_skill_matching"),
+        0.0
+    )
 
-        task_type = str(
-            data.get("task_type", "")
-        ).strip()
+    date_features = get_date_features(data)
 
-        if not task_type:
-            raise ValueError("Task type is required")
+    days_to_deadline = safe_float(
+        data.get("days_to_deadline"),
+        5.0
+    )
 
-        # Use the exact encoder fitted during training.
-        known_tasks = list(task_encoder.classes_)
-
-        # Case-insensitive matching while preserving the trained label.
-        matched_task = None
-        for task in known_tasks:
-            if str(task).strip().lower() == task_type.lower():
-                matched_task = task
-                break
-
-        if matched_task is None:
-            raise ValueError(
-                f"Unknown task type '{task_type}'. "
-                f"Expected one of: {known_tasks}"
-            )
-
-        task_type_encoded = int(
-            task_encoder.transform([matched_task])[0]
-        ) + 1
-
-        priority_encoded = priority_to_number(
-            data.get("priority", "Medium")
-        )
-
-        volume_metric = safe_float(
-            data.get("volume_metric"), 0.5
-        )
-
-        dependency_score = safe_float(
-            data.get("dependency_score"), 0.0
-        )
-
-        error_risk = safe_float(
-            data.get("error_risk"), 1.0
-        )
-
-        perceived_difficulty = difficulty_to_number(
-            data.get("perceived_difficulty", "Medium")
-        )
-
-        primary_skill_matching = safe_float(
-            data.get("primary_skill_matching"), 0.0
-        )
-
-        secondary_skill_matching = safe_float(
-            data.get("secondary_skill_matching"), 0.0
-        )
-
-        date_features = get_date_features(data)
-
-        days_to_deadline = safe_float(
-            data.get("days_to_deadline"), 5.0
-        )
-
-        # Build features in the EXACT order used by training.
-        input_df = pd.DataFrame([{
+    input_df = pd.DataFrame(
+        [{
             "task_type_encoded": task_type_encoded,
             "priority_encoded": priority_encoded,
             "volume_metric": volume_metric,
@@ -487,11 +404,36 @@ def model_rating_prediction(model_data, data):
             "given_month": date_features["given_month"],
             "given_year": date_features["given_year"],
             "days_to_deadline": days_to_deadline,
-        }], columns=RANDOM_FOREST_FEATURES)
+        }],
+        columns=RANDOM_FOREST_FEATURES
+    )
 
-        # Training scaled only days_to_deadline.
-        input_df[["days_to_deadline"]] = scaler.transform(
-            input_df[["days_to_deadline"]]
+    # Training scaled ONLY days_to_deadline.
+    input_df[["days_to_deadline"]] = scaler.transform(
+        input_df[["days_to_deadline"]]
+    )
+
+    return input_df
+
+
+# =========================================================
+# TRAINED MODEL PREDICTION
+# =========================================================
+
+def model_rating_prediction(model_data, data):
+    """
+    Predict rating using one employee's saved Random Forest model.
+    """
+
+    if not model_data:
+        return None
+
+    try:
+        model = model_data["model"]
+
+        input_df = build_model_input(
+            model_data,
+            data
         )
 
         prediction = model.predict(input_df)
@@ -502,8 +444,63 @@ def model_rating_prediction(model_data, data):
         return normalize_rating(prediction[0])
 
     except Exception as e:
-        print(f"SYNQ: Trained model prediction failed: {e}")
+        print(
+            "SYNQ: Trained model prediction failed:",
+            e
+        )
         return None
+
+
+# =========================================================
+# BEST FIT EMPLOYEE
+# =========================================================
+
+def find_best_employee(df, data):
+    """
+    Select the best employee from the 20 available employee
+    regression models.
+
+    The employee with the highest trained-model predicted
+    rating is selected.
+    """
+
+    employee_ids = []
+
+    # Prefer employee IDs from the dataset.
+    if "employee_id" in df.columns:
+        employee_ids = (
+            df["employee_id"]
+            .dropna()
+            .astype(str)
+            .str.strip()
+            .unique()
+            .tolist()
+        )
+
+    # Also include every available trained model.
+    model_files = glob.glob(
+        os.path.join(MODEL_DIR, "EMP_*.pkl")
+    )
+
+    for model_file in model_files:
+        filename = os.path.basename(model_file)
+        employee_id = os.path.splitext(filename)[0]
+
+        if employee_id not in employee_ids:
+            employee_ids.append(employee_id)
+
+    employee_ids = sorted(
+        employee_ids,
+        key=lambda x: (
+            0,
+            int(x.split("_")[-1])
+        )
+        if x.upper().startswith("EMP_")
+        and x.split("_")[-1].isdigit()
+        else (1, x)
+    )
+
+    return employee_ids
 
 
 # =========================================================
@@ -520,7 +517,9 @@ def historical_rating_prediction(df, data):
             .str.strip()
             .str.lower()
             .eq(
-                str(data.get("task_type", "")).strip().lower()
+                str(
+                    data.get("task_type", "")
+                ).strip().lower()
             )
         ]
 
@@ -537,7 +536,9 @@ def historical_rating_prediction(df, data):
             .str.strip()
             .str.lower()
             .eq(
-                str(data.get("priority")).strip().lower()
+                str(
+                    data.get("priority")
+                ).strip().lower()
             )
         ]
 
@@ -548,7 +549,8 @@ def historical_rating_prediction(df, data):
         return 5.0
 
     ratings = pd.to_numeric(
-        working["rating"], errors="coerce"
+        working["rating"],
+        errors="coerce"
     ).dropna()
 
     if len(ratings) == 0:
@@ -562,19 +564,23 @@ def historical_rating_prediction(df, data):
     )
 
     error_risk = safe_float(
-        data.get("error_risk"), 1.0
+        data.get("error_risk"),
+        1.0
     )
 
     dependency = safe_float(
-        data.get("dependency_score"), 0.0
+        data.get("dependency_score"),
+        0.0
     )
 
     days_to_deadline = safe_float(
-        data.get("days_to_deadline"), 5.0
+        data.get("days_to_deadline"),
+        5.0
     )
 
     volume_metric = safe_float(
-        data.get("volume_metric"), 0.5
+        data.get("volume_metric"),
+        0.5
     )
 
     priority = priority_to_number(
@@ -605,18 +611,12 @@ def historical_rating_prediction(df, data):
         adjustment += 0.05
 
     return float(
-        np.clip(base_rating + adjustment, 1, 10)
+        np.clip(
+            base_rating + adjustment,
+            1,
+            10
+        )
     )
-
-_predictor = None
-
-def get_predictor():
-    global _predictor
-
-    if _predictor is None:
-        _predictor = run_pipeline()
-
-    return _predictor
 
 
 # =========================================================
@@ -625,113 +625,144 @@ def get_predictor():
 
 def predict_employee(data):
     """
-    Run the complete employee prediction pipeline.
+    Predict the best employee using the 20 saved
+    employee-specific Random Forest regression models.
 
-    Stage 1:
-        Classification models identify employees predicted
-        to complete the task.
+    There is NO dependency on classification models here.
 
-    Stage 2:
-        Regression models predict ratings for eligible employees.
-
-    Final:
-        Employees are ranked by predicted rating and the
-        highest-rated employee is recommended.
+    Process:
+        1. Load dataset.
+        2. Find available employee IDs/models.
+        3. Run the same task through each employee model.
+        4. Rank employees by predicted rating.
+        5. Return the highest-rated employee.
     """
 
-    # Get the saved-model prediction pipeline.
-    predictor = get_predictor()
+    df = load_dataset()
 
-    # The predictor expects task_given_date and task_deadline.
-    # The frontend currently sends days_to_deadline instead.
-    given_date = pd.Timestamp.today().normalize()
-
-    days_to_deadline = safe_float(
-        data.get("days_to_deadline"),
-        5.0
+    employee_ids = find_best_employee(
+        df,
+        data
     )
 
-    deadline_date = given_date + pd.Timedelta(
-        days=days_to_deadline
+    ranked = []
+    failed_models = []
+
+    for employee_id in employee_ids:
+
+        model_data = load_employee_model(
+            employee_id
+        )
+
+        if model_data is None:
+            failed_models.append(
+                str(employee_id)
+            )
+            continue
+
+        predicted_rating = model_rating_prediction(
+            model_data,
+            data
+        )
+
+        if predicted_rating is None:
+            failed_models.append(
+                str(employee_id)
+            )
+            continue
+
+        ranked.append({
+            "employee_id": str(employee_id),
+            "predicted_rating": round(
+                float(predicted_rating),
+                2
+            ),
+            "category": get_rating_category(
+                predicted_rating
+            ),
+        })
+
+    # Highest predicted rating first.
+    ranked.sort(
+        key=lambda item: item["predicted_rating"],
+        reverse=True
     )
 
-    # Create the input expected by EmployeePredictor.
-    prediction_data = dict(data)
-
-    prediction_data["task_given_date"] = given_date
-    prediction_data["task_deadline"] = deadline_date
-
-    # Run Stage 1 -> Stage 2 -> ranking.
-    result = predictor.predict(prediction_data)
-
-    # Convert the predictor result into the format
-    # expected by the existing frontend.
-    ranked_employees = result.get(
-        "ranked_employees",
-        []
+    error_risk = float(
+        np.clip(
+            safe_float(
+                data.get("error_risk"),
+                1.0
+            ),
+            0,
+            5
+        )
     )
 
-    if not ranked_employees:
+    # ---------------------------------------------------------
+    # No model could predict
+    # ---------------------------------------------------------
+
+    if not ranked:
+
+        fallback_rating = historical_rating_prediction(
+            df,
+            data
+        )
+
+        # If there are no trained models at all, still provide
+        # a usable fallback employee.
+        fallback_employee = (
+            "EMP_001"
+            if "EMP_001" in employee_ids
+            else (
+                employee_ids[0]
+                if employee_ids
+                else "EMP_001"
+            )
+        )
+
         return {
-            "best_fit_employee": None,
-            "predicted_rating": None,
-            "category": "No Eligible Employee",
+            "best_fit_employee": fallback_employee,
+            "predicted_rating": round(
+                float(fallback_rating),
+                2
+            ),
+            "category": get_rating_category(
+                fallback_rating
+            ),
             "error_risk": round(
-                float(
-                    np.clip(
-                        safe_float(
-                            data.get("error_risk"),
-                            1.0
-                        ),
-                        0,
-                        5
-                    )
-                ),
+                error_risk,
                 2
             ),
             "risk_level": get_risk_level(
-                np.clip(
-                    safe_float(
-                        data.get("error_risk"),
-                        1.0
-                    ),
-                    0,
-                    5
-                )
+                error_risk
             ),
-            "model_available": True,
-            "fallback_used": False,
-            "model_type": "Classification + Random Forest Regression",
-            "eligible_employees": [],
+            "model_available": False,
+            "fallback_used": True,
+            "model_type": "Historical Fallback",
+            "eligible_employees": [
+                str(x) for x in employee_ids
+            ],
             "ranked_employees": [],
+            "failed_models": failed_models,
         }
 
-    best_employee = ranked_employees[0]
+    # ---------------------------------------------------------
+    # Best employee
+    # ---------------------------------------------------------
 
-    predicted_rating = normalize_rating(
-        best_employee["predicted_rating"]
-    )
-
-    error_risk = np.clip(
-        safe_float(
-            data.get("error_risk"),
-            1.0
-        ),
-        0,
-        5
-    )
+    best_employee = ranked[0]
 
     return {
         "best_fit_employee": best_employee["employee_id"],
         "predicted_rating": round(
-            float(predicted_rating),
+            float(best_employee["predicted_rating"]),
             2
         ),
-        "category": get_rating_category(
-            predicted_rating
-        ),
+        "category": best_employee["category"],
         "error_risk": round(
-            float(error_risk),
+            error_risk,
             2
         ),
         "risk_level": get_risk_level(
@@ -739,10 +770,11 @@ def predict_employee(data):
         ),
         "model_available": True,
         "fallback_used": False,
-        "model_type": "Classification + Random Forest Regression",
-        "eligible_employees": result.get(
-            "eligible_employees",
-            []
-        ),
-        "ranked_employees": ranked_employees,
+        "model_type": "Random Forest Regression",
+        "eligible_employees": [
+            item["employee_id"]
+            for item in ranked
+        ],
+        "ranked_employees": ranked,
+        "failed_models": failed_models,
     }

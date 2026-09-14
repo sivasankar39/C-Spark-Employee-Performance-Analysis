@@ -1,1454 +1,2463 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SYNQ - Predict Employee</title>
+    <title>SYNQ | Predict Employee</title>
 
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
-      /* =====================================================
-           RESET
-        ===================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+        }
 
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-        background: #050505;
-        color: #ffffff;
-        min-height: 100vh;
-      }
+        body {
+            background: #050505;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
-
-      /* =====================================================
+        /* ================================
            MAIN
-        ===================================================== */
+        ================================= */
 
-      .main {
-        margin-left: 260px;
-        width: calc(100% - 260px);
-        min-height: 100vh;
-        background:
-          radial-gradient(
-            circle at 80% 5%,
-            rgba(106, 35, 172, 0.07),
-            transparent 22%
-          ),
-          #050505;
-      }
+        .main {
+            margin-left: 300px !important;
+            width: calc(100% - 300px) !important;
+            min-height: 100vh;
+            background: #050505;
+            overflow-x: hidden;
+        }
 
-      /* =====================================================
+        /* ================================
            TOPBAR
-        ===================================================== */
-
-      .topbar {
-        height: 70px;
-        border-bottom: 1px solid #222;
-        display: flex;
-        align-items: center;
-        padding: 0 38px;
-        gap: 28px;
-      }
-
-      .menu-button {
-        color: #a648ff;
-        font-size: 25px;
-      }
-
-      .search {
-        width: 535px;
-        height: 48px;
-        border: 1px solid #292929;
-        background: #0b0b0b;
-        border-radius: 11px;
-        display: flex;
-        align-items: center;
-        padding: 0 16px;
-        gap: 12px;
-      }
-
-      .search-icon {
-        color: #777;
-        font-size: 15px;
-      }
-
-      .search input {
-        flex: 1;
-        border: none;
-        outline: none;
-        background: transparent;
-        color: #ffffff;
-        font-size: 14px;
-      }
-
-      .search input::placeholder {
-        color: #555;
-      }
-
-      .top-right {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-        gap: 25px;
-      }
-
-      .notification {
-        color: #a647ff;
-        font-size: 19px;
-      }
-
-      .date {
-        color: #aaa;
-        font-size: 14px;
-      }
-
-      /* =====================================================
-           PAGE
-        ===================================================== */
-
-      .page {
-        padding: 31px 39px 50px;
-      }
-
-      /* =====================================================
-           HERO
-        ===================================================== */
-
-      .hero {
-        border: 1px solid #4b2770;
-        border-radius: 20px;
-        position: relative;
-        overflow: hidden;
-        padding: 29px 36px 32px;
-
-        background:
-          radial-gradient(
-            circle at 78% 40%,
-            rgba(100, 34, 170, 0.16),
-            transparent 35%
-          ),
-          #080808;
-
-        margin-bottom: 24px;
-      }
-
-      .hero::after {
-        content: "";
-        position: absolute;
-
-        width: 235px;
-        height: 235px;
-
-        border: 1px solid rgba(153, 69, 255, 0.2);
-        border-radius: 50%;
-
-        right: 160px;
-        top: -25px;
-      }
-
-      .hero-small {
-        color: #ad50ff;
-        font-size: 12px;
-        letter-spacing: 5px;
-        margin-bottom: 14px;
-      }
-
-      .hero h1 {
-        font-size: 34px;
-        line-height: 1.2;
-        margin-bottom: 13px;
-        position: relative;
-        z-index: 2;
-      }
-
-      .hero h1 span {
-        color: #ad4cff;
-      }
-
-      .hero p {
-        color: #777;
-        font-size: 14px;
-        line-height: 1.7;
-        max-width: 800px;
-        position: relative;
-        z-index: 2;
-      }
-
-      /* =====================================================
-           CONTENT GRID
-        ===================================================== */
-
-      .content-grid {
-        display: grid;
-
-        grid-template-columns: minmax(500px, 1.55fr) minmax(390px, 0.9fr);
-
-        gap: 24px;
-      }
-
-      /* =====================================================
-           PANEL
-        ===================================================== */
-
-      .panel {
-        background: #080808;
-        border: 1px solid #282828;
-        border-radius: 18px;
-        padding: 29px;
-      }
-
-      .panel-header {
-        margin-bottom: 26px;
-      }
-
-      .panel-header h3 {
-        font-size: 21px;
-        margin-bottom: 8px;
-      }
-
-      .panel-header p {
-        color: #666;
-        font-size: 13px;
-      }
-
-      /* =====================================================
-           FORM
-        ===================================================== */
-
-      .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 19px 22px;
-      }
-
-      .form-group {
-        display: flex;
-        flex-direction: column;
-      }
-
-      label {
-        color: #999;
-        font-size: 13px;
-        margin-bottom: 9px;
-      }
-
-      input,
-      select {
-        width: 100%;
-        height: 54px;
-
-        background: #111111;
-        color: #ffffff;
-
-        border: 1px solid #292929;
-        border-radius: 11px;
-
-        padding: 0 16px;
-
-        outline: none;
-
-        font-size: 15px;
-      }
-
-      input:focus,
-      select:focus {
-        border-color: #873bce;
-
-        box-shadow: 0 0 0 2px rgba(135, 59, 206, 0.1);
-      }
-
-      select {
-        cursor: pointer;
-      }
-
-      select option {
-        background: #111111;
-        color: #ffffff;
-      }
-
-      /* =====================================================
-           PREDICT BUTTON
-        ===================================================== */
-
-      .predict-button {
-        grid-column: 1 / -1;
-
-        height: 57px;
-
-        margin-top: 7px;
-
-        border: none;
-        border-radius: 11px;
-
-        color: #ffffff;
-
-        font-size: 16px;
-        font-weight: 700;
-
-        cursor: pointer;
-
-        background: linear-gradient(100deg, #7630e9, #ae4df1);
-
-        box-shadow: 0 12px 30px rgba(125, 48, 230, 0.2);
-
-        transition: 0.2s ease;
-      }
-
-      .predict-button:hover {
-        transform: translateY(-1px);
-
-        box-shadow: 0 15px 35px rgba(125, 48, 230, 0.3);
-      }
-
-      .predict-button:disabled {
-        opacity: 0.65;
-        cursor: wait;
-        transform: none;
-      }
-
-      /* =====================================================
-           RESULT PANEL
-        ===================================================== */
-
-      .result-panel {
-        min-height: 610px;
-
-        display: flex;
-        flex-direction: column;
-      }
-
-      .result-content {
-        flex: 1;
-
-        display: flex;
-        flex-direction: column;
-
-        align-items: center;
-        justify-content: center;
-
-        text-align: center;
-
-        padding: 20px;
-      }
-
-      .result-icon {
-        width: 78px;
-        height: 78px;
-
-        border-radius: 19px;
-
-        background: #160d25;
-        color: #b14dff;
-
-        display: flex;
-
-        align-items: center;
-        justify-content: center;
-
-        font-size: 34px;
-
-        margin-bottom: 23px;
-
-        box-shadow: 0 0 35px rgba(151, 61, 255, 0.08);
-      }
-
-      .result-content h2 {
-        font-size: 21px;
-        margin-bottom: 12px;
-      }
-
-      .result-content > p {
-        color: #666;
-
-        line-height: 1.7;
-
-        max-width: 360px;
-
-        font-size: 13px;
-      }
-
-      .ready-text {
-        color: #aa48f5;
-
-        font-size: 48px;
-
-        font-weight: 800;
-
-        margin-top: 30px;
-      }
-
-      .ready-label {
-        color: #666;
-
-        font-size: 12px;
-
-        letter-spacing: 1px;
-
-        margin-top: 7px;
-      }
-
-      /* =====================================================
-           SUCCESS RESULT
-        ===================================================== */
-
-      .prediction-result {
-        width: 100%;
-        height: 100%;
-      }
-
-      .success-result {
-        width: 100%;
-
-        text-align: center;
-      }
-
-      .success-result .result-icon {
-        margin: 5px auto 16px;
-      }
-
-      .result-label {
-        color: #777;
-
-        font-size: 11px;
-
-        letter-spacing: 2px;
-
-        margin-bottom: 8px;
-      }
-
-      .employee-name {
-        color: #b34fff;
-
-        font-size: 36px;
-
-        font-weight: 800;
-
-        margin-bottom: 24px;
-
-        word-break: break-word;
-      }
-
-      .result-grid {
-        width: 100%;
-
-        display: grid;
-
-        grid-template-columns: 1fr 1fr;
-
-        gap: 11px;
-
-        text-align: left;
-      }
-
-      .result-card {
-        background: #0f0f0f;
-
-        border: 1px solid #282828;
-
-        border-radius: 11px;
-
-        padding: 16px;
-      }
-
-      .result-card span {
-        display: block;
-
-        color: #666;
-
-        font-size: 11px;
-
-        margin-bottom: 8px;
-      }
-
-      .result-card strong {
-        display: block;
-
-        color: #ffffff;
-
-        font-size: 15px;
-      }
-
-      .model-status {
-        margin-top: 18px;
-
-        padding: 13px;
-
-        border: 1px solid #3b2356;
-
-        background: #100b16;
-
-        color: #a77cc9;
-
-        border-radius: 9px;
-
-        font-size: 11px;
-
-        line-height: 1.5;
-      }
-
-      /* =====================================================
-           LOADING
-        ===================================================== */
-
-      .loading-result {
-        text-align: center;
-
-        width: 100%;
-      }
-
-      .loading-result .result-icon {
-        margin: 0 auto 20px;
-
-        animation: pulse 1s infinite;
-      }
-
-      .loading-result h2 {
-        color: #b34fff;
-
-        margin-bottom: 12px;
-      }
-
-      .loading-result p {
-        color: #666;
-
-        font-size: 13px;
-
-        line-height: 1.6;
-      }
-
-      @keyframes pulse {
-        0% {
-          transform: scale(1);
-          opacity: 0.7;
-        }
-
-        50% {
-          transform: scale(1.08);
-          opacity: 1;
-        }
-
-        100% {
-          transform: scale(1);
-          opacity: 0.7;
-        }
-      }
-
-      /* =====================================================
-           ERROR
-        ===================================================== */
-
-      .error-result {
-        text-align: center;
-
-        width: 100%;
-      }
-
-      .error-result .result-icon {
-        margin: 0 auto 20px;
-
-        color: #ff5c8a;
-      }
-
-      .error-result h2 {
-        color: #ff5c8a;
-
-        margin-bottom: 12px;
-      }
-
-      .error-result p {
-        margin: 0 auto;
-
-        color: #999;
-
-        max-width: 400px;
-
-        line-height: 1.6;
-
-        font-size: 13px;
-      }
-
-      /* =====================================================
-           RESPONSIVE
-        ===================================================== */
-
-      @media (max-width: 1150px) {
-        .sidebar {
-          width: 250px;
-        }
-
-        .main {
-          margin-left: 250px;
-
-          width: calc(100% - 250px);
-        }
-
-        .content-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .result-panel {
-          min-height: 500px;
-        }
-      }
-
-      @media (max-width: 750px) {
-        .sidebar {
-          position: relative;
-
-          width: 100%;
-
-          min-width: 100%;
-
-          min-height: auto;
-        }
-
-        .app {
-          display: block;
-        }
-
-        .main {
-          margin-left: 0;
-
-          width: 100%;
-        }
+        ================================= */
 
         .topbar {
-          padding: 0 18px;
+            height: 70px;
+            width: 100%;
+
+            border-bottom: 1px solid #222;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 35px;
+            gap: 25px;
+        }
+
+        .menu-button {
+            color: #a855f7;
+            font-size: 22px;
         }
 
         .search {
-          width: 100%;
+            width: 500px;
+            height: 44px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+            padding: 0 15px;
+
+            background: #0b0b0b;
+            border: 1px solid #272727;
+            border-radius: 10px;
+        }
+
+        .search-icon {
+            color: #777;
+        }
+
+        .search input {
+            width: 100%;
+            border: none;
+            outline: none;
+
+            background: transparent;
+            color: white;
+        }
+
+        .search input::placeholder {
+            color: #555;
+        }
+
+        .top-right {
+            margin-left: auto;
+
+            display: flex;
+            align-items: center;
+
+            gap: 22px;
+        }
+
+        .notification {
+            color: #a855f7;
+            font-size: 18px;
         }
 
         .date {
-          display: none;
+            color: #777;
+            font-size: 13px;
+            white-space: nowrap;
         }
+
+        /* ================================
+           PAGE
+        ================================= */
 
         .page {
-          padding: 22px 16px;
+            width: 100%;
+            padding: 30px 34px 50px;
         }
 
-        .form-grid {
-          grid-template-columns: 1fr;
+        /* ================================
+           HERO
+        ================================= */
+
+        .hero {
+            width: 100%;
+
+            padding: 30px 36px;
+
+            background:
+                radial-gradient(circle at 80% 30%,
+                    rgba(139, 55, 220, 0.15),
+                    transparent 35%),
+                #080808;
+
+            border: 1px solid #4b2770;
+            border-radius: 20px;
+
+            margin-bottom: 24px;
+
+            position: relative;
+            overflow: hidden;
         }
 
-        .predict-button {
-          grid-column: auto;
+        .hero-small {
+            color: #b84cff;
+            font-size: 12px;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
         }
 
         .hero h1 {
-          font-size: 28px;
+            font-size: 35px;
+            line-height: 1.2;
+            margin-bottom: 14px;
+        }
+
+        .hero h1 span {
+            color: #a855f7;
+        }
+
+        .hero p {
+            color: #777;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        /* ================================
+           CONTENT GRID
+        ================================= */
+
+        .content-grid {
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1.5fr) minmax(330px, 0.9fr);
+
+            gap: 24px;
+        }
+
+        /* ================================
+           PANEL
+        ================================= */
+
+        .panel {
+            width: 100%;
+            min-width: 0;
+
+            background: #080808;
+
+            border: 1px solid #292929;
+            border-radius: 18px;
+
+            padding: 30px;
+        }
+
+        .panel-header {
+            margin-bottom: 25px;
+        }
+
+        .panel-header h3 {
+            font-size: 21px;
+            margin-bottom: 8px;
+        }
+
+        .panel-header p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* ================================
+           FORM
+        ================================= */
+
+        .form-grid {
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1fr) minmax(0, 1fr);
+
+            gap: 20px;
+        }
+
+        .form-group {
+            width: 100%;
+            min-width: 0;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 53px;
+
+            padding: 0 15px;
+
+            background: #101010;
+            color: #ffffff;
+
+            border: 1px solid #2b2b2b;
+            border-radius: 10px;
+
+            outline: none;
+
+            font-size: 14px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #8b5cf6;
+
+            box-shadow:
+                0 0 0 3px rgba(139, 92, 246, 0.10);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #101010;
+            color: white;
+        }
+
+        /* ================================
+           BUTTON
+        ================================= */
+
+        .predict-button {
+            grid-column: 1 / -1;
+
+            width: 100%;
+            height: 56px;
+
+            margin-top: 5px;
+
+            border: none;
+            border-radius: 10px;
+
+            background:
+                linear-gradient(135deg,
+                    #7835e8,
+                    #a83df0);
+
+            color: white;
+
+            font-size: 15px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 10px 28px rgba(124, 58, 237, 0.20);
+
+            transition: 0.2s ease;
+        }
+
+        .predict-button:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 14px 32px rgba(124, 58, 237, 0.30);
+        }
+
+        .predict-button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+            transform: none;
+        }
+
+        /* ================================
+           RESULT PANEL
+        ================================= */
+
+        .result-panel {
+            min-height: 620px;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        .result-content {
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 20px;
+
+            min-width: 0;
+        }
+
+        .result-icon {
+            width: 78px;
+            height: 78px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 20px;
+
+            background: #160c24;
+
+            border-radius: 20px;
+
+            color: #b04cff;
+
+            font-size: 35px;
+        }
+
+        .result-content h2 {
+            font-size: 21px;
+            margin-bottom: 12px;
+        }
+
+        .result-content>p {
+            max-width: 350px;
+
+            color: #666;
+
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .ready-text {
+            color: #a855f7;
+
+            font-size: 45px;
+            font-weight: 800;
+
+            margin-top: 30px;
+        }
+
+        .ready-label {
+            color: #555;
+
+            font-size: 11px;
+            letter-spacing: 2px;
+
+            margin-top: 7px;
+        }
+
+        /* ================================
+           SUCCESS
+        ================================= */
+
+        .success-result {
+            width: 100%;
+            text-align: center;
+        }
+
+        .success-result .result-icon {
+            margin: 0 auto 18px;
+        }
+
+        .result-label {
+            color: #777;
+
+            font-size: 11px;
+            letter-spacing: 3px;
+
+            margin-bottom: 9px;
+        }
+
+        .employee-name {
+            color: #a855f7;
+
+            font-size: 38px;
+            font-weight: 800;
+
+            margin-bottom: 25px;
+
+            word-break: break-word;
         }
 
         .result-grid {
-          grid-template-columns: 1fr;
+            width: 100%;
+
+            display: grid;
+
+            grid-template-columns:
+                minmax(0, 1fr) minmax(0, 1fr);
+
+            gap: 12px;
+
+            text-align: left;
         }
-      }
+
+        .result-card {
+            background: #101010;
+
+            border: 1px solid #2a2a2a;
+
+            border-radius: 11px;
+
+            padding: 16px;
+
+            min-width: 0;
+        }
+
+        .result-card span {
+            display: block;
+
+            color: #666;
+
+            font-size: 11px;
+
+            margin-bottom: 8px;
+        }
+
+        .result-card strong {
+            display: block;
+
+            color: #ffffff;
+
+            font-size: 15px;
+
+            word-break: break-word;
+        }
+
+        .model-status {
+            width: 100%;
+
+            margin-top: 18px;
+
+            padding: 14px;
+
+            border: 1px solid #44205f;
+
+            border-radius: 10px;
+
+            background: #100a16;
+
+            color: #b875e4;
+
+            font-size: 11px;
+        }
+
+        /* ================================
+           LOADING
+        ================================= */
+
+        .loading-result {
+            text-align: center;
+        }
+
+        .loading-result .result-icon {
+            margin: 0 auto 20px;
+            animation: pulse 1s infinite;
+        }
+
+        .loading-result h2 {
+            color: #a855f7;
+            margin-bottom: 10px;
+        }
+
+        .loading-result p {
+            color: #666;
+            font-size: 13px;
+        }
+
+        @keyframes pulse {
+
+            0% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1.08);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+        }
+
+        /* ================================
+           ERROR
+        ================================= */
+
+        .error-result {
+            width: 100%;
+            text-align: center;
+        }
+
+        .error-result .result-icon {
+            margin: 0 auto 20px;
+            color: #ff4f91;
+        }
+
+        .error-result h2 {
+            color: #ff4f91;
+            margin-bottom: 12px;
+        }
+
+        .error-result p {
+            color: #999;
+            font-size: 13px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        /* ================================
+           RESPONSIVE
+        ================================= */
+
+        @media (max-width: 1100px) {
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-panel {
+                min-height: 500px;
+            }
+
+            .search {
+                width: 380px;
+            }
+        }
+
+        @media (max-width: 850px) {
+
+            .main {
+                margin-left: 240px !important;
+                width: calc(100% - 240px) !important;
+            }
+
+            .page {
+                padding: 24px 20px 40px;
+            }
+
+            .topbar {
+                padding: 0 20px;
+            }
+
+            .date {
+                display: none;
+            }
+
+            .search {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .main {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .topbar {
+                height: 65px;
+            }
+
+            .page {
+                padding: 18px 14px 35px;
+            }
+
+            .hero {
+                padding: 25px 22px;
+            }
+
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .predict-button {
+                grid-column: auto;
+            }
+
+            .panel {
+                padding: 22px;
+            }
+
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .employee-name {
+                font-size: 30px;
+            }
+        }
     </style>
-  </head>
 
-  <body>
+</head>
+
+<body>
+
     <div class="app">
-      <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
 
-      {% include 'partials/sidebar.html' %}
+        {% include 'partials/sidebar.html' %}
 
-      <!-- =====================================================
-         MAIN
-    ====================================================== -->
+        <main class="main">
 
-      <main class="main">
-        <!-- =================================================
-             TOPBAR
-        ================================================== -->
+            <!-- TOPBAR -->
 
-        <header class="topbar">
-          <div class="menu-button">☰</div>
+            <header class="topbar">
 
-          <div class="search">
-            <span class="search-icon"> ⌕ </span>
+                <div class="menu-button">
+                    ☰
+                </div>
 
-            <input
-              type="text"
-              placeholder="Search employees, tasks, insights..."
-            />
-          </div>
+                <div class="search">
 
-          <div class="top-right">
-            <div class="notification">♧</div>
+                    <span class="search-icon">
+                        ⌕
+                    </span>
 
-            <div class="date">Thursday, 10 September 2026</div>
-          </div>
-        </header>
+                    <input type="text" placeholder="Search employees, tasks, insights...">
 
-        <!-- =================================================
-             PAGE
-        ================================================== -->
+                </div>
 
-        <div class="page">
-          <!-- =================================================
-                 HERO
-            ================================================== -->
+                <div class="top-right">
 
-          <section class="hero">
-            <div class="hero-small">
-              S Y N Q · P E R F O R M A N C E &nbsp; P R E D I C T I O N
+                    <div class="notification">
+                        ♧
+                    </div>
+
+                    <div class="date">
+                        SYNQ Performance Intelligence
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- PAGE -->
+
+            <div class="page">
+
+                <!-- HERO -->
+
+                <section class="hero">
+
+                    <div class="hero-small">
+                        S Y N Q · P E R F O R M A N C E
+                        &nbsp; P R E D I C T I O N
+                    </div>
+
+                    <h1>
+                        Find the right
+                        <span>employee</span>
+                        for the task.
+                    </h1>
+
+                    <p>
+                        Provide task information and SYNQ will analyze
+                        employee performance data to generate a prediction.
+                    </p>
+
+                </section>
+
+
+                <!-- CONTENT -->
+
+                <div class="content-grid">
+
+                    <!-- INPUT -->
+
+                    <section class="panel">
+
+                        <div class="panel-header">
+
+                            <h3>
+                                Prediction Inputs
+                            </h3>
+
+                            <p>
+                                Enter the task and performance details
+                            </p>
+
+                        </div>
+
+
+                        <div class="form-grid">
+
+                            <!-- TASK TYPE -->
+
+                            <div class="form-group">
+
+                                <label for="task_type">
+                                    Task Type
+                                </label>
+
+                                <select id="task_type">
+
+                                    <option value="">
+                                        Loading task types...
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- PRIORITY -->
+
+                            <div class="form-group">
+
+                                <label for="priority">
+                                    Priority
+                                </label>
+
+                                <select id="priority">
+
+                                    <option value="">
+                                        Loading priorities...
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- DAYS -->
+
+                            <div class="form-group">
+
+                                <label for="days_to_deadline">
+                                    Days to Deadline
+                                </label>
+
+                                <input type="number" id="days_to_deadline" value="6" min="0" step="1">
+
+                            </div>
+
+
+                            <!-- VOLUME -->
+
+                            <div class="form-group">
+
+                                <label for="volume_metric">
+                                    Volume Metric
+                                </label>
+
+                                <input type="number" id="volume_metric" value="0.14" min="0" step="0.01">
+
+                            </div>
+
+
+                            <!-- DIFFICULTY -->
+
+                            <div class="form-group">
+
+                                <label for="perceived_difficulty">
+                                    Perceived Difficulty
+                                </label>
+
+                                <select id="perceived_difficulty">
+
+                                    <option value="Low">
+                                        Low
+                                    </option>
+
+                                    <option value="Medium" selected>
+                                        Medium
+                                    </option>
+
+                                    <option value="High">
+                                        High
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- ERROR RISK -->
+
+                            <div class="form-group">
+
+                                <label for="error_risk">
+                                    Error Risk
+                                </label>
+
+                                <select id="error_risk">
+
+                                    <option value="0">
+                                        0 — Minimal
+                                    </option>
+
+                                    <option value="1">
+                                        1 — Very Low
+                                    </option>
+
+                                    <option value="2">
+                                        2 — Low
+                                    </option>
+
+                                    <option value="3" selected>
+                                        3 — Moderate
+                                    </option>
+
+                                    <option value="4">
+                                        4 — High
+                                    </option>
+
+                                    <option value="5">
+                                        5 — Critical
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- DEPENDENCY -->
+
+                            <div class="form-group">
+
+                                <label for="dependency_score">
+                                    Dependency Score
+                                </label>
+
+                                <input type="number" id="dependency_score" value="3" min="0" max="5" step="1">
+
+                            </div>
+
+
+                            <!-- PRIMARY SKILL -->
+
+                            <div class="form-group">
+
+                                <label for="primary_skill_matching">
+                                    Primary Skill Matching
+                                </label>
+
+                                <input type="number" id="primary_skill_matching" value="0.80" min="0" max="1"
+                                    step="0.01">
+
+                            </div>
+
+
+                            <!-- SECONDARY SKILL -->
+
+                            <div class="form-group">
+
+                                <label for="secondary_skill_matching">
+                                    Secondary Skill Matching
+                                </label>
+
+                                <input type="number" id="secondary_skill_matching" value="0.50" min="0" max="1"
+                                    step="0.01">
+
+                            </div>
+
+
+                            <!-- BUTTON -->
+
+                            <button type="button" class="predict-button" id="predictButton" onclick="predictEmployee()">
+                                ✦ &nbsp; PREDICT EMPLOYEE
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <!-- RESULT -->
+
+                    <section class="panel result-panel">
+
+                        <div class="panel-header">
+
+                            <h3>
+                                Prediction Result
+                            </h3>
+
+                            <p>
+                                SYNQ prediction output
+                            </p>
+
+                        </div>
+
+
+                        <div class="result-content" id="predictionResult">
+
+                            <div class="result-icon">
+                                ◎
+                            </div>
+
+                            <h2>
+                                Ready for prediction
+                            </h2>
+
+                            <p>
+                                Select the task characteristics and click
+                                Predict Employee to get the best-fit
+                                recommendation.
+                            </p>
+
+                            <div class="ready-text">
+                                READY
+                            </div>
+
+                            <div class="ready-label">
+                                PREDICTED EMPLOYEE
+                            </div>
+
+                        </div>
+
+                    </section>
+
+                </div>
+
             </div>
 
-            <h1>
-              Find the right
+        </main>
 
-              <span> employee </span>
-
-              for the task.
-            </h1>
-
-            <p>
-              Provide task information and SYNQ will analyze employee
-              performance data to generate a prediction.
-            </p>
-          </section>
-
-          <!-- =================================================
-                 CONTENT
-            ================================================== -->
-
-          <div class="content-grid">
-            <!-- =================================================
-                     INPUT PANEL
-                ================================================== -->
-
-            <section class="panel">
-              <div class="panel-header">
-                <h3>Prediction Inputs</h3>
-
-                <p>Enter the task and performance details</p>
-              </div>
-
-              <div class="form-grid">
-                <!-- =========================================
-                             TASK TYPE
-                        ========================================== -->
-
-                <div class="form-group">
-                  <label for="task_type"> Task Type </label>
-
-                  <select id="task_type">
-                    <option value="">Loading task types...</option>
-                  </select>
-                </div>
-
-                <!-- =========================================
-                             PRIORITY
-                        ========================================== -->
-
-                <div class="form-group">
-                  <label for="priority"> Priority </label>
-
-                  <select id="priority">
-                    <option value="">Loading priorities...</option>
-                  </select>
-                </div>
-
-                <!-- =========================================
-                             DAYS TO DEADLINE
-                        ========================================== -->
-
-                <div class="form-group">
-                  <label for="days_to_deadline"> Days to Deadline </label>
-
-                  <input
-                    type="number"
-                    id="days_to_deadline"
-                    value="6"
-                    min="0"
-                    step="1"
-                  />
-                </div>
-
-                <!-- =========================================
-                             VOLUME
-                        ========================================== -->
-
-                <div class="form-group">
-                  <label for="volume_metric"> Volume Metric </label>
-
-                  <input
-                    type="number"
-                    id="volume_metric"
-                    value="0.14"
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-
-                <!-- =========================================
-                             DIFFICULTY
-                        ========================================== -->
-
-                <div class="form-group">
-                  <label for="perceived_difficulty">
-                    Perceived Difficulty
-                  </label>
-
-                  <select id="perceived_difficulty">
-                    <option value="Low">Low</option>
-
-                    <option value="Medium" selected>Medium</option>
-
-                    <option value="High">High</option>
-                  </select>
-                </div>
-
-                <!-- =========================================
-                             ERROR RISK
-                        ========================================== -->
-
-                <div class="form-group">
-                  <label for="error_risk"> Error Risk </label>
-
-                  <select id="error_risk">
-                    <option value="0">0 — Minimal</option>
-
-                    <option value="1">1 — Very Low</option>
-
-                    <option value="2">2 — Low</option>
-
-                    <option value="3">3 — Moderate</option>
-
-                    <option value="4" selected>4 — High</option>
-
-                    <option value="5">5 — Critical</option>
-                  </select>
-                </div>
-
-                <!-- =========================================
-                             DEPENDENCY
-                        ========================================== -->
-
-                <div class="form-group">
-                  <label for="dependency_score"> Dependency Score </label>
-
-                  <input
-                    type="number"
-                    id="dependency_score"
-                    value="0.06"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                  />
-                </div>
-
-                <div class="form-group">
-                  <label for="primary_skill_matching">
-                    Primary Skill Matching
-                  </label>
-                  <input
-                    type="number"
-                    id="primary_skill_matching"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value="0.80"
-                    required
-                  />
-                </div>
-
-                <div class="form-group">
-                  <label for="secondary_skill_matching">
-                    Secondary Skill Matching
-                  </label>
-                  <input
-                    type="number"
-                    id="secondary_skill_matching"
-                    min="0"
-                    max="1"
-                    step="0.01"
-                    value="0.50"
-                    required
-                  />
-                </div>
-
-                <!-- =========================================
-                             PREDICT BUTTON
-                        ========================================== -->
-
-                <button
-                  type="button"
-                  class="predict-button"
-                  id="predictButton"
-                  onclick="predictEmployee()"
-                >
-                  ✦ &nbsp; PREDICT EMPLOYEE
-                </button>
-              </div>
-            </section>
-
-            <!-- =================================================
-                     RESULT PANEL
-                ================================================== -->
-
-            <section class="panel result-panel">
-              <div class="panel-header">
-                <h3>Prediction Result</h3>
-
-                <p>SYNQ prediction output</p>
-              </div>
-
-              <div class="result-content" id="predictionResult">
-                <div class="result-icon">◎</div>
-
-                <h2>Ready for prediction</h2>
-
-                <p>
-                  Select the task characteristics and click Predict Employee to
-                  get the best-fit recommendation.
-                </p>
-
-                <div class="ready-text">READY</div>
-
-                <div class="ready-label">PREDICTED EMPLOYEE</div>
-              </div>
-            </section>
-          </div>
-        </div>
-      </main>
     </div>
 
-    <!-- =========================================================
-     JAVASCRIPT
-========================================================== -->
 
     <script>
-      /* =====================================================
+
+        /* =====================================================
            LOAD TASK OPTIONS
         ===================================================== */
 
-      async function loadTaskOptions() {
-        const taskTypeSelect = document.getElementById("task_type");
+        async function loadTaskOptions() {
 
-        const prioritySelect = document.getElementById("priority");
+            const taskType =
+                document.getElementById("task_type");
 
-        try {
-          const response = await fetch("/api/task-options");
+            const priority =
+                document.getElementById("priority");
 
-          const data = await response.json();
+            try {
 
-          if (!response.ok || !data.success) {
-            throw new Error(data.error || "Unable to load task options");
-          }
+                const response =
+                    await fetch("/api/task-options");
 
-          /*
-                =================================================
-                IMPORTANT
-    
-                Backend returns:
-    
-                {
-                    success: true,
-                    options: {
-                        task_types: [...],
-                        priorities: [...]
-                    }
+                const data =
+                    await response.json();
+
+                if (!response.ok || !data.success) {
+
+                    throw new Error(
+                        data.error ||
+                        "Unable to load task options."
+                    );
+
                 }
-                =================================================
-                */
 
-          const options = data.options || {};
+                const options =
+                    data.options || {};
 
-          const taskTypes = options.task_types || [];
+                const taskTypes =
+                    options.task_types ||
+                    options.taskTypes ||
+                    options.task_type ||
+                    [];
 
-          const priorities = options.priorities || [];
+                const priorities =
+                    options.priorities ||
+                    options.priority ||
+                    [];
 
-          /* =============================================
-                   TASK TYPE
-                ============================================== */
 
-          taskTypeSelect.innerHTML =
-            '<option value="">Select task type</option>';
+                /* TASK TYPES */
 
-          taskTypes.forEach(function (taskType) {
-            const option = document.createElement("option");
+                taskType.innerHTML =
+                    '<option value="">Select task type</option>';
 
-            option.value = taskType;
+                if (Array.isArray(taskTypes)) {
 
-            option.textContent = taskType;
+                    taskTypes.forEach(function (value) {
 
-            taskTypeSelect.appendChild(option);
-          });
+                        const option =
+                            document.createElement("option");
 
-          /* =============================================
-                   PRIORITY
-                ============================================== */
+                        option.value = value;
+                        option.textContent = value;
 
-          prioritySelect.innerHTML =
-            '<option value="">Select priority</option>';
+                        taskType.appendChild(option);
 
-          priorities.forEach(function (priority) {
-            const option = document.createElement("option");
+                    });
 
-            option.value = priority;
+                }
 
-            option.textContent = priority;
 
-            prioritySelect.appendChild(option);
-          });
+                /* PRIORITIES */
 
-          /* =============================================
-                   DEFAULT TASK TYPE
-                ============================================== */
+                priority.innerHTML =
+                    '<option value="">Select priority</option>';
 
-          if (taskTypes.length > 0) {
-            taskTypeSelect.value = taskTypes[0];
-          }
+                if (Array.isArray(priorities)) {
 
-          /* =============================================
-                   DEFAULT PRIORITY = MEDIUM
-                ============================================== */
+                    priorities.forEach(function (value) {
 
-          const mediumOption = Array.from(prioritySelect.options).find(
-            function (option) {
-              return option.value.toLowerCase().trim() === "medium";
-            },
-          );
+                        const option =
+                            document.createElement("option");
 
-          if (mediumOption) {
-            prioritySelect.value = mediumOption.value;
-          } else if (priorities.length > 0) {
-            prioritySelect.value = priorities[0];
-          }
+                        option.value = value;
+                        option.textContent = value;
 
-          console.log("SYNQ Task Types:", taskTypes);
+                        priority.appendChild(option);
 
-          console.log("SYNQ Priorities:", priorities);
-        } catch (error) {
-          console.error("Task options error:", error);
+                    });
 
-          taskTypeSelect.innerHTML =
-            '<option value="">Unable to load task types</option>';
+                }
 
-          prioritySelect.innerHTML =
-            '<option value="">Unable to load priorities</option>';
+
+                /* DEFAULT TASK */
+
+                if (taskTypes.length > 0) {
+
+                    taskType.value =
+                        taskTypes[0];
+
+                }
+
+
+                /* DEFAULT MEDIUM */
+
+                const medium =
+                    Array.from(priority.options).find(
+                        function (option) {
+
+                            return option.value
+                                .toLowerCase()
+                                .trim() === "medium";
+
+                        }
+                    );
+
+
+                if (medium) {
+
+                    priority.value =
+                        medium.value;
+
+                }
+                else if (priorities.length > 0) {
+
+                    priority.value =
+                        priorities[0];
+
+                }
+
+
+                console.log(
+                    "SYNQ task options:",
+                    data
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Task option error:",
+                    error
+                );
+
+                taskType.innerHTML =
+                    '<option value="">Unable to load task types</option>';
+
+                priority.innerHTML =
+                    '<option value="">Unable to load priorities</option>';
+
+            }
+
         }
-      }
 
-      /* =====================================================
-           PREDICT EMPLOYEE
+
+        /* =====================================================
+           MAIN PREDICTION
         ===================================================== */
 
-      async function predictEmployee() {
-        const button = document.getElementById("predictButton");
+        async function predictEmployee() {
 
-        const resultBox = document.getElementById("predictionResult");
+            const button =
+                document.getElementById("predictButton");
 
-        /* =============================================
-               INPUTS
-            ============================================== */
+            const resultBox =
+                document.getElementById("predictionResult");
 
-        const taskType = document.getElementById("task_type").value;
 
-        const priority = document.getElementById("priority").value;
+            /* INPUTS */
 
-        const daysToDeadline =
-          document.getElementById("days_to_deadline").value;
+            const taskType =
+                document.getElementById("task_type").value;
 
-        const volumeMetric = document.getElementById("volume_metric").value;
+            const priority =
+                document.getElementById("priority").value;
 
-        const perceivedDifficulty = document.getElementById(
-          "perceived_difficulty",
-        ).value;
+            const daysToDeadline =
+                document.getElementById("days_to_deadline").value;
 
-        const errorRisk = document.getElementById("error_risk").value;
+            const volumeMetric =
+                document.getElementById("volume_metric").value;
 
-        const dependencyScore =
-          document.getElementById("dependency_score").value;
+            const difficulty =
+                document.getElementById("perceived_difficulty").value;
 
-        const primarySkillMatching = document.getElementById(
-          "primary_skill_matching",
-        ).value;
+            const errorRisk =
+                document.getElementById("error_risk").value;
 
-        const secondarySkillMatching = document.getElementById(
-          "secondary_skill_matching",
-        ).value;
+            const dependency =
+                document.getElementById("dependency_score").value;
 
-        /* =============================================
-               VALIDATION
-            ============================================== */
+            const primarySkill =
+                document.getElementById("primary_skill_matching").value;
 
-        if (!taskType) {
-          showError("Please select a Task Type.");
+            const secondarySkill =
+                document.getElementById("secondary_skill_matching").value;
 
-          return;
-        }
 
-        if (!priority) {
-          showError("Please select a Priority.");
+            /* VALIDATION */
 
-          return;
-        }
+            if (!taskType) {
 
-        if (daysToDeadline === "" || isNaN(parseFloat(daysToDeadline))) {
-          showError("Please enter Days to Deadline.");
+                showError(
+                    "Please select a Task Type."
+                );
 
-          return;
-        }
+                return;
+            }
 
-        if (volumeMetric === "" || isNaN(parseFloat(volumeMetric))) {
-          showError("Please enter Volume Metric.");
 
-          return;
-        }
+            if (!priority) {
 
-        if (dependencyScore === "" || isNaN(parseFloat(dependencyScore))) {
-          showError("Please enter Dependency Score.");
+                showError(
+                    "Please select a Priority."
+                );
 
-          return;
-        }
+                return;
+            }
 
-        const dependency = parseFloat(dependencyScore);
 
-        if (dependency <= 0 || dependency >= 5) {
-          showError("Dependency Score must be between 0 and 5.");
+            const deadline =
+                parseFloat(daysToDeadline);
 
-          return;
-        }
+            if (
+                isNaN(deadline) ||
+                deadline < 0
+            ) {
 
-        if (
-          primarySkillMatching === "" ||
-          isNaN(parseFloat(primarySkillMatching))
-        ) {
-          showError("Please enter Primary Skill Matching.");
-          return;
-        }
+                showError(
+                    "Days to Deadline must be 0 or greater."
+                );
 
-        if (
-          secondarySkillMatching === "" ||
-          isNaN(parseFloat(secondarySkillMatching))
-        ) {
-          showError("Please enter Secondary Skill Matching.");
-          return;
-        }
+                return;
+            }
 
-        const primarySkill = parseFloat(primarySkillMatching);
-        const secondarySkill = parseFloat(secondarySkillMatching);
 
-        if (primarySkill < 0 || primarySkill > 1) {
-          showError("Primary Skill Matching must be between 0 and 1.");
-          return;
-        }
+            const volume =
+                parseFloat(volumeMetric);
 
-        if (secondarySkill < 0 || secondarySkill > 1) {
-          showError("Secondary Skill Matching must be between 0 and 1.");
-          return;
-        }
+            if (
+                isNaN(volume) ||
+                volume < 0
+            ) {
 
-        /* =============================================
-               LOADING
-            ============================================== */
+                showError(
+                    "Volume Metric must be 0 or greater."
+                );
 
-        button.disabled = true;
+                return;
+            }
 
-        button.innerHTML = "◌ &nbsp; ANALYZING...";
 
-        resultBox.innerHTML = `
+            const dependencyValue =
+                parseFloat(dependency);
 
-            <div class="loading-result">
+            if (
+                isNaN(dependencyValue) ||
+                dependencyValue < 0 ||
+                dependencyValue > 5
+            ) {
+
+                showError(
+                    "Dependency Score must be between 0 and 5."
+                );
+
+                return;
+            }
+
+
+            const primaryValue =
+                parseFloat(primarySkill);
+
+            if (
+                isNaN(primaryValue) ||
+                primaryValue < 0 ||
+                primaryValue > 1
+            ) {
+
+                showError(
+                    "Primary Skill Matching must be between 0 and 1."
+                );
+
+                return;
+            }
+
+
+            const secondaryValue =
+                parseFloat(secondarySkill);
+
+            if (
+                isNaN(secondaryValue) ||
+                secondaryValue < 0 ||
+                secondaryValue > 1
+            ) {
+
+                showError(
+                    "Secondary Skill Matching must be between 0 and 1."
+                );
+
+                return;
+            }
+
+
+            /* LOADING */
+
+            button.disabled = true;
+
+            button.innerHTML =
+                "◌ &nbsp; ANALYZING...";
+
+
+            resultBox.innerHTML = `
+
+        <div class="loading-result">
+
+            <div class="result-icon">
+                ◉
+            </div>
+
+            <h2>
+                ANALYZING...
+            </h2>
+
+            <p>
+                SYNQ is analyzing employee
+                performance data.
+            </p>
+
+        </div>
+
+    `;
+
+
+            /* REQUEST */
+
+            const requestData = {
+
+                task_type:
+                    taskType,
+
+                priority:
+                    priority,
+
+                days_to_deadline:
+                    deadline,
+
+                volume_metric:
+                    volume,
+
+                perceived_difficulty:
+                    difficulty,
+
+                error_risk:
+                    parseFloat(errorRisk),
+
+                dependency_score:
+                    dependencyValue,
+
+                primary_skill_matching:
+                    primaryValue,
+
+                secondary_skill_matching:
+                    secondaryValue
+
+            };
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/predict",
+                        {
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    requestData
+                                )
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                console.log(
+                    "================================="
+                );
+
+                console.log(
+                    "SYNQ FULL API RESPONSE:"
+                );
+
+                console.log(result);
+
+                console.log(
+                    "================================="
+                );
+
+
+                if (
+                    !response.ok ||
+                    result.success === false
+                ) {
+
+                    throw new Error(
+                        result.error ||
+                        result.message ||
+                        "Prediction failed."
+                    );
+
+                }
+
+
+                /* =================================================
+                   FIND ACTUAL PREDICTION OBJECT
+                ================================================= */
+
+                let prediction =
+                    result;
+
+
+                if (
+                    result.prediction &&
+                    typeof result.prediction === "object"
+                ) {
+
+                    prediction =
+                        result.prediction;
+
+                }
+
+                else if (
+                    result.result &&
+                    typeof result.result === "object"
+                ) {
+
+                    prediction =
+                        result.result;
+
+                }
+
+                else if (
+                    result.data &&
+                    typeof result.data === "object"
+                ) {
+
+                    prediction =
+                        result.data;
+
+                }
+
+
+                /* =================================================
+                   EXTRACT EMPLOYEE
+                ================================================= */
+
+                let employee =
+                    findValue(
+                        prediction,
+                        [
+                            "best_fit_employee",
+                            "best_employee",
+                            "recommended_employee",
+                            "predicted_employee",
+                            "employee_id",
+                            "employee"
+                        ]
+                    );
+
+
+                /* =================================================
+                   IF DIRECT EMPLOYEE NOT FOUND,
+                   SEARCH PREDICTION LIST
+                ================================================= */
+
+                let selectedPrediction = null;
+
+
+                if (
+                    employee === null ||
+                    employee === undefined ||
+                    employee === "" ||
+                    employee === "N/A"
+                ) {
+
+                    selectedPrediction =
+                        findBestEmployeePrediction(
+                            result
+                        );
+
+
+                    if (selectedPrediction) {
+
+                        employee =
+                            selectedPrediction.employee;
+
+                        prediction =
+                        {
+                            ...prediction,
+                            ...selectedPrediction.data
+                        };
+
+                    }
+
+                }
+
+
+                /* =================================================
+                   HANDLE ARRAY/TUPLE RESPONSE
+                   
+                   Example:
+                   [
+                       "EMP_007",
+                       8.42
+                   ]
+                ================================================= */
+
+                if (
+                    (
+                        employee === null ||
+                        employee === undefined ||
+                        employee === "" ||
+                        employee === "N/A"
+                    )
+                    &&
+                    Array.isArray(result)
+                ) {
+
+                    if (result.length > 0) {
+
+                        employee =
+                            result[0];
+
+                    }
+
+                }
+
+
+                /* =================================================
+                   RATING
+                ================================================= */
+
+                let rating =
+                    findValue(
+                        prediction,
+                        [
+                            "predicted_rating",
+                            "predictedRating",
+                            "prediction_rating",
+                            "rating"
+                        ]
+                    );
+
+
+                if (
+                    (
+                        rating === null ||
+                        rating === undefined
+                    )
+                    &&
+                    selectedPrediction
+                ) {
+
+                    rating =
+                        selectedPrediction.rating;
+
+                }
+
+
+                /*
+                   If API returned:
+        
+                   [
+                       "EMP_007",
+                       8.42
+                   ]
+                */
+
+                if (
+                    (
+                        rating === null ||
+                        rating === undefined
+                    )
+                    &&
+                    Array.isArray(result)
+                ) {
+
+                    if (result.length > 1) {
+
+                        rating =
+                            result[1];
+
+                    }
+
+                }
+
+
+                /* =================================================
+                   CATEGORY
+                ================================================= */
+
+                let category =
+                    findValue(
+                        prediction,
+                        [
+                            "category",
+                            "performance",
+                            "performance_category",
+                            "performance_level"
+                        ]
+                    );
+
+
+                if (
+                    category === null ||
+                    category === undefined ||
+                    category === ""
+                ) {
+
+                    category =
+                        getPerformanceCategory(
+                            rating
+                        );
+
+                }
+
+
+                /* =================================================
+                   ERROR RISK
+                ================================================= */
+
+                let risk =
+                    findValue(
+                        prediction,
+                        [
+                            "error_risk",
+                            "errorRisk",
+                            "risk"
+                        ]
+                    );
+
+
+                if (
+                    risk === null ||
+                    risk === undefined ||
+                    risk === ""
+                ) {
+
+                    risk =
+                        parseFloat(errorRisk);
+
+                }
+
+
+                /* =================================================
+                   RISK LEVEL
+                ================================================= */
+
+                let riskLevel =
+                    findValue(
+                        prediction,
+                        [
+                            "risk_level",
+                            "riskLevel"
+                        ]
+                    );
+
+
+                if (
+                    riskLevel === null ||
+                    riskLevel === undefined ||
+                    riskLevel === ""
+                ) {
+
+                    riskLevel =
+                        getRiskName(
+                            Number(risk)
+                        );
+
+                }
+
+
+                /* =================================================
+                   MODEL STATUS
+                ================================================= */
+
+                const fallbackUsed =
+                    findValue(
+                        prediction,
+                        [
+                            "fallback_used",
+                            "fallbackUsed"
+                        ]
+                    );
+
+
+                const modelAvailable =
+                    findValue(
+                        prediction,
+                        [
+                            "model_available",
+                            "modelAvailable"
+                        ]
+                    );
+
+
+                let modelMessage =
+                    "✓ SYNQ trained model used";
+
+
+                if (
+                    fallbackUsed === true ||
+                    modelAvailable === false
+                ) {
+
+                    modelMessage =
+                        "⚠ Historical dataset fallback used";
+
+                }
+
+
+                /* =================================================
+                   FINAL SAFETY CHECK
+                ================================================= */
+
+                if (
+                    employee === null ||
+                    employee === undefined ||
+                    employee === "" ||
+                    employee === "N/A"
+                ) {
+
+                    console.error(
+                        "Could not find employee in API response:",
+                        result
+                    );
+
+                    showError(
+                        "Prediction completed, but the API did not return a Best Fit Employee. Check the browser console for the API response."
+                    );
+
+                    return;
+
+                }
+
+
+                /* =================================================
+                   DISPLAY
+                ================================================= */
+
+                resultBox.innerHTML = `
+
+            <div class="success-result">
 
                 <div class="result-icon">
-                    ◉
+                    ◎
                 </div>
 
-                <h2>
-                    ANALYZING...
-                </h2>
 
-                <p>
-                    SYNQ is analyzing employee
-                    performance data.
-                </p>
+                <div class="result-label">
+                    BEST FIT EMPLOYEE
+                </div>
+
+
+                <div class="employee-name">
+                    ${escapeHtml(
+                    String(employee)
+                )}
+                </div>
+
+
+                <div class="result-grid">
+
+                    <div class="result-card">
+
+                        <span>
+                            Task Type
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(
+                    String(taskType)
+                )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-card">
+
+                        <span>
+                            Priority
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(
+                    String(priority)
+                )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-card">
+
+                        <span>
+                            Predicted Rating
+                        </span>
+
+                        <strong>
+                            ${formatRating(rating)}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-card">
+
+                        <span>
+                            Performance
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(
+                    String(category)
+                )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-card">
+
+                        <span>
+                            Error Risk
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(
+                    String(risk)
+                )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="result-card">
+
+                        <span>
+                            Risk Level
+                        </span>
+
+                        <strong>
+                            ${escapeHtml(
+                    String(riskLevel)
+                )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="model-status">
+                    ${modelMessage}
+                </div>
 
             </div>
 
         `;
 
-        /* =============================================
-               REQUEST DATA
-            ============================================== */
+            }
 
-        const requestData = {
-          task_type: taskType,
+            catch (error) {
 
-          priority: priority,
+                console.error(
+                    "Prediction error:",
+                    error
+                );
 
-          days_to_deadline: parseFloat(daysToDeadline),
+                showError(
+                    error.message ||
+                    "Something went wrong while predicting."
+                );
 
-          volume_metric: parseFloat(volumeMetric),
+            }
 
-          perceived_difficulty: perceivedDifficulty,
+            finally {
 
-          error_risk: parseFloat(errorRisk),
+                button.disabled = false;
 
-          dependency_score: dependency,
+                button.innerHTML =
+                    "✦ &nbsp; PREDICT EMPLOYEE";
 
-          primary_skill_matching: parseFloat(primarySkillMatching),
+            }
 
-          secondary_skill_matching: parseFloat(secondarySkillMatching),
-        };
-
-        try {
-          /* =========================================
-                   API REQUEST
-                ========================================== */
-
-          const response = await fetch("/api/predict", {
-            method: "POST",
-
-            headers: {
-              "Content-Type": "application/json",
-            },
-
-            body: JSON.stringify(requestData),
-          });
-
-          const result = await response.json();
-
-          if (!response.ok || !result.success) {
-            throw new Error(result.error || "Prediction failed.");
-          }
-
-          /* =========================================
-                   RESULT VALUES
-                ========================================== */
-
-          const employee = result.best_fit_employee ?? "N/A";
-
-          const rating = result.predicted_rating ?? "N/A";
-
-          const category = result.category ?? "N/A";
-
-          const risk = result.error_risk ?? "N/A";
-
-          const riskLevel =
-            result.risk_level ?? getRiskName(Number(result.error_risk));
-
-          /* =========================================
-                   MODEL STATUS
-                ========================================== */
-
-          let modelMessage;
-
-          if (result.model_available) {
-            modelMessage = "✓ SYNQ trained model used";
-          } else {
-            modelMessage = "⚠ Historical dataset fallback used";
-          }
-
-          /* =========================================
-                   DISPLAY RESULT
-                ========================================== */
-
-          resultBox.innerHTML = `
-
-                <div class="success-result">
-
-
-                    <div class="result-icon">
-                        ◎
-                    </div>
-
-
-                    <div class="result-label">
-                        BEST FIT EMPLOYEE
-                    </div>
-
-
-                    <div class="employee-name">
-                        ${escapeHtml(String(employee))}
-                    </div>
-
-
-
-                    <div class="result-grid">
-
-
-                        <div class="result-card">
-
-                            <span>
-                                Predicted Rating
-                            </span>
-
-                            <strong>
-                                ${escapeHtml(String(rating))}/5
-                            </strong>
-
-                        </div>
-
-
-
-                        <div class="result-card">
-
-                            <span>
-                                Performance
-                            </span>
-
-                            <strong>
-                                ${escapeHtml(String(category))}
-                            </strong>
-
-                        </div>
-
-
-
-                        <div class="result-card">
-
-                            <span>
-                                Error Risk
-                            </span>
-
-                            <strong>
-                                ${escapeHtml(String(risk))}
-                            </strong>
-
-                        </div>
-
-
-
-                        <div class="result-card">
-
-                            <span>
-                                Risk Level
-                            </span>
-
-                            <strong>
-                                ${escapeHtml(String(riskLevel))}
-                            </strong>
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <div class="model-status">
-
-                        ${modelMessage}
-
-                    </div>
-
-
-                </div>
-
-            `;
-        } catch (error) {
-          console.error("Prediction error:", error);
-
-          showError(error.message || "Something went wrong while predicting.");
-        } finally {
-          button.disabled = false;
-
-          button.innerHTML = "✦ &nbsp; PREDICT EMPLOYEE";
         }
-      }
 
-      /* =====================================================
+
+        /* =====================================================
+           FIND VALUE FROM OBJECT
+        ===================================================== */
+
+        function findValue(
+            object,
+            keys
+        ) {
+
+            if (
+                object === null ||
+                object === undefined
+            ) {
+
+                return null;
+
+            }
+
+
+            if (
+                typeof object !== "object"
+            ) {
+
+                return null;
+
+            }
+
+
+            for (
+                const key of keys
+            ) {
+
+                if (
+                    Object.prototype.hasOwnProperty.call(
+                        object,
+                        key
+                    )
+                ) {
+
+                    const value =
+                        object[key];
+
+                    if (
+                        value !== null &&
+                        value !== undefined &&
+                        value !== ""
+                    ) {
+
+                        return value;
+
+                    }
+
+                }
+
+            }
+
+
+            /*
+               Case-insensitive search
+            */
+
+            const objectKeys =
+                Object.keys(object);
+
+
+            for (
+                const wantedKey of keys
+            ) {
+
+                const foundKey =
+                    objectKeys.find(
+                        function (actualKey) {
+
+                            return (
+                                actualKey
+                                    .toLowerCase()
+                                    .replace(/[-\s]/g, "_")
+                                ===
+                                wantedKey
+                                    .toLowerCase()
+                                    .replace(/[-\s]/g, "_")
+                            );
+
+                        }
+                    );
+
+
+                if (foundKey) {
+
+                    const value =
+                        object[foundKey];
+
+                    if (
+                        value !== null &&
+                        value !== undefined &&
+                        value !== ""
+                    ) {
+
+                        return value;
+
+                    }
+
+                }
+
+            }
+
+
+            return null;
+
+        }
+
+
+        /* =====================================================
+           FIND BEST EMPLOYEE FROM PREDICTION COLLECTION
+        ===================================================== */
+
+        function findBestEmployeePrediction(
+            root
+        ) {
+
+            const candidates = [];
+
+
+            function scan(
+                value,
+                parentKey = ""
+            ) {
+
+                if (
+                    value === null ||
+                    value === undefined
+                ) {
+
+                    return;
+
+                }
+
+
+                if (
+                    Array.isArray(value)
+                ) {
+
+                    value.forEach(
+                        function (item) {
+
+                            scan(
+                                item,
+                                parentKey
+                            );
+
+                        }
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    typeof value !== "object"
+                ) {
+
+                    return;
+
+                }
+
+
+                /*
+                   CASE 1:
+        
+                   {
+                       employee_id: "EMP_001",
+                       predicted_rating: 8.5
+                   }
+                */
+
+                const emp =
+                    findValue(
+                        value,
+                        [
+                            "employee_id",
+                            "employee",
+                            "emp_id",
+                            "employeeId"
+                        ]
+                    );
+
+
+                const rating =
+                    findValue(
+                        value,
+                        [
+                            "predicted_rating",
+                            "predictedRating",
+                            "prediction_rating",
+                            "rating",
+                            "score"
+                        ]
+                    );
+
+
+                if (
+                    emp !== null &&
+                    emp !== undefined &&
+                    rating !== null &&
+                    rating !== undefined
+                ) {
+
+                    const numericRating =
+                        Number(rating);
+
+
+                    if (
+                        !Number.isNaN(
+                            numericRating
+                        )
+                    ) {
+
+                        candidates.push({
+
+                            employee:
+                                String(emp),
+
+                            rating:
+                                numericRating,
+
+                            data:
+                                value
+
+                        });
+
+                    }
+
+                }
+
+
+                /*
+                   CASE 2:
+        
+                   {
+                       EMP_001: {
+                           predicted_rating: 8.5
+                       },
+        
+                       EMP_002: {
+                           predicted_rating: 7.9
+                       }
+                   }
+                */
+
+                Object.keys(value).forEach(
+                    function (key) {
+
+                        const child =
+                            value[key];
+
+
+                        if (
+                            /^EMP[_-]?\d+$/i.test(
+                                key
+                            )
+                        ) {
+
+                            if (
+                                child &&
+                                typeof child === "object"
+                            ) {
+
+                                const childRating =
+                                    findValue(
+                                        child,
+                                        [
+                                            "predicted_rating",
+                                            "predictedRating",
+                                            "rating",
+                                            "score"
+                                        ]
+                                    );
+
+
+                                if (
+                                    childRating !== null &&
+                                    childRating !== undefined
+                                ) {
+
+                                    const numericRating =
+                                        Number(
+                                            childRating
+                                        );
+
+
+                                    if (
+                                        !Number.isNaN(
+                                            numericRating
+                                        )
+                                    ) {
+
+                                        candidates.push({
+
+                                            employee:
+                                                key,
+
+                                            rating:
+                                                numericRating,
+
+                                            data:
+                                                child
+
+                                        });
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+
+                        scan(
+                            child,
+                            key
+                        );
+
+                    }
+                );
+
+            }
+
+
+            scan(root);
+
+
+            if (
+                candidates.length === 0
+            ) {
+
+                return null;
+
+            }
+
+
+            candidates.sort(
+                function (a, b) {
+
+                    return b.rating - a.rating;
+
+                }
+            );
+
+
+            return candidates[0];
+
+        }
+
+
+        /* =====================================================
+           PERFORMANCE CATEGORY
+        ===================================================== */
+
+        function getPerformanceCategory(
+            rating
+        ) {
+
+            const value =
+                Number(rating);
+
+
+            if (
+                Number.isNaN(value)
+            ) {
+
+                return "Eligible Employee";
+
+            }
+
+
+            if (value >= 8) {
+
+                return "High Performer";
+
+            }
+
+            if (value >= 6) {
+
+                return "Good Performer";
+
+            }
+
+            if (value >= 4) {
+
+                return "Average Performer";
+
+            }
+
+            return "Needs Improvement";
+
+        }
+
+
+        /* =====================================================
+           RATING FORMAT
+        ===================================================== */
+
+        function formatRating(
+            value
+        ) {
+
+            if (
+                value === null ||
+                value === undefined ||
+                value === "" ||
+                value === "N/A"
+            ) {
+
+                return "N/A";
+
+            }
+
+
+            const number =
+                Number(value);
+
+
+            if (
+                !Number.isNaN(number)
+            ) {
+
+                return (
+                    number.toFixed(2) +
+                    "/10"
+                );
+
+            }
+
+
+            return (
+                escapeHtml(
+                    String(value)
+                ) +
+                "/10"
+            );
+
+        }
+
+
+        /* =====================================================
            RISK NAME
         ===================================================== */
 
-      function getRiskName(value) {
-        const riskNames = {
-          0: "Minimal",
+        function getRiskName(
+            value
+        ) {
 
-          1: "Very Low",
+            const names = {
 
-          2: "Low",
+                0: "Minimal Risk",
+                1: "Very Low Risk",
+                2: "Low Risk",
+                3: "Moderate Risk",
+                4: "High Risk",
+                5: "Critical Risk"
 
-          3: "Moderate",
+            };
 
-          4: "High",
 
-          5: "Critical",
-        };
+            return (
+                names[value] ||
+                "Unknown Risk"
+            );
 
-        return riskNames[value] || "Unknown";
-      }
+        }
 
-      /* =====================================================
-           SHOW ERROR
+
+        /* =====================================================
+           ERROR
         ===================================================== */
 
-      function showError(message) {
-        const resultBox = document.getElementById("predictionResult");
+        function showError(
+            message
+        ) {
 
-        resultBox.innerHTML = `
-
-            <div class="error-result">
-
-
-                <div class="result-icon">
-                    !
-                </div>
+            const resultBox =
+                document.getElementById(
+                    "predictionResult"
+                );
 
 
-                <h2>
-                    PREDICTION FAILED
-                </h2>
+            resultBox.innerHTML = `
 
+        <div class="error-result">
 
-                <p>
-
-                    ${escapeHtml(String(message))}
-
-                </p>
-
-
+            <div class="result-icon">
+                !
             </div>
 
-        `;
-      }
+            <h2>
+                PREDICTION FAILED
+            </h2>
 
-      /* =====================================================
-           HTML ESCAPE
+            <p>
+                ${escapeHtml(
+                String(message)
+            )}
+            </p>
+
+        </div>
+
+    `;
+
+        }
+
+
+        /* =====================================================
+           ESCAPE HTML
         ===================================================== */
 
-      function escapeHtml(value) {
-        return value
+        function escapeHtml(
+            value
+        ) {
 
-          .replace(/&/g, "&amp;")
+            return String(
+                value ?? ""
+            )
 
-          .replace(/</g, "&lt;")
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
 
-          .replace(/>/g, "&gt;")
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
 
-          .replace(/"/g, "&quot;")
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
 
-          .replace(/'/g, "&#039;");
-      }
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
 
-      /* =====================================================
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        /* =====================================================
            PAGE LOAD
         ===================================================== */
 
-      document.addEventListener("DOMContentLoaded", function () {
-        loadTaskOptions();
-      });
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                loadTaskOptions();
+
+            }
+        );
+
     </script>
-  </body>
+
+</body>
+
 </html>

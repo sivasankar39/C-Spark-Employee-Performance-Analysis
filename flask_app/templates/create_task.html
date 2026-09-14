@@ -1,1166 +1,1621 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>SYNQ - Create Task</title>
 
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/style.css') }}"
-    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <style>
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        background: #050505;
-        color: #ffffff;
-        font-family: Arial, Helvetica, sans-serif;
-      }
-
-      .main-content {
-        margin-left: 260px;
-        min-height: 100vh;
-        width: calc(100% - 260px);
-      }
-
-      .page-container {
-        padding: 28px 38px 50px;
-      }
-
-      /* =========================================
-           TOPBAR
-        ========================================== */
-
-      .topbar {
-        height: 70px;
-        border-bottom: 1px solid #222;
-        display: flex;
-        align-items: center;
-        padding: 0 38px;
-      }
-
-      .topbar-title {
-        font-size: 13px;
-        color: #777;
-        letter-spacing: 1px;
-      }
-
-      .topbar-right {
-        margin-left: auto;
-        display: flex;
-        align-items: center;
-        gap: 22px;
-      }
-
-      .topbar-date {
-        color: #777;
-        font-size: 13px;
-      }
-
-      /* =========================================
-           HERO
-        ========================================== */
-
-      .hero {
-        position: relative;
-        overflow: hidden;
-
-        padding: 36px 38px;
-
-        border: 1px solid #422060;
-        border-radius: 20px;
-
-        background:
-          radial-gradient(
-            circle at 85% 40%,
-            rgba(128, 43, 214, 0.16),
-            transparent 35%
-          ),
-          #090909;
-
-        margin-bottom: 26px;
-      }
-
-      .hero::after {
-        content: "";
-
-        position: absolute;
-
-        width: 260px;
-        height: 260px;
-
-        right: 80px;
-        top: -100px;
-
-        border: 1px solid rgba(170, 75, 255, 0.13);
-
-        border-radius: 50%;
-      }
-
-      .hero-label {
-        color: #a94cff;
-        font-size: 10px;
-        letter-spacing: 4px;
-        margin-bottom: 14px;
-      }
-
-      .hero h1 {
-        margin: 0 0 12px;
-
-        font-size: 32px;
-        line-height: 1.2;
-
-        position: relative;
-        z-index: 2;
-      }
-
-      .hero p {
-        margin: 0;
-
-        color: #777;
-
-        font-size: 14px;
-        line-height: 1.7;
-
-        max-width: 850px;
-
-        position: relative;
-        z-index: 2;
-      }
-
-      /* =========================================
-           GRID
-        ========================================== */
-
-      .content-grid {
-        display: grid;
-
-        grid-template-columns: minmax(520px, 1.4fr) minmax(390px, 0.85fr);
-
-        gap: 24px;
-      }
-
-      .panel {
-        background: #080808;
-
-        border: 1px solid #292929;
-
-        border-radius: 18px;
-
-        padding: 30px;
-      }
-
-      .panel-title {
-        font-size: 20px;
-        margin-bottom: 7px;
-      }
-
-      .panel-subtitle {
-        color: #666;
-        font-size: 13px;
-        margin-bottom: 28px;
-      }
-
-      /* =========================================
-           FORM
-        ========================================== */
-
-      .form-grid {
-        display: grid;
-
-        grid-template-columns: 1fr 1fr;
-
-        gap: 20px 22px;
-      }
-
-      .form-group {
-        display: flex;
-        flex-direction: column;
-      }
-
-      .form-group.full {
-        grid-column: 1 / -1;
-      }
-
-      label {
-        color: #999;
-        font-size: 13px;
-        margin-bottom: 9px;
-      }
-
-      input,
-      select {
-        width: 100%;
-        height: 53px;
-
-        background: #111;
-
-        color: #fff;
-
-        border: 1px solid #2b2b2b;
-
-        border-radius: 10px;
-
-        padding: 0 15px;
-
-        font-size: 14px;
-
-        outline: none;
-      }
-
-      input:focus,
-      select:focus {
-        border-color: #8d3ee4;
-
-        box-shadow: 0 0 0 2px rgba(141, 62, 228, 0.1);
-      }
-
-      select {
-        cursor: pointer;
-      }
-
-      select option {
-        background: #111;
-        color: #fff;
-      }
-
-      input::placeholder {
-        color: #555;
-      }
-
-      .hint {
-        margin-top: 6px;
-
-        color: #555;
-
-        font-size: 11px;
-      }
-
-      /* =========================================
-           CREATE BUTTON
-        ========================================== */
-
-      .create-button {
-        grid-column: 1 / -1;
-
-        height: 56px;
-
-        border: none;
-
-        border-radius: 10px;
-
-        background: linear-gradient(100deg, #7430e9, #b047f0);
-
-        color: white;
-
-        font-size: 15px;
-
-        font-weight: 700;
-
-        cursor: pointer;
-
-        margin-top: 5px;
-
-        box-shadow: 0 12px 30px rgba(125, 48, 230, 0.2);
-
-        transition: 0.2s;
-      }
-
-      .create-button:hover {
-        transform: translateY(-1px);
-
-        box-shadow: 0 15px 35px rgba(125, 48, 230, 0.3);
-      }
-
-      .create-button:disabled {
-        opacity: 0.6;
-        cursor: wait;
-        transform: none;
-      }
-
-      /* =========================================
-           MESSAGE
-        ========================================== */
-
-      .message {
-        display: none;
-
-        padding: 13px 15px;
-
-        border-radius: 9px;
-
-        font-size: 12px;
-
-        margin-bottom: 18px;
-
-        line-height: 1.5;
-      }
-
-      .message.success {
-        display: block;
-
-        background: rgba(34, 197, 94, 0.08);
-
-        border: 1px solid rgba(34, 197, 94, 0.25);
-
-        color: #72df94;
-      }
-
-      .message.error {
-        display: block;
-
-        background: rgba(239, 68, 68, 0.08);
-
-        border: 1px solid rgba(239, 68, 68, 0.25);
-
-        color: #ff7b7b;
-      }
-
-      /* =========================================
-           PREVIEW
-        ========================================== */
-
-      .preview-panel {
-        min-height: 610px;
-      }
-
-      .preview-box {
-        background: #0d0d0d;
-
-        border: 1px solid #292929;
-
-        border-radius: 13px;
-
-        padding: 21px;
-
-        margin-top: 32px;
-      }
-
-      .preview-label {
-        color: #777;
-
-        font-size: 10px;
-
-        font-weight: 700;
-
-        letter-spacing: 2px;
-
-        margin-bottom: 18px;
-      }
-
-      .preview-row {
-        display: flex;
-
-        align-items: center;
-        justify-content: space-between;
-
-        min-height: 48px;
-
-        border-bottom: 1px solid #1c1c1c;
-      }
-
-      .preview-row:last-child {
-        border-bottom: none;
-      }
-
-      .preview-row span:first-child {
-        color: #555;
-        font-size: 12px;
-      }
-
-      .preview-row span:last-child {
-        color: #ddd;
-        font-size: 12px;
-        font-weight: 600;
-        text-align: right;
-      }
-
-      /* =========================================
-           INTELLIGENCE CARD
-        ========================================== */
-
-      .intelligence {
-        margin-top: 20px;
-
-        padding: 20px;
-
-        border: 1px solid #34204c;
-
-        border-radius: 13px;
-
-        background: linear-gradient(
-          135deg,
-          rgba(95, 35, 145, 0.1),
-          rgba(15, 8, 22, 0.5)
-        );
-      }
-
-      .intelligence-title {
-        color: #b34fff;
-
-        font-size: 13px;
-
-        font-weight: 700;
-
-        margin-bottom: 10px;
-      }
-
-      .intelligence p {
-        color: #666;
-
-        font-size: 12px;
-
-        line-height: 1.7;
-
-        margin: 0;
-      }
-
-      /* =========================================
-           RESPONSIVE
-        ========================================== */
-
-      @media (max-width: 1100px) {
-        .content-grid {
-          grid-template-columns: 1fr;
+        * {
+            box-sizing: border-box;
         }
 
-        .preview-panel {
-          min-height: auto;
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            background: #050505;
+            color: #fff;
+            font-family: Arial, Helvetica, sans-serif;
         }
-      }
 
-      @media (max-width: 800px) {
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
         .main-content {
-          margin-left: 0;
-
-          width: 100%;
+            margin-left: 300px;
+            width: calc(100% - 300px);
+            min-height: 100vh;
+            background: #050505;
         }
+
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
+
+        .topbar {
+            height: 72px;
+            display: flex;
+            align-items: center;
+            padding: 0 38px;
+            border-bottom: 1px solid #222;
+            background: #070707;
+        }
+
+        .topbar-title {
+            color: #777;
+            font-size: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .topbar-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 16px;
+            border: 1px solid #292929;
+            border-radius: 12px;
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #a94cff;
+            box-shadow: 0 0 10px #a94cff;
+        }
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
 
         .page-container {
-          padding: 20px 15px;
+            padding: 34px 38px 60px;
+            max-width: 1200px;
         }
+
+        .page-label {
+            color: #a94cff;
+            font-size: 10px;
+            letter-spacing: 4px;
+            margin-bottom: 12px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+            line-height: 1.2;
+        }
+
+        .page-header p {
+            margin: 0 0 32px;
+            color: #707070;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           GRID
+        ===================================================== */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.5fr) minmax(320px, 0.8fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+        .card {
+            background: #090909;
+            border: 1px solid #272727;
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card-subtitle {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 28px;
+        }
+
+        /* =====================================================
+           FORM
+        ===================================================== */
 
         .form-grid {
-          grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
-        .form-group.full,
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            color: #aaa;
+            font-size: 11px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .required {
+            color: #a94cff;
+        }
+
+        input,
+        select {
+            width: 100%;
+            height: 48px;
+            padding: 0 14px;
+
+            background: #101010;
+            border: 1px solid #292929;
+            border-radius: 9px;
+
+            color: #fff;
+            outline: none;
+            font-size: 13px;
+        }
+
+        input:focus,
+        select:focus {
+            border-color: #8b42d7;
+            box-shadow: 0 0 0 2px rgba(139, 66, 215, 0.12);
+        }
+
+        input::placeholder {
+            color: #555;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #111;
+            color: #fff;
+        }
+
+        .field-help {
+            color: #555;
+            font-size: 10px;
+            line-height: 1.4;
+        }
+
+        /* =====================================================
+           CREATE BUTTON
+        ===================================================== */
+
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 28px;
+        }
+
         .create-button {
-          grid-column: auto;
+            min-width: 180px;
+            height: 48px;
+
+            border: none;
+            border-radius: 9px;
+
+            background: linear-gradient(100deg,
+                    #7832e8,
+                    #b04cf4);
+
+            color: #fff;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1px;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 12px 28px rgba(130, 50, 230, 0.20);
+
+            transition: 0.2s ease;
         }
 
-        .hero h1 {
-          font-size: 26px;
+        .create-button:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 15px 35px rgba(130, 50, 230, 0.30);
         }
-      }
+
+        .create-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* =====================================================
+           MESSAGE
+        ===================================================== */
+
+        .message {
+            margin-top: 18px;
+            padding: 13px 15px;
+            border-radius: 9px;
+            display: none;
+            font-size: 12px;
+        }
+
+        .message.success {
+            display: block;
+            background: rgba(34, 197, 94, 0.08);
+            border: 1px solid rgba(34, 197, 94, 0.25);
+            color: #65d58a;
+        }
+
+        .message.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #ff6b75;
+        }
+
+        /* =====================================================
+           PREVIEW
+        ===================================================== */
+
+        .preview-card {
+            background: #090909;
+            border: 1px solid #272727;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .preview-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .preview-subtitle {
+            color: #666;
+            font-size: 11px;
+            margin-bottom: 22px;
+        }
+
+        .preview-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+
+            padding: 14px 0;
+            border-bottom: 1px solid #191919;
+        }
+
+        .preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .preview-label {
+            color: #666;
+            font-size: 11px;
+        }
+
+        .preview-value {
+            color: #ddd;
+            font-size: 12px;
+            text-align: right;
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .preview-value.purple {
+            color: #b04cff;
+        }
+
+        .preview-value.red {
+            color: #ff5968;
+        }
+
+        /* =====================================================
+           QUICK INFO
+        ===================================================== */
+
+        .info-box {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid #252525;
+            background: #0d0d0d;
+        }
+
+        .info-title {
+            color: #a94cff;
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            color: #666;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-card {
+                order: 2;
+            }
+        }
+
+        @media (max-width: 900px) {
+
+            .main-content {
+                margin-left: 240px;
+                width: calc(100% - 240px);
+            }
+
+            .page-container {
+                padding: 25px 20px 50px;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .page-container {
+                padding: 20px 15px 40px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .page-header h1 {
+                font-size: 27px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
     </style>
-  </head>
+</head>
 
-  <body>
-    <!-- =========================================
+
+<body>
+
+    <!-- =====================================================
          SIDEBAR
-    ========================================== -->
+    ====================================================== -->
 
     {% include 'partials/sidebar.html' %}
 
-    <!-- =========================================
+
+    <!-- =====================================================
          MAIN
-    ========================================== -->
+    ====================================================== -->
 
     <main class="main-content">
-      <!-- =====================================
-             TOPBAR
-        ====================================== -->
 
-      <header class="topbar">
-        <div class="topbar-title">SYNQ / CREATE TASK</div>
+        <!-- TOPBAR -->
 
-        <div class="topbar-right">
-          <div class="topbar-date">Thursday, 10 September 2026</div>
+        <header class="topbar">
+
+            <div class="topbar-title">
+                SYNQ / TASK MANAGEMENT / CREATE
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="status">
+                    <span class="status-dot"></span>
+                    SYNQ Intelligence Active
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE -->
+
+        <div class="page-container">
+
+            <section class="page-header">
+
+                <div class="page-label">
+                    S Y N Q · T A S K M A N A G E M E N T
+                </div>
+
+                <h1>
+                    Create Task
+                </h1>
+
+                <p>
+                    Create a new task and add it to your SYNQ task history.
+                </p>
+
+            </section>
+
+
+            <div class="content-grid">
+
+                <!-- =================================================
+                     FORM CARD
+                ================================================== -->
+
+                <section class="card">
+
+                    <div class="card-title">
+                        Task Details
+                    </div>
+
+                    <div class="card-subtitle">
+                        Enter the task information below.
+                    </div>
+
+
+                    <form id="createTaskForm">
+
+                        <div class="form-grid">
+
+                            <!-- TASK TYPE -->
+
+                            <div class="form-group">
+
+                                <label for="task_type">
+                                    Task Type
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="task_type" required>
+
+                                    <option value="">
+                                        Loading task types...
+                                    </option>
+
+                                </select>
+
+                                <div class="field-help">
+                                    Select the type of work assigned.
+                                </div>
+
+                            </div>
+
+
+                            <!-- PRIORITY -->
+
+                            <div class="form-group">
+
+                                <label for="priority">
+                                    Priority
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="priority" required>
+
+                                    <option value="">
+                                        Loading priorities...
+                                    </option>
+
+                                </select>
+
+                                <div class="field-help">
+                                    Select task priority.
+                                </div>
+
+                            </div>
+
+
+                            <!-- DEADLINE -->
+
+                            <div class="form-group">
+
+                                <label for="days_to_deadline">
+                                    Days to Deadline
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="number" id="days_to_deadline" min="0" step="1" value="5"
+                                    placeholder="Example: 5" required>
+
+                            </div>
+
+
+                            <!-- VOLUME -->
+
+                            <div class="form-group">
+
+                                <label for="volume_metric">
+                                    Volume Metric
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="number" id="volume_metric" min="0" step="0.01" value="0.14"
+                                    placeholder="Example: 0.14" required>
+
+                            </div>
+
+
+                            <!-- DIFFICULTY -->
+
+                            <div class="form-group">
+
+                                <label for="perceived_difficulty">
+                                    Perceived Difficulty
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select id="perceived_difficulty" required>
+
+                                    <option value="">
+                                        Select Difficulty
+                                    </option>
+
+                                    <option value="Low">
+                                        Low
+                                    </option>
+
+                                    <option value="Medium" selected>
+                                        Medium
+                                    </option>
+
+                                    <option value="High">
+                                        High
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- ERROR RISK -->
+
+                            <div class="form-group">
+
+                                <label for="error_risk">
+                                    Error Risk
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="number" id="error_risk" min="0" max="5" step="0.1" value="2"
+                                    placeholder="0 - 5" required>
+
+                                <div class="field-help">
+                                    Enter a value between 0 and 5.
+                                </div>
+
+                            </div>
+
+
+                            <!-- DEPENDENCY -->
+
+                            <div class="form-group">
+
+                                <label for="dependency_score">
+                                    Dependency Score
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="number" id="dependency_score" min="0" max="5" step="0.1" value="3"
+                                    placeholder="0 - 5" required>
+
+                                <div class="field-help">
+                                    Enter a value between 0 and 5.
+                                </div>
+
+                            </div>
+
+
+                            <!-- DATE -->
+
+                            <div class="form-group">
+
+                                <label for="task_date">
+                                    Task Date
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input type="date" id="task_date" required>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="button-row">
+
+                            <button type="submit" class="create-button" id="createButton">
+                                CREATE TASK
+                            </button>
+
+                        </div>
+
+
+                        <div id="message" class="message"></div>
+
+                    </form>
+
+                </section>
+
+
+                <!-- =================================================
+                     PREVIEW
+                ================================================== -->
+
+                <aside class="preview-card">
+
+                    <div class="preview-title">
+                        Task Preview
+                    </div>
+
+                    <div class="preview-subtitle">
+                        Review the task before creating it.
+                    </div>
+
+
+                    <div class="preview-list">
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Task Type
+                            </span>
+
+                            <span class="preview-value purple" id="previewTaskType">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Priority
+                            </span>
+
+                            <span class="preview-value" id="previewPriority">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Deadline
+                            </span>
+
+                            <span class="preview-value" id="previewDeadline">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Volume
+                            </span>
+
+                            <span class="preview-value" id="previewVolume">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Difficulty
+                            </span>
+
+                            <span class="preview-value" id="previewDifficulty">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Error Risk
+                            </span>
+
+                            <span class="preview-value red" id="previewRisk">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Dependency
+                            </span>
+
+                            <span class="preview-value" id="previewDependency">
+                                —
+                            </span>
+
+                        </div>
+
+
+                        <div class="preview-item">
+
+                            <span class="preview-label">
+                                Task Date
+                            </span>
+
+                            <span class="preview-value" id="previewDate">
+                                —
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-box">
+
+                        <div class="info-title">
+                            SYNQ
+                        </div>
+
+                        <div class="info-text">
+                            Once created, this task will be saved
+                            and displayed automatically in
+                            Task History.
+                        </div>
+
+                    </div>
+
+                </aside>
+
+            </div>
+
         </div>
-      </header>
 
-      <div class="page-container">
-        <!-- =====================================
-                 HERO
-            ====================================== -->
-
-        <section class="hero">
-          <div class="hero-label">S Y N Q · T A S K M A N A G E M E N T</div>
-
-          <h1>Create a new task.</h1>
-
-          <p>
-            Enter the task characteristics below. You can use this information
-            later with SYNQ's employee prediction engine to find the most
-            suitable employee.
-          </p>
-        </section>
-
-        <!-- =====================================
-                 CONTENT GRID
-            ====================================== -->
-
-        <div class="content-grid">
-          <!-- =================================
-                     FORM PANEL
-                ================================== -->
-
-          <section class="panel">
-            <div class="panel-title">Task Information</div>
-
-            <div class="panel-subtitle">
-              Provide the basic characteristics of the task.
-            </div>
-
-            <div id="message" class="message"></div>
-
-            <form id="taskForm">
-              <div class="form-grid">
-                <!-- TASK TYPE -->
-
-                <div class="form-group">
-                  <label for="task_type"> Task Type </label>
-
-                  <select id="task_type" name="task_type" required>
-                    <option value="">Loading task types...</option>
-                  </select>
-                </div>
-
-                <!-- PRIORITY -->
-
-                <div class="form-group">
-                  <label for="priority"> Priority </label>
-
-                  <select id="priority" name="priority" required>
-                    <option value="">Loading priorities...</option>
-                  </select>
-                </div>
-
-                <!-- DEADLINE -->
-
-                <div class="form-group">
-                  <label for="days_to_deadline"> Days to Deadline </label>
-
-                  <input
-                    type="number"
-                    id="days_to_deadline"
-                    name="days_to_deadline"
-                    placeholder="e.g. 6"
-                    min="0"
-                    step="1"
-                    required
-                  />
-                </div>
-
-                <!-- VOLUME -->
-
-                <div class="form-group">
-                  <label for="volume_metric"> Volume Metric </label>
-
-                  <input
-                    type="number"
-                    id="volume_metric"
-                    name="volume_metric"
-                    placeholder="e.g. 0.14"
-                    min="0"
-                    step="0.01"
-                    required
-                  />
-                </div>
-
-                <!-- DIFFICULTY -->
-
-                <div class="form-group">
-                  <label for="perceived_difficulty">
-                    Perceived Difficulty
-                  </label>
-
-                  <select
-                    id="perceived_difficulty"
-                    name="perceived_difficulty"
-                    required
-                  >
-                    <option value="">Select difficulty</option>
-
-                    <option value="Low">Low</option>
-
-                    <option value="Medium">Medium</option>
-
-                    <option value="High">High</option>
-                  </select>
-                </div>
-
-                <!-- ERROR RISK -->
-
-                <div class="form-group">
-                  <label for="error_risk"> Error Risk </label>
-
-                  <select id="error_risk" name="error_risk" required>
-                    <option value="">Select risk</option>
-
-                    <option value="0">0 — Minimal</option>
-
-                    <option value="1">1 — Very Low</option>
-
-                    <option value="2">2 — Low</option>
-
-                    <option value="3">3 — Moderate</option>
-
-                    <option value="4">4 — High</option>
-
-                    <option value="5">5 — Critical</option>
-                  </select>
-                </div>
-
-                <!-- DEPENDENCY -->
-
-                <div class="form-group">
-                  <label for="dependency_score"> Dependency Score </label>
-
-                  <input
-                    type="number"
-                    id="dependency_score"
-                    name="dependency_score"
-                    placeholder="0.00 – 5.00"
-                    min="0"
-                    max="5"
-                    step="0.01"
-                    required
-                  />
-
-                  <div class="hint">Enter a value between 0 and 5.</div>
-                </div>
-
-                <!-- DATE -->
-
-                <div class="form-group">
-                  <label for="task_date"> Task Date </label>
-
-                  <input type="date" id="task_date" name="task_date" required />
-                </div>
-
-                <!-- BUTTON -->
-
-                <button type="submit" class="create-button" id="createButton">
-                  CREATE TASK
-                </button>
-              </div>
-            </form>
-          </section>
-
-          <!-- =================================
-                     PREVIEW PANEL
-                ================================== -->
-
-          <section class="panel preview-panel">
-            <div class="panel-title">Task Preview</div>
-
-            <div class="panel-subtitle">
-              Review the task before creating it.
-            </div>
-
-            <div class="preview-box">
-              <div class="preview-label">TASK DETAILS</div>
-
-              <div class="preview-row">
-                <span> Task Type </span>
-
-                <span id="previewTaskType"> — </span>
-              </div>
-
-              <div class="preview-row">
-                <span> Priority </span>
-
-                <span id="previewPriority"> — </span>
-              </div>
-
-              <div class="preview-row">
-                <span> Deadline </span>
-
-                <span id="previewDeadline"> — </span>
-              </div>
-
-              <div class="preview-row">
-                <span> Volume </span>
-
-                <span id="previewVolume"> — </span>
-              </div>
-
-              <div class="preview-row">
-                <span> Difficulty </span>
-
-                <span id="previewDifficulty"> — </span>
-              </div>
-
-              <div class="preview-row">
-                <span> Error Risk </span>
-
-                <span id="previewRisk"> — </span>
-              </div>
-
-              <div class="preview-row">
-                <span> Dependency </span>
-
-                <span id="previewDependency"> — </span>
-              </div>
-
-              <div class="preview-row">
-                <span> Task Date </span>
-
-                <span id="previewDate"> — </span>
-              </div>
-            </div>
-
-            <div class="intelligence">
-              <div class="intelligence-title">SYNQ Intelligence</div>
-
-              <p>
-                Task characteristics can be used by the prediction engine to
-                evaluate employee suitability and expected performance.
-              </p>
-            </div>
-          </section>
-        </div>
-      </div>
     </main>
 
-    <!-- =========================================
+
+    <!-- =====================================================
          JAVASCRIPT
-    ========================================== -->
+    ====================================================== -->
 
     <script>
-      /* =========================================
-           RISK NAMES
-        ========================================== */
 
-      const riskNames = {
-        0: "Minimal",
-        1: "Very Low",
-        2: "Low",
-        3: "Moderate",
-        4: "High",
-        5: "Critical",
-      };
+        /* =====================================================
+           ELEMENTS
+        ===================================================== */
 
-      /* =========================================
+        const form =
+            document.getElementById("createTaskForm");
+
+        const message =
+            document.getElementById("message");
+
+        const button =
+            document.getElementById("createButton");
+
+
+        /* =====================================================
            LOAD TASK OPTIONS
-        ========================================== */
+        ===================================================== */
 
-      async function loadTaskOptions() {
-        const taskType = document.getElementById("task_type");
+        async function loadTaskOptions() {
 
-        const priority = document.getElementById("priority");
+            const taskTypeSelect =
+                document.getElementById("task_type");
 
-        try {
-          const response = await fetch("/api/task-options");
+            const prioritySelect =
+                document.getElementById("priority");
 
-          if (!response.ok) {
-            throw new Error("Unable to load task options");
-          }
 
-          const data = await response.json();
+            try {
 
-          /*
-                    Backend response:
+                const response =
+                    await fetch("/api/task-options");
 
-                    {
-                        success: true,
-                        options: {
-                            task_types: [],
-                            priorities: []
-                        }
+
+                const data =
+                    await response.json();
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        data.error ||
+                        "Unable to load task options"
+                    );
+
+                }
+
+
+                const options =
+                    data.options ||
+                    data;
+
+
+                /* ==========================
+                   TASK TYPES
+                =========================== */
+
+                const taskTypes =
+                    Array.isArray(
+                        options.task_types
+                    )
+                        ? options.task_types
+                        : [];
+
+
+                taskTypeSelect.innerHTML = `
+                    <option value="">
+                        Select Task Type
+                    </option>
+                `;
+
+
+                taskTypes.forEach(
+                    type => {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+                        option.value = type;
+                        option.textContent = type;
+
+                        taskTypeSelect.appendChild(
+                            option
+                        );
+
                     }
-                */
+                );
 
-          const options = data.options || data;
 
-          const taskTypes = Array.isArray(options.task_types)
-            ? options.task_types
-            : [];
+                /* ==========================
+                   PRIORITIES
+                =========================== */
 
-          const priorities = Array.isArray(options.priorities)
-            ? options.priorities
-            : [];
+                const priorities =
+                    Array.isArray(
+                        options.priorities
+                    )
+                        ? options.priorities
+                        : [];
 
-          /* =====================================
-                   TASK TYPE
-                ====================================== */
 
-          taskType.innerHTML = '<option value="">Select task type</option>';
+                prioritySelect.innerHTML = `
+                    <option value="">
+                        Select Priority
+                    </option>
+                `;
 
-          taskTypes.forEach(function (item) {
-            const value = String(item).trim();
 
-            if (!value) {
-              return;
+                priorities.forEach(
+                    priority => {
+
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
+
+                        option.value = priority;
+                        option.textContent = priority;
+
+                        prioritySelect.appendChild(
+                            option
+                        );
+
+                    }
+                );
+
+
+                /*
+                 * Fallback in case backend
+                 * does not return priorities.
+                 */
+
+                if (!priorities.length) {
+
+                    [
+                        "Low",
+                        "Medium",
+                        "High"
+                    ].forEach(
+                        priority => {
+
+                            const option =
+                                document.createElement(
+                                    "option"
+                                );
+
+                            option.value = priority;
+                            option.textContent = priority;
+
+                            prioritySelect.appendChild(
+                                option
+                            );
+
+                        }
+                    );
+
+                }
+
+            }
+            catch (error) {
+
+                console.error(
+                    "Task option loading error:",
+                    error
+                );
+
+
+                taskTypeSelect.innerHTML = `
+                    <option value="">
+                        Unable to load task types
+                    </option>
+                `;
+
+
+                prioritySelect.innerHTML = `
+                    <option value="">
+                        Select Priority
+                    </option>
+
+                    <option value="Low">
+                        Low
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="High">
+                        High
+                    </option>
+                `;
+
             }
 
-            const option = document.createElement("option");
-
-            option.value = value;
-
-            option.textContent = value;
-
-            taskType.appendChild(option);
-          });
-
-          /* =====================================
-                   PRIORITY
-                ====================================== */
-
-          priority.innerHTML = '<option value="">Select priority</option>';
-
-          priorities.forEach(function (item) {
-            const value = String(item).trim();
-
-            if (!value) {
-              return;
-            }
-
-            const option = document.createElement("option");
-
-            option.value = value;
-
-            option.textContent = value;
-
-            priority.appendChild(option);
-          });
-
-          /* =====================================
-                   DEFAULT TASK TYPE
-                ====================================== */
-
-          if (taskTypes.length > 0) {
-            taskType.value = String(taskTypes[0]).trim();
-          }
-
-          /* =====================================
-                   DEFAULT PRIORITY
-                ====================================== */
-
-          const mediumPriority = Array.from(priority.options).find(
-            function (option) {
-              return option.value.toLowerCase().trim() === "medium";
-            },
-          );
-
-          if (mediumPriority) {
-            priority.value = mediumPriority.value;
-          } else if (priorities.length > 0) {
-            priority.value = String(priorities[0]).trim();
-          }
-
-          console.log("SYNQ Task Types:", taskTypes);
-
-          console.log("SYNQ Priorities:", priorities);
-
-          updatePreview();
-        } catch (error) {
-          console.error("Task options error:", error);
-
-          taskType.innerHTML =
-            '<option value="">Unable to load task types</option>';
-
-          priority.innerHTML =
-            '<option value="">Unable to load priorities</option>';
         }
-      }
 
-      /* =========================================
+
+        /* =====================================================
            UPDATE PREVIEW
-        ========================================== */
+        ===================================================== */
 
-      function updatePreview() {
-        const taskType = document.getElementById("task_type").value;
+        function updatePreview() {
 
-        const priority = document.getElementById("priority").value;
+            const taskType =
+                document.getElementById(
+                    "task_type"
+                ).value || "—";
 
-        const deadline = document.getElementById("days_to_deadline").value;
 
-        const volume = document.getElementById("volume_metric").value;
+            const priority =
+                document.getElementById(
+                    "priority"
+                ).value || "—";
 
-        const difficulty = document.getElementById(
-          "perceived_difficulty",
-        ).value;
 
-        const risk = document.getElementById("error_risk").value;
+            const deadline =
+                document.getElementById(
+                    "days_to_deadline"
+                ).value || "—";
 
-        const dependency = document.getElementById("dependency_score").value;
 
-        const date = document.getElementById("task_date").value;
+            const volume =
+                document.getElementById(
+                    "volume_metric"
+                ).value || "—";
 
-        document.getElementById("previewTaskType").textContent =
-          taskType || "—";
 
-        document.getElementById("previewPriority").textContent =
-          priority || "—";
+            const difficulty =
+                document.getElementById(
+                    "perceived_difficulty"
+                ).value || "—";
 
-        document.getElementById("previewDeadline").textContent = deadline
-          ? `${deadline} day(s)`
-          : "—";
 
-        document.getElementById("previewVolume").textContent = volume || "—";
+            const risk =
+                document.getElementById(
+                    "error_risk"
+                ).value || "—";
 
-        document.getElementById("previewDifficulty").textContent =
-          difficulty || "—";
 
-        document.getElementById("previewRisk").textContent =
-          risk !== "" ? `${risk} — ${riskNames[risk]}` : "—";
+            const dependency =
+                document.getElementById(
+                    "dependency_score"
+                ).value || "—";
 
-        document.getElementById("previewDependency").textContent =
-          dependency || "—";
 
-        document.getElementById("previewDate").textContent = date || "—";
-      }
+            const date =
+                document.getElementById(
+                    "task_date"
+                ).value || "—";
 
-      /* =========================================
-           FORM LISTENERS
-        ========================================== */
 
-      const fields = [
-        "task_type",
-        "priority",
-        "days_to_deadline",
-        "volume_metric",
-        "perceived_difficulty",
-        "error_risk",
-        "dependency_score",
-        "task_date",
-      ];
+            document.getElementById(
+                "previewTaskType"
+            ).textContent =
+                taskType;
 
-      fields.forEach(function (id) {
-        const element = document.getElementById(id);
 
-        if (!element) {
-          return;
+            document.getElementById(
+                "previewPriority"
+            ).textContent =
+                priority;
+
+
+            document.getElementById(
+                "previewDeadline"
+            ).textContent =
+                deadline === "—"
+                    ? "—"
+                    : `${deadline} day(s)`;
+
+
+            document.getElementById(
+                "previewVolume"
+            ).textContent =
+                volume;
+
+
+            document.getElementById(
+                "previewDifficulty"
+            ).textContent =
+                difficulty;
+
+
+            document.getElementById(
+                "previewRisk"
+            ).textContent =
+                risk;
+
+
+            document.getElementById(
+                "previewDependency"
+            ).textContent =
+                dependency;
+
+
+            document.getElementById(
+                "previewDate"
+            ).textContent =
+                date;
+
         }
 
-        element.addEventListener("input", updatePreview);
 
-        element.addEventListener("change", updatePreview);
-      });
+        /* =====================================================
+           LIVE PREVIEW EVENTS
+        ===================================================== */
 
-      /* =========================================
-           CREATE TASK
-        ========================================== */
-
-      document
-        .getElementById("taskForm")
-        .addEventListener("submit", async function (event) {
-          event.preventDefault();
-
-          const button = document.getElementById("createButton");
-
-          const message = document.getElementById("message");
-
-          /* =============================
-                       VALUES
-                    ============================== */
-
-          const taskType = document.getElementById("task_type").value;
-
-          const priority = document.getElementById("priority").value;
-
-          const daysToDeadline = Number(
-            document.getElementById("days_to_deadline").value,
-          );
-
-          const volumeMetric = Number(
-            document.getElementById("volume_metric").value,
-          );
-
-          const difficulty = document.getElementById(
+        [
+            "task_type",
+            "priority",
+            "days_to_deadline",
+            "volume_metric",
             "perceived_difficulty",
-          ).value;
+            "error_risk",
+            "dependency_score",
+            "task_date"
+        ].forEach(
+            id => {
 
-          const errorRisk = Number(document.getElementById("error_risk").value);
+                const element =
+                    document.getElementById(id);
 
-          const dependency = Number(
-            document.getElementById("dependency_score").value,
-          );
+                element.addEventListener(
+                    "input",
+                    updatePreview
+                );
 
-          const taskDate = document.getElementById("task_date").value;
+                element.addEventListener(
+                    "change",
+                    updatePreview
+                );
 
-          /* =============================
-                       VALIDATION
-                    ============================== */
-
-          if (!taskType) {
-            message.className = "message error";
-
-            message.textContent = "Please select a task type.";
-
-            return;
-          }
-
-          if (!priority) {
-            message.className = "message error";
-
-            message.textContent = "Please select a priority.";
-
-            return;
-          }
-
-          if (isNaN(daysToDeadline) || daysToDeadline < 0) {
-            message.className = "message error";
-
-            message.textContent = "Please enter a valid deadline.";
-
-            return;
-          }
-
-          if (isNaN(volumeMetric) || volumeMetric < 0) {
-            message.className = "message error";
-
-            message.textContent = "Please enter a valid volume metric.";
-
-            return;
-          }
-
-          if (!difficulty) {
-            message.className = "message error";
-
-            message.textContent = "Please select difficulty.";
-
-            return;
-          }
-
-          if (isNaN(errorRisk) || errorRisk < 0 || errorRisk > 5) {
-            message.className = "message error";
-
-            message.textContent = "Please select a valid error risk.";
-
-            return;
-          }
-
-          if (isNaN(dependency) || dependency <= 0 || dependency >= 5) {
-            message.className = "message error";
-
-            message.textContent = "Dependency score must be between 0 and 5.";
-
-            return;
-          }
-
-          if (!taskDate) {
-            message.className = "message error";
-
-            message.textContent = "Please select a task date.";
-
-            return;
-          }
-
-          /* =============================
-                       PAYLOAD
-                    ============================== */
-
-          const payload = {
-            task_type: taskType,
-
-            priority: priority,
-
-            days_to_deadline: daysToDeadline,
-
-            volume_metric: volumeMetric,
-
-            perceived_difficulty: difficulty,
-
-            error_risk: errorRisk,
-
-            dependency_score: dependency,
-
-            task_date: taskDate,
-          };
-
-          /* =============================
-                       LOADING
-                    ============================== */
-
-          button.disabled = true;
-
-          button.textContent = "CREATING...";
-
-          message.className = "message";
-
-          message.textContent = "";
-
-          try {
-            const response = await fetch("/create-task", {
-              method: "POST",
-
-              headers: {
-                "Content-Type": "application/json",
-              },
-
-              body: JSON.stringify(payload),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-              throw new Error(
-                data.message ||
-                  data.msg ||
-                  data.error ||
-                  "Unable to create task.",
-              );
             }
+        );
 
-            /* =========================
-                           SUCCESS
-                        ========================== */
 
-            message.className = "message success";
+        /* =====================================================
+           CREATE TASK
+        ===================================================== */
 
-            message.textContent = data.message || "Task created successfully.";
+        form.addEventListener(
+            "submit",
+            async function (event) {
 
-            updatePreview();
-          } catch (error) {
-            console.error("Create task error:", error);
+                event.preventDefault();
 
-            message.className = "message error";
+
+                const taskType =
+                    document.getElementById(
+                        "task_type"
+                    ).value.trim();
+
+
+                const priority =
+                    document.getElementById(
+                        "priority"
+                    ).value.trim();
+
+
+                const days =
+                    parseFloat(
+                        document.getElementById(
+                            "days_to_deadline"
+                        ).value
+                    );
+
+
+                const volume =
+                    parseFloat(
+                        document.getElementById(
+                            "volume_metric"
+                        ).value
+                    );
+
+
+                const difficulty =
+                    document.getElementById(
+                        "perceived_difficulty"
+                    ).value;
+
+
+                const risk =
+                    parseFloat(
+                        document.getElementById(
+                            "error_risk"
+                        ).value
+                    );
+
+
+                const dependency =
+                    parseFloat(
+                        document.getElementById(
+                            "dependency_score"
+                        ).value
+                    );
+
+
+                const taskDate =
+                    document.getElementById(
+                        "task_date"
+                    ).value;
+
+
+                /* ==========================
+                   VALIDATION
+                =========================== */
+
+                if (!taskType) {
+
+                    showMessage(
+                        "Please select a Task Type.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!priority) {
+
+                    showMessage(
+                        "Please select a Priority.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    isNaN(days) ||
+                    days < 0
+                ) {
+
+                    showMessage(
+                        "Days to Deadline must be 0 or greater.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    isNaN(volume) ||
+                    volume < 0
+                ) {
+
+                    showMessage(
+                        "Volume Metric must be 0 or greater.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!difficulty) {
+
+                    showMessage(
+                        "Please select Perceived Difficulty.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    isNaN(risk) ||
+                    risk < 0 ||
+                    risk > 5
+                ) {
+
+                    showMessage(
+                        "Error Risk must be between 0 and 5.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    isNaN(dependency) ||
+                    dependency < 0 ||
+                    dependency > 5
+                ) {
+
+                    showMessage(
+                        "Dependency Score must be between 0 and 5.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (!taskDate) {
+
+                    showMessage(
+                        "Please select Task Date.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                /* ==========================
+                   PAYLOAD
+                =========================== */
+
+                const payload = {
+
+                    task_type:
+                        taskType,
+
+                    priority:
+                        priority,
+
+                    days_to_deadline:
+                        days,
+
+                    volume_metric:
+                        volume,
+
+                    perceived_difficulty:
+                        difficulty,
+
+                    error_risk:
+                        risk,
+
+                    dependency_score:
+                        dependency,
+
+                    task_date:
+                        taskDate
+
+                };
+
+
+                /* ==========================
+                   LOADING
+                =========================== */
+
+                button.disabled = true;
+
+                button.textContent =
+                    "CREATING...";
+
+
+                message.className =
+                    "message";
+
+                message.style.display =
+                    "none";
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            "/create-task",
+                            {
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        payload
+                                    )
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.error ||
+                            data.message ||
+                            data.msg ||
+                            "Unable to create task."
+                        );
+
+                    }
+
+
+                    /* ==========================
+                       SUCCESS
+                    =========================== */
+
+                    showMessage(
+                        data.message ||
+                        "Task created successfully.",
+                        "success"
+                    );
+
+
+                    /*
+                     * Reset form after
+                     * successful creation.
+                     */
+
+                    form.reset();
+
+
+                    /*
+                     * Restore default values.
+                     */
+
+                    document.getElementById(
+                        "days_to_deadline"
+                    ).value = "5";
+
+
+                    document.getElementById(
+                        "volume_metric"
+                    ).value = "0.14";
+
+
+                    document.getElementById(
+                        "perceived_difficulty"
+                    ).value = "Medium";
+
+
+                    document.getElementById(
+                        "error_risk"
+                    ).value = "2";
+
+
+                    document.getElementById(
+                        "dependency_score"
+                    ).value = "3";
+
+
+                    setToday();
+
+
+                    updatePreview();
+
+                }
+                catch (error) {
+
+                    console.error(
+                        "Create task error:",
+                        error
+                    );
+
+
+                    showMessage(
+                        error.message ||
+                        "Unable to connect to server.",
+                        "error"
+                    );
+
+                }
+                finally {
+
+                    button.disabled = false;
+
+                    button.textContent =
+                        "CREATE TASK";
+
+                }
+
+            }
+        );
+
+
+        /* =====================================================
+           SHOW MESSAGE
+        ===================================================== */
+
+        function showMessage(
+            text,
+            type
+        ) {
 
             message.textContent =
-              error.message || "Unable to connect to server.";
-          } finally {
-            button.disabled = false;
+                text;
 
-            button.textContent = "CREATE TASK";
-          }
-        });
+            message.className =
+                `message ${type}`;
 
-      /* =========================================
-           DEFAULT DATE
-        ========================================== */
+            message.style.display =
+                "block";
 
-      const dateInput = document.getElementById("task_date");
+        }
 
-      if (dateInput && !dateInput.value) {
-        const today = new Date();
 
-        const year = today.getFullYear();
+        /* =====================================================
+           TODAY
+        ===================================================== */
 
-        const month = String(today.getMonth() + 1).padStart(2, "0");
+        function setToday() {
 
-        const day = String(today.getDate()).padStart(2, "0");
+            const dateInput =
+                document.getElementById(
+                    "task_date"
+                );
 
-        dateInput.value = `${year}-${month}-${day}`;
-      }
 
-      /* =========================================
+            if (!dateInput.value) {
+
+                const today =
+                    new Date();
+
+
+                const year =
+                    today.getFullYear();
+
+
+                const month =
+                    String(
+                        today.getMonth() + 1
+                    ).padStart(
+                        2,
+                        "0"
+                    );
+
+
+                const day =
+                    String(
+                        today.getDate()
+                    ).padStart(
+                        2,
+                        "0"
+                    );
+
+
+                dateInput.value =
+                    `${year}-${month}-${day}`;
+
+            }
+
+        }
+
+
+        /* =====================================================
            INITIALIZE
-        ========================================== */
+        ===================================================== */
 
-      loadTaskOptions();
+        setToday();
 
-      updatePreview();
+        loadTaskOptions();
+
+        updatePreview();
+
     </script>
-  </body>
+
+</body>
+
 </html>

@@ -28,21 +28,15 @@ from .data_service import (
 def register_routes(app):
 
     # =====================================================
-    # INSIGHTS PAGE
-    # =====================================================
-
-    @app.route("/insights")
-    def insights_page():
-        return render_template("insights.html")
-
-
-    # =====================================================
     # LOGIN PAGE
     # =====================================================
 
     @app.route("/")
     def login_page():
-        return render_template("login.html")
+
+        return render_template(
+            "login.html"
+        )
 
 
     # =====================================================
@@ -51,7 +45,10 @@ def register_routes(app):
 
     @app.route("/register")
     def register():
-        return render_template("register.html")
+
+        return render_template(
+            "register.html"
+        )
 
 
     # =====================================================
@@ -64,10 +61,14 @@ def register_routes(app):
         import pandas as pd
 
         try:
-            df = pd.read_csv(DATA_FILE)
+
+            df = pd.read_csv(
+                DATA_FILE
+            )
 
             total_employees = (
-                df["employee_id"].nunique()
+                df["employee_id"]
+                .nunique()
             )
 
             total_tasks = len(df)
@@ -83,18 +84,32 @@ def register_routes(app):
             ).mean()
 
             stats = {
-                "total_employees": int(total_employees),
-                "total_tasks": int(total_tasks),
-                "avg_rating": (
-                    round(float(avg_rating), 2)
-                    if pd.notna(avg_rating)
-                    else 0
-                ),
-                "avg_error_risk": (
-                    round(float(avg_error_risk), 2)
-                    if pd.notna(avg_error_risk)
-                    else 0
-                )
+
+                "total_employees":
+                    int(total_employees),
+
+                "total_tasks":
+                    int(total_tasks),
+
+                "avg_rating":
+                    (
+                        round(
+                            float(avg_rating),
+                            2
+                        )
+                        if pd.notna(avg_rating)
+                        else 0
+                    ),
+
+                "avg_error_risk":
+                    (
+                        round(
+                            float(avg_error_risk),
+                            2
+                        )
+                        if pd.notna(avg_error_risk)
+                        else 0
+                    )
             }
 
             return render_template(
@@ -103,6 +118,7 @@ def register_routes(app):
             )
 
         except Exception as e:
+
             return (
                 f"Dashboard error: {str(e)}",
                 500
@@ -115,7 +131,10 @@ def register_routes(app):
 
     @app.route("/predict")
     def predict_page():
-        return render_template("predict.html")
+
+        return render_template(
+            "predict.html"
+        )
 
 
     # =====================================================
@@ -124,8 +143,10 @@ def register_routes(app):
 
     @app.route("/analytics")
     def analytics_page():
-        return render_template("analytics.html")
 
+        return render_template(
+            "analytics.html"
+        )
 
     # =====================================================
     # ANALYTICS API
@@ -140,7 +161,6 @@ def register_routes(app):
             # -------------------------------------------------
             # LOAD ORIGINAL DATASET
             # -------------------------------------------------
-
             df = pd.read_csv(DATA_FILE)
 
             if df.empty:
@@ -191,7 +211,6 @@ def register_routes(app):
             # -------------------------------------------------
             # CLEAN NUMERIC COLUMNS
             # -------------------------------------------------
-
             numeric_columns = [
                 "rating",
                 "error_risk",
@@ -210,7 +229,6 @@ def register_routes(app):
             # -------------------------------------------------
             # BASIC STATISTICS
             # -------------------------------------------------
-
             total_employees = (
                 int(df["employee_id"].nunique())
                 if "employee_id" in df.columns
@@ -221,8 +239,7 @@ def register_routes(app):
 
             avg_rating = (
                 float(df["rating"].mean())
-                if "rating" in df.columns
-                and df["rating"].notna().any()
+                if "rating" in df.columns and df["rating"].notna().any()
                 else 0
             )
 
@@ -236,11 +253,9 @@ def register_routes(app):
             # -------------------------------------------------
             # COMPLETION RATE
             # -------------------------------------------------
-
             completion_rate = 0
 
             if "is_completed" in df.columns:
-
                 completed = (
                     df["is_completed"]
                     .astype(str)
@@ -264,8 +279,12 @@ def register_routes(app):
 
             # -------------------------------------------------
             # PERFORMANCE DISTRIBUTION
+            # Based on rating:
+            # >= 8  High Performer
+            # >= 6  Good Performer
+            # >= 4  Average Performer
+            # < 4   Needs Improvement
             # -------------------------------------------------
-
             performance_counts = {
                 "High Performer": 0,
                 "Good Performer": 0,
@@ -302,7 +321,6 @@ def register_routes(app):
             # -------------------------------------------------
             # TASK TYPE DISTRIBUTION
             # -------------------------------------------------
-
             task_type_distribution = {
                 "labels": [],
                 "values": []
@@ -333,7 +351,6 @@ def register_routes(app):
             # -------------------------------------------------
             # PRIORITY DISTRIBUTION
             # -------------------------------------------------
-
             priority_distribution = {
                 "labels": [],
                 "values": []
@@ -350,9 +367,11 @@ def register_routes(app):
                 )
 
                 priority_counts = (
-                    priority_series.value_counts()
+                    priority_series
+                    .value_counts()
                 )
 
+                # Keep common priority order when available.
                 preferred_order = [
                     "Low",
                     "Medium",
@@ -381,7 +400,6 @@ def register_routes(app):
             # -------------------------------------------------
             # ERROR RISK DISTRIBUTION
             # -------------------------------------------------
-
             risk_labels = [
                 "Minimal",
                 "Very Low",
@@ -417,13 +435,15 @@ def register_routes(app):
 
                         risk_counts[index] += 1
 
-                    except (ValueError, TypeError):
+                    except (
+                        ValueError,
+                        TypeError
+                    ):
                         continue
 
             # -------------------------------------------------
             # MONTHLY PERFORMANCE TREND
             # -------------------------------------------------
-
             trend_labels = []
             trend_values = []
 
@@ -456,6 +476,7 @@ def register_routes(app):
                         .sort_index()
                     )
 
+                    # Limit the chart to the latest 12 months.
                     monthly = monthly.tail(12)
 
                     trend_labels = [
@@ -468,6 +489,7 @@ def register_routes(app):
                         for value in monthly.values
                     ]
 
+            # Fallback if date column is unavailable.
             if not trend_labels and "rating" in df.columns:
 
                 overall_rating = (
@@ -484,7 +506,6 @@ def register_routes(app):
             # -------------------------------------------------
             # EMPLOYEE PERFORMANCE
             # -------------------------------------------------
-
             employees = []
 
             if "employee_id" in df.columns:
@@ -582,6 +603,7 @@ def register_routes(app):
                         "category": category
                     })
 
+                # Highest-rated employees first.
                 employees.sort(
                     key=lambda item: item["avg_rating"],
                     reverse=True
@@ -590,24 +612,32 @@ def register_routes(app):
             # -------------------------------------------------
             # RESPONSE
             # -------------------------------------------------
-
             return jsonify({
                 "success": True,
 
                 "stats": {
-                    "total_employees": total_employees,
-                    "total_tasks": total_tasks,
-                    "avg_rating": round(avg_rating, 2),
-                    "avg_error_risk": round(avg_error_risk, 2),
-                    "completion_rate": round(
-                        completion_rate,
-                        1
-                    )
+                    "total_employees":
+                        total_employees,
+
+                    "total_tasks":
+                        total_tasks,
+
+                    "avg_rating":
+                        round(avg_rating, 2),
+
+                    "avg_error_risk":
+                        round(avg_error_risk, 2),
+
+                    "completion_rate":
+                        round(completion_rate, 1)
                 },
 
                 "performance_trend": {
-                    "labels": trend_labels,
-                    "values": trend_values
+                    "labels":
+                        trend_labels,
+
+                    "values":
+                        trend_values
                 },
 
                 "performance_distribution": {
@@ -617,11 +647,20 @@ def register_routes(app):
                         "Average Performer",
                         "Needs Improvement"
                     ],
+
                     "values": [
-                        performance_counts["High Performer"],
-                        performance_counts["Good Performer"],
-                        performance_counts["Average Performer"],
-                        performance_counts["Needs Improvement"]
+                        performance_counts[
+                            "High Performer"
+                        ],
+                        performance_counts[
+                            "Good Performer"
+                        ],
+                        performance_counts[
+                            "Average Performer"
+                        ],
+                        performance_counts[
+                            "Needs Improvement"
+                        ]
                     ]
                 },
 
@@ -632,11 +671,15 @@ def register_routes(app):
                     priority_distribution,
 
                 "risk_distribution": {
-                    "labels": risk_labels,
-                    "values": risk_counts
+                    "labels":
+                        risk_labels,
+
+                    "values":
+                        risk_counts
                 },
 
-                "employees": employees[:10]
+                "employees":
+                    employees[:10]
             })
 
         except Exception as e:
@@ -645,6 +688,7 @@ def register_routes(app):
                 "success": False,
                 "error": str(e)
             }), 500
+
 
 
     # =====================================================
@@ -657,40 +701,63 @@ def register_routes(app):
     )
     def create_task():
 
+        # -------------------------------------------------
+        # GET
+        # -------------------------------------------------
+
         if request.method == "GET":
+
             return render_template(
                 "create_task.html"
             )
+
+
+        # -------------------------------------------------
+        # POST
+        # -------------------------------------------------
 
         try:
 
             data = request.get_json()
 
             if not data:
+
                 return jsonify({
                     "success": False,
-                    "error": "No task data received"
+                    "error":
+                        "No task data received"
                 }), 400
+
 
             # =================================================
             # READ VALUES
             # =================================================
 
             task_type = str(
-                data.get("task_type", "")
+                data.get(
+                    "task_type",
+                    ""
+                )
             ).strip()
 
+
             priority = str(
-                data.get("priority", "")
+                data.get(
+                    "priority",
+                    ""
+                )
             ).strip()
+
 
             days_to_deadline = data.get(
                 "days_to_deadline"
             )
 
+
             volume_metric = data.get(
                 "volume_metric"
             )
+
 
             perceived_difficulty = str(
                 data.get(
@@ -699,69 +766,100 @@ def register_routes(app):
                 )
             ).strip()
 
+
             error_risk = data.get(
                 "error_risk"
             )
+
 
             dependency_score = data.get(
                 "dependency_score"
             )
 
+
             task_date = str(
-                data.get("task_date", "")
+                data.get(
+                    "task_date",
+                    ""
+                )
             ).strip()
+
 
             # =================================================
             # REQUIRED VALIDATION
             # =================================================
 
             if not task_type:
+
                 return jsonify({
                     "success": False,
-                    "error": "Task type is required"
+                    "error":
+                        "Task type is required"
                 }), 400
+
 
             if not priority:
+
                 return jsonify({
                     "success": False,
-                    "error": "Priority is required"
+                    "error":
+                        "Priority is required"
                 }), 400
+
 
             if days_to_deadline is None:
+
                 return jsonify({
                     "success": False,
-                    "error": "Days to deadline is required"
+                    "error":
+                        "Days to deadline is required"
                 }), 400
+
 
             if volume_metric is None:
+
                 return jsonify({
                     "success": False,
-                    "error": "Volume metric is required"
+                    "error":
+                        "Volume metric is required"
                 }), 400
+
 
             if not perceived_difficulty:
+
                 return jsonify({
                     "success": False,
-                    "error": "Perceived difficulty is required"
+                    "error":
+                        "Perceived difficulty is required"
                 }), 400
+
 
             if error_risk is None:
+
                 return jsonify({
                     "success": False,
-                    "error": "Error risk is required"
+                    "error":
+                        "Error risk is required"
                 }), 400
+
 
             if dependency_score is None:
+
                 return jsonify({
                     "success": False,
-                    "error": "Dependency score is required"
+                    "error":
+                        "Dependency score is required"
                 }), 400
 
+
             if not task_date:
+
                 return jsonify({
                     "success": False,
-                    "error": "Task date is required"
+                    "error":
+                        "Task date is required"
                 }), 400
+
 
             # =================================================
             # NUMERIC CONVERSION
@@ -785,13 +883,17 @@ def register_routes(app):
                     dependency_score
                 )
 
-            except (ValueError, TypeError):
+            except (
+                ValueError,
+                TypeError
+            ):
 
                 return jsonify({
                     "success": False,
                     "error":
                         "Numeric fields contain invalid values"
                 }), 400
+
 
             # =================================================
             # DIFFICULTY CONVERSION
@@ -801,20 +903,33 @@ def register_routes(app):
                 perceived_difficulty
             ).strip()
 
+
             difficulty_lower = (
                 difficulty_text.lower()
             )
 
+
             difficulty_map = {
+
                 "low": 1.0,
+
                 "easy": 1.0,
+
                 "medium": 3.0,
+
                 "moderate": 3.0,
+
                 "high": 5.0,
+
                 "hard": 5.0
+
             }
 
-            if difficulty_lower in difficulty_map:
+
+            if (
+                difficulty_lower
+                in difficulty_map
+            ):
 
                 difficulty_numeric = (
                     difficulty_map[
@@ -825,11 +940,15 @@ def register_routes(app):
             else:
 
                 try:
+
                     difficulty_numeric = float(
                         difficulty_text
                     )
 
-                except (ValueError, TypeError):
+                except (
+                    ValueError,
+                    TypeError
+                ):
 
                     return jsonify({
                         "success": False,
@@ -837,69 +956,101 @@ def register_routes(app):
                             "Invalid perceived difficulty"
                     }), 400
 
+
             # =================================================
             # RANGE VALIDATION
             # =================================================
 
             if days_to_deadline < 0:
+
                 return jsonify({
                     "success": False,
                     "error":
                         "Days to deadline cannot be negative"
                 }), 400
 
+
             if volume_metric < 0:
+
                 return jsonify({
                     "success": False,
                     "error":
                         "Volume metric cannot be negative"
                 }), 400
 
+
             if error_risk < 0 or error_risk > 5:
+
                 return jsonify({
                     "success": False,
                     "error":
                         "Error risk must be between 0 and 5"
                 }), 400
 
+
             if (
-                dependency_score <= 0
-                or dependency_score >= 5
+                dependency_score < 0
+                or
+                dependency_score > 5
             ):
+
                 return jsonify({
                     "success": False,
                     "error":
                         "Dependency score must be between 0 and 5"
                 }), 400
 
+
             if (
                 difficulty_numeric < 0
-                or difficulty_numeric > 10
+                or
+                difficulty_numeric > 10
             ):
+
                 return jsonify({
                     "success": False,
                     "error":
                         "Perceived difficulty must be between 0 and 10"
                 }), 400
 
+
             # =================================================
             # CREATED TASKS FILE
             # =================================================
 
             tasks_file = os.path.abspath(
+
                 os.path.join(
+
                     os.path.dirname(__file__),
+
                     "..",
+
                     "data",
+
                     "processed",
+
                     "created_tasks.csv"
+
                 )
+
             )
 
+
+            # =================================================
+            # CREATE DIRECTORY
+            # =================================================
+
             os.makedirs(
-                os.path.dirname(tasks_file),
+
+                os.path.dirname(
+                    tasks_file
+                ),
+
                 exist_ok=True
+
             )
+
 
             # =================================================
             # GENERATE TASK ID
@@ -907,18 +1058,29 @@ def register_routes(app):
 
             next_number = 1
 
-            if os.path.exists(tasks_file):
+
+            if os.path.exists(
+                tasks_file
+            ):
 
                 try:
 
                     with open(
+
                         tasks_file,
+
                         "r",
+
                         encoding="utf-8",
+
                         newline=""
+
                     ) as file:
 
-                        reader = csv.DictReader(file)
+                        reader = csv.DictReader(
+                            file
+                        )
+
 
                         for row in reader:
 
@@ -929,7 +1091,10 @@ def register_routes(app):
                                 )
                             ).strip()
 
-                            if existing_id.startswith("TSK-"):
+
+                            if existing_id.startswith(
+                                "TSK-"
+                            ):
 
                                 try:
 
@@ -940,91 +1105,168 @@ def register_routes(app):
                                         )
                                     )
 
+
                                     next_number = max(
+
                                         next_number,
+
                                         number + 1
+
                                     )
 
                                 except ValueError:
+
                                     pass
 
+
                 except Exception:
+
                     next_number = 1
 
-            task_id = f"TSK-{next_number:04d}"
+
+            task_id = (
+                f"TSK-{next_number:04d}"
+            )
+
 
             # =================================================
             # TASK OBJECT
             # =================================================
 
             task = {
-                "task_id": task_id,
-                "task_type": task_type,
-                "priority": priority,
-                "days_to_deadline": days_to_deadline,
-                "volume_metric": volume_metric,
-                "perceived_difficulty": difficulty_text,
+
+                "task_id":
+                    task_id,
+
+                "task_type":
+                    task_type,
+
+                "priority":
+                    priority,
+
+                "days_to_deadline":
+                    days_to_deadline,
+
+                "volume_metric":
+                    volume_metric,
+
+                "perceived_difficulty":
+                    difficulty_text,
+
                 "perceived_difficulty_numeric":
                     difficulty_numeric,
-                "error_risk": error_risk,
-                "dependency_score": dependency_score,
-                "task_date": task_date
+
+                "error_risk":
+                    error_risk,
+
+                "dependency_score":
+                    dependency_score,
+
+                "task_date":
+                    task_date
+
             }
+
 
             # =================================================
             # CSV COLUMNS
             # =================================================
 
             fieldnames = [
+
                 "task_id",
+
                 "task_type",
+
                 "priority",
+
                 "days_to_deadline",
+
                 "volume_metric",
+
                 "perceived_difficulty",
+
                 "perceived_difficulty_numeric",
+
                 "error_risk",
+
                 "dependency_score",
+
                 "task_date"
+
             ]
+
+
+            # =================================================
+            # CHECK FILE
+            # =================================================
 
             file_exists = os.path.exists(
                 tasks_file
             )
+
 
             # =================================================
             # SAVE TASK
             # =================================================
 
             with open(
+
                 tasks_file,
+
                 "a",
+
                 newline="",
+
                 encoding="utf-8"
+
             ) as file:
 
                 writer = csv.DictWriter(
+
                     file,
+
                     fieldnames=fieldnames
+
                 )
 
+
                 if not file_exists:
+
                     writer.writeheader()
 
-                writer.writerow(task)
+
+                writer.writerow(
+                    task
+                )
+
+
+            # =================================================
+            # SUCCESS
+            # =================================================
 
             return jsonify({
+
                 "success": True,
+
                 "message":
                     f"Task {task_id} created successfully",
-                "task": task
+
+                "task":
+                    task
+
             })
+
 
         except Exception as e:
 
             return jsonify({
+
                 "success": False,
-                "error": str(e)
+
+                "error":
+                    str(e)
+
             }), 500
 
 
@@ -1034,6 +1276,7 @@ def register_routes(app):
 
     @app.route("/tasks")
     def tasks_page():
+
         return render_template(
             "tasks.html"
         )
@@ -1049,46 +1292,81 @@ def register_routes(app):
         try:
 
             tasks_file = os.path.abspath(
+
                 os.path.join(
+
                     os.path.dirname(__file__),
+
                     "..",
+
                     "data",
+
                     "processed",
+
                     "created_tasks.csv"
+
                 )
+
             )
+
 
             tasks = []
 
-            if os.path.exists(tasks_file):
+
+            # -------------------------------------------------
+            # FILE EXISTS
+            # -------------------------------------------------
+
+            if os.path.exists(
+                tasks_file
+            ):
 
                 with open(
+
                     tasks_file,
+
                     "r",
+
                     encoding="utf-8",
+
                     newline=""
+
                 ) as file:
 
-                    reader = csv.DictReader(file)
+                    reader = csv.DictReader(
+                        file
+                    )
+
 
                     for row in reader:
 
+                        # Convert numeric fields
                         numeric_fields = [
+
                             "days_to_deadline",
+
                             "volume_metric",
+
                             "perceived_difficulty_numeric",
+
                             "error_risk",
+
                             "dependency_score"
+
                         ]
+
 
                         for field in numeric_fields:
 
-                            if row.get(field) not in [
+                            if row.get(
+                                field
+                            ) not in [
                                 None,
                                 ""
                             ]:
 
                                 try:
+
                                     row[field] = float(
                                         row[field]
                                     )
@@ -1097,21 +1375,41 @@ def register_routes(app):
                                     ValueError,
                                     TypeError
                                 ):
+
                                     pass
 
-                        tasks.append(row)
+
+                        tasks.append(
+                            row
+                        )
+
+
+            # -------------------------------------------------
+            # RESPONSE
+            # -------------------------------------------------
 
             return jsonify({
+
                 "success": True,
-                "tasks": tasks,
-                "total": len(tasks)
+
+                "tasks":
+                    tasks,
+
+                "total":
+                    len(tasks)
+
             })
+
 
         except Exception as e:
 
             return jsonify({
+
                 "success": False,
-                "error": str(e)
+
+                "error":
+                    str(e)
+
             }), 500
 
 
@@ -1119,25 +1417,18 @@ def register_routes(app):
     # EDIT TASK API
     # =====================================================
 
-    @app.route(
-        "/api/tasks/<task_id>",
-        methods=["PUT"]
-    )
+    @app.route("/api/tasks/<task_id>", methods=["PUT"])
     def edit_task(task_id):
 
         try:
-
             task_id = str(task_id).strip()
 
-            data = request.get_json(
-                silent=True
-            )
+            data = request.get_json(silent=True)
 
             if not data:
                 return jsonify({
                     "success": False,
-                    "error":
-                        "No task data received"
+                    "error": "No task data received"
                 }), 400
 
             tasks_file = os.path.abspath(
@@ -1156,15 +1447,14 @@ def register_routes(app):
                     "error": "Task file not found"
                 }), 404
 
+            # utf-8-sig also handles a possible BOM in the CSV header.
             with open(
                 tasks_file,
                 "r",
                 encoding="utf-8-sig",
                 newline=""
             ) as file:
-
                 reader = csv.DictReader(file)
-
                 fieldnames = reader.fieldnames
                 tasks = list(reader)
 
@@ -1174,6 +1464,8 @@ def register_routes(app):
                     "error": "Task CSV is empty"
                 }), 404
 
+            # Make sure all fields used by the application exist
+            # when writing the CSV back.
             required_fields = [
                 "task_id",
                 "task_type",
@@ -1208,21 +1500,15 @@ def register_routes(app):
                 # -----------------------------
                 # Task Type
                 # -----------------------------
-
                 if "task_type" in data:
-
                     value = str(
-                        data.get(
-                            "task_type",
-                            ""
-                        )
+                        data.get("task_type", "")
                     ).strip()
 
                     if not value:
                         return jsonify({
                             "success": False,
-                            "error":
-                                "Task type is required"
+                            "error": "Task type is required"
                         }), 400
 
                     task["task_type"] = value
@@ -1230,21 +1516,15 @@ def register_routes(app):
                 # -----------------------------
                 # Priority
                 # -----------------------------
-
                 if "priority" in data:
-
                     value = str(
-                        data.get(
-                            "priority",
-                            ""
-                        )
+                        data.get("priority", "")
                     ).strip()
 
                     if not value:
                         return jsonify({
                             "success": False,
-                            "error":
-                                "Priority is required"
+                            "error": "Priority is required"
                         }), 400
 
                     task["priority"] = value
@@ -1252,27 +1532,21 @@ def register_routes(app):
                 # -----------------------------
                 # Days to Deadline
                 # -----------------------------
-
                 if "days_to_deadline" in data:
-
                     try:
                         value = float(
                             data["days_to_deadline"]
                         )
-
                     except (ValueError, TypeError):
-
                         return jsonify({
                             "success": False,
-                            "error":
-                                "Invalid days to deadline"
+                            "error": "Invalid days to deadline"
                         }), 400
 
                     if value < 0:
                         return jsonify({
                             "success": False,
-                            "error":
-                                "Days to deadline cannot be negative"
+                            "error": "Days to deadline cannot be negative"
                         }), 400
 
                     task["days_to_deadline"] = value
@@ -1280,27 +1554,21 @@ def register_routes(app):
                 # -----------------------------
                 # Volume Metric
                 # -----------------------------
-
                 if "volume_metric" in data:
-
                     try:
                         value = float(
                             data["volume_metric"]
                         )
-
                     except (ValueError, TypeError):
-
                         return jsonify({
                             "success": False,
-                            "error":
-                                "Invalid volume metric"
+                            "error": "Invalid volume metric"
                         }), 400
 
                     if value < 0:
                         return jsonify({
                             "success": False,
-                            "error":
-                                "Volume metric cannot be negative"
+                            "error": "Volume metric cannot be negative"
                         }), 400
 
                     task["volume_metric"] = value
@@ -1308,21 +1576,16 @@ def register_routes(app):
                 # -----------------------------
                 # Perceived Difficulty
                 # -----------------------------
-
                 if "perceived_difficulty" in data:
 
                     difficulty_text = str(
-                        data.get(
-                            "perceived_difficulty",
-                            ""
-                        )
+                        data.get("perceived_difficulty", "")
                     ).strip()
 
                     if not difficulty_text:
                         return jsonify({
                             "success": False,
-                            "error":
-                                "Perceived difficulty is required"
+                            "error": "Perceived difficulty is required"
                         }), 400
 
                     difficulty_map = {
@@ -1338,40 +1601,25 @@ def register_routes(app):
                         difficulty_text.lower()
                     )
 
-                    if (
-                        difficulty_lower
-                        in difficulty_map
-                    ):
-
+                    if difficulty_lower in difficulty_map:
                         difficulty_numeric = (
-                            difficulty_map[
-                                difficulty_lower
-                            ]
+                            difficulty_map[difficulty_lower]
                         )
-
                     else:
-
                         try:
                             difficulty_numeric = float(
                                 difficulty_text
                             )
-
-                        except (
-                            ValueError,
-                            TypeError
-                        ):
-
+                        except (ValueError, TypeError):
                             return jsonify({
                                 "success": False,
-                                "error":
-                                    "Invalid perceived difficulty"
+                                "error": "Invalid perceived difficulty"
                             }), 400
 
                     if (
                         difficulty_numeric < 0
                         or difficulty_numeric > 10
                     ):
-
                         return jsonify({
                             "success": False,
                             "error":
@@ -1382,34 +1630,25 @@ def register_routes(app):
                         difficulty_text
                     )
 
-                    task[
-                        "perceived_difficulty_numeric"
-                    ] = difficulty_numeric
+                    task["perceived_difficulty_numeric"] = (
+                        difficulty_numeric
+                    )
 
                 # -----------------------------
                 # Error Risk
                 # -----------------------------
-
                 if "error_risk" in data:
-
                     try:
                         value = float(
                             data["error_risk"]
                         )
-
-                    except (
-                        ValueError,
-                        TypeError
-                    ):
-
+                    except (ValueError, TypeError):
                         return jsonify({
                             "success": False,
-                            "error":
-                                "Invalid error risk"
+                            "error": "Invalid error risk"
                         }), 400
 
                     if value < 0 or value > 5:
-
                         return jsonify({
                             "success": False,
                             "error":
@@ -1421,27 +1660,18 @@ def register_routes(app):
                 # -----------------------------
                 # Dependency Score
                 # -----------------------------
-
                 if "dependency_score" in data:
-
                     try:
                         value = float(
                             data["dependency_score"]
                         )
-
-                    except (
-                        ValueError,
-                        TypeError
-                    ):
-
+                    except (ValueError, TypeError):
                         return jsonify({
                             "success": False,
-                            "error":
-                                "Invalid dependency score"
+                            "error": "Invalid dependency score"
                         }), 400
 
-                    if value <= 0 or value >= 5:
-
+                    if value < 0 or value > 5:
                         return jsonify({
                             "success": False,
                             "error":
@@ -1453,22 +1683,15 @@ def register_routes(app):
                 # -----------------------------
                 # Task Date
                 # -----------------------------
-
                 if "task_date" in data:
-
                     value = str(
-                        data.get(
-                            "task_date",
-                            ""
-                        )
+                        data.get("task_date", "")
                     ).strip()
 
                     if not value:
-
                         return jsonify({
                             "success": False,
-                            "error":
-                                "Task date is required"
+                            "error": "Task date is required"
                         }), 400
 
                     task["task_date"] = value
@@ -1477,13 +1700,12 @@ def register_routes(app):
                 break
 
             if not found:
-
                 return jsonify({
                     "success": False,
-                    "error":
-                        f"Task {task_id} not found"
+                    "error": f"Task {task_id} not found"
                 }), 404
 
+            # Write the complete CSV back.
             with open(
                 tasks_file,
                 "w",
@@ -1508,11 +1730,7 @@ def register_routes(app):
             })
 
         except Exception as e:
-
-            print(
-                "EDIT TASK ERROR:",
-                str(e)
-            )
+            print("EDIT TASK ERROR:", str(e))
 
             return jsonify({
                 "success": False,
@@ -1524,14 +1742,11 @@ def register_routes(app):
     # DELETE TASK API
     # =====================================================
 
-    @app.route(
-        "/api/tasks/<task_id>",
-        methods=["DELETE"]
-    )
+    @app.route("/api/tasks/<task_id>", methods=["DELETE"])
     def delete_task(task_id):
 
         try:
-
+            # Clean the ID received from the browser.
             task_id = str(task_id).strip()
 
             tasks_file = os.path.abspath(
@@ -1545,13 +1760,12 @@ def register_routes(app):
             )
 
             if not os.path.exists(tasks_file):
-
                 return jsonify({
                     "success": False,
-                    "error":
-                        "Task file not found"
+                    "error": "Task file not found"
                 }), 404
 
+            # utf-8-sig handles a possible BOM in the first CSV header.
             with open(
                 tasks_file,
                 "r",
@@ -1560,16 +1774,13 @@ def register_routes(app):
             ) as file:
 
                 reader = csv.DictReader(file)
-
                 fieldnames = reader.fieldnames
                 tasks = list(reader)
 
             if not fieldnames:
-
                 return jsonify({
                     "success": False,
-                    "error":
-                        "Task CSV is empty"
+                    "error": "Task CSV is empty"
                 }), 404
 
             remaining_tasks = []
@@ -1577,28 +1788,25 @@ def register_routes(app):
 
             for task in tasks:
 
+                # Strip whitespace from the CSV value before comparing.
                 csv_task_id = str(
-                    task.get(
-                        "task_id",
-                        ""
-                    )
+                    task.get("task_id", "")
                 ).strip()
 
                 if csv_task_id == task_id:
-
                     deleted = True
                     continue
 
                 remaining_tasks.append(task)
 
             if not deleted:
-
                 return jsonify({
                     "success": False,
                     "error":
                         f"Task {task_id} not found"
                 }), 404
 
+            # Save the CSV without the deleted task.
             with open(
                 tasks_file,
                 "w",
@@ -1613,9 +1821,7 @@ def register_routes(app):
                 )
 
                 writer.writeheader()
-                writer.writerows(
-                    remaining_tasks
-                )
+                writer.writerows(remaining_tasks)
 
             print(
                 f"TASK DELETED SUCCESSFULLY: {task_id}"
@@ -1628,11 +1834,7 @@ def register_routes(app):
             })
 
         except Exception as e:
-
-            print(
-                "DELETE TASK ERROR:",
-                str(e)
-            )
+            print("DELETE TASK ERROR:", str(e))
 
             return jsonify({
                 "success": False,
@@ -1646,6 +1848,7 @@ def register_routes(app):
 
     @app.route("/employee-data")
     def employee_data():
+
         return render_template(
             "employee_data.html"
         )
@@ -1666,7 +1869,9 @@ def register_routes(app):
                 DATA_FILE
             )
 
+
             employee_data = []
+
 
             # =================================================
             # GROUP BY EMPLOYEE
@@ -1680,110 +1885,181 @@ def register_routes(app):
                     group
                 )
 
+
                 # =============================================
                 # COMPLETED TASKS
                 # =============================================
 
                 completed_tasks = (
+
                     group["is_completed"]
+
                     .astype(str)
-                    .str.strip()
+
                     .str.lower()
+
                     .isin([
                         "1",
                         "true",
-                        "yes",
-                        "y",
-                        "completed"
+                        "yes"
                     ])
+
                     .sum()
+
                 )
+
 
                 # =============================================
                 # COMPLETION RATE
                 # =============================================
 
                 completion_rate = (
+
                     (
                         completed_tasks
                         /
                         total_tasks
                     ) * 100
+
                     if total_tasks > 0
+
                     else 0
+
                 )
+
 
                 # =============================================
                 # AVG RATING
                 # =============================================
 
                 avg_rating = pd.to_numeric(
+
                     group["rating"],
+
                     errors="coerce"
+
                 ).mean()
+
 
                 # =============================================
                 # AVG ERROR RISK
                 # =============================================
 
                 avg_risk = pd.to_numeric(
+
                     group["error_risk"],
+
                     errors="coerce"
+
                 ).mean()
 
+
+                # =============================================
+                # ADD EMPLOYEE
+                # =============================================
+
                 employee_data.append({
-                    "employee_id": str(
-                        employee_id
-                    ),
-                    "tasks": int(
-                        total_tasks
-                    ),
-                    "avg_rating": (
+
+                    "employee_id":
+                        str(employee_id),
+
+                    "tasks":
+                        int(total_tasks),
+
+                    "avg_rating":
+
+                        (
+
+                            round(
+
+                                float(
+                                    avg_rating
+                                ),
+
+                                2
+
+                            )
+
+                            if pd.notna(
+                                avg_rating
+                            )
+
+                            else 0
+
+                        ),
+
+                    "completion":
+
                         round(
-                            float(avg_rating),
-                            2
+
+                            float(
+                                completion_rate
+                            ),
+
+                            1
+
+                        ),
+
+                    "avg_risk":
+
+                        (
+
+                            round(
+
+                                float(
+                                    avg_risk
+                                ),
+
+                                2
+
+                            )
+
+                            if pd.notna(
+                                avg_risk
+                            )
+
+                            else 0
+
                         )
-                        if pd.notna(avg_rating)
-                        else 0
-                    ),
-                    "completion": round(
-                        float(completion_rate),
-                        1
-                    ),
-                    "avg_risk": (
-                        round(
-                            float(avg_risk),
-                            2
-                        )
-                        if pd.notna(avg_risk)
-                        else 0
-                    )
+
                 })
+
 
             # =================================================
             # SORT
             # =================================================
 
             employee_data.sort(
+
                 key=lambda x:
                     x["employee_id"]
+
             )
+
 
             # =================================================
             # RESPONSE
             # =================================================
 
             return jsonify({
+
                 "success": True,
+
                 "employees":
                     employee_data
+
             })
+
 
         except Exception as e:
 
             return jsonify({
+
                 "success": False,
-                "error": str(e)
+
+                "error":
+                    str(e)
+
             }), 500
 
 
@@ -1801,21 +2077,28 @@ def register_routes(app):
 
             data = request.get_json()
 
+
             if not data:
 
                 return jsonify({
+
                     "success": False,
+
                     "error":
                         "No registration data received"
+
                 }), 400
+
 
             username = data.get(
                 "username"
             )
 
+
             password = data.get(
                 "password"
             )
+
 
             # =================================================
             # VALIDATION
@@ -1824,66 +2107,96 @@ def register_routes(app):
             if not username or not password:
 
                 return jsonify({
+
                     "success": False,
+
                     "error":
                         "Username and password are required"
+
                 }), 400
+
 
             # =================================================
             # EXISTING USER
             # =================================================
 
             existing_user = User.query.filter_by(
+
                 username=username
+
             ).first()
+
 
             if existing_user:
 
                 return jsonify({
+
                     "success": False,
+
                     "error":
                         "Username already exists"
+
                 }), 400
+
 
             # =================================================
             # PASSWORD HASH
             # =================================================
 
             password_hash = (
+
                 generate_password_hash(
                     password
                 )
+
             )
+
 
             # =================================================
             # CREATE USER
             # =================================================
 
             user = User(
+
                 username=username,
+
                 password_hash=password_hash,
+
                 role="manager"
+
             )
+
 
             db.session.add(
                 user
             )
 
+
             db.session.commit()
 
+
             return jsonify({
+
                 "success": True,
+
                 "message":
                     "Registration successful"
+
             })
+
 
         except Exception as e:
 
             db.session.rollback()
 
+
             return jsonify({
+
                 "success": False,
-                "error": str(e)
+
+                "error":
+                    str(e)
+
             }), 500
 
 
@@ -1901,21 +2214,28 @@ def register_routes(app):
 
             data = request.get_json()
 
+
             if not data:
 
                 return jsonify({
+
                     "success": False,
+
                     "error":
                         "No login data received"
+
                 }), 400
+
 
             username = data.get(
                 "username"
             )
 
+
             password = data.get(
                 "password"
             )
+
 
             # =================================================
             # VALIDATION
@@ -1924,64 +2244,98 @@ def register_routes(app):
             if not username or not password:
 
                 return jsonify({
+
                     "success": False,
+
                     "error":
                         "Username and password are required"
+
                 }), 400
+
 
             # =================================================
             # FIND USER
             # =================================================
 
             user = User.query.filter_by(
+
                 username=username
+
             ).first()
+
 
             if not user:
 
                 return jsonify({
+
                     "success": False,
+
                     "error":
                         "Invalid username or password"
+
                 }), 401
+
 
             # =================================================
             # CHECK PASSWORD
             # =================================================
 
             if not check_password_hash(
+
                 user.password_hash,
+
                 password
+
             ):
 
                 return jsonify({
+
                     "success": False,
+
                     "error":
                         "Invalid username or password"
+
                 }), 401
+
 
             # =================================================
             # CREATE JWT
             # =================================================
 
             token = create_access_token(
+
                 identity=str(
                     user.id
                 )
+
             )
 
+
             return jsonify({
+
                 "success": True,
-                "token": token,
-                "username": user.username,
-                "role": user.role
+
+                "token":
+                    token,
+
+                "username":
+                    user.username,
+
+                "role":
+                    user.role
+
             })
+
 
         except Exception as e:
 
             return jsonify({
+
                 "success": False,
-                "error": str(e)
+
+                "error":
+                    str(e)
+
             }), 500
 
 
@@ -1998,16 +2352,26 @@ def register_routes(app):
                 get_task_options()
             )
 
+
             return jsonify({
+
                 "success": True,
-                "options": options
+
+                "options":
+                    options
+
             })
+
 
         except Exception as e:
 
             return jsonify({
+
                 "success": False,
-                "error": str(e)
+
+                "error":
+                    str(e)
+
             }), 500
 
 
@@ -2025,28 +2389,46 @@ def register_routes(app):
 
             data = request.get_json()
 
+
             if not data:
 
                 return jsonify({
+
                     "success": False,
+
                     "error":
                         "No prediction data received"
+
                 }), 400
+
+
+            # =================================================
+            # PREDICT
+            # =================================================
 
             result = predict_employee(
                 data
             )
 
+
             return jsonify({
+
                 "success": True,
+
                 **result
+
             })
+
 
         except Exception as e:
 
             return jsonify({
+
                 "success": False,
-                "error": str(e)
+
+                "error":
+                    str(e)
+
             }), 500
 
 
@@ -2065,56 +2447,109 @@ def register_routes(app):
                 DATA_FILE
             )
 
+
             total_employees = (
+
                 df["employee_id"]
+
                 .nunique()
+
             )
+
 
             total_tasks = len(
                 df
             )
 
+
             avg_rating = pd.to_numeric(
+
                 df["rating"],
+
                 errors="coerce"
+
             ).mean()
+
 
             avg_error_risk = pd.to_numeric(
+
                 df["error_risk"],
+
                 errors="coerce"
+
             ).mean()
 
+
             return jsonify({
+
                 "success": True,
-                "total_employees": int(
-                    total_employees
-                ),
-                "total_tasks": int(
-                    total_tasks
-                ),
-                "avg_rating": (
-                    round(
-                        float(avg_rating),
-                        2
+
+                "total_employees":
+                    int(
+                        total_employees
+                    ),
+
+                "total_tasks":
+                    int(
+                        total_tasks
+                    ),
+
+                "avg_rating":
+
+                    (
+
+                        round(
+
+                            float(
+                                avg_rating
+                            ),
+
+                            2
+
+                        )
+
+                        if pd.notna(
+                            avg_rating
+                        )
+
+                        else 0
+
+                    ),
+
+                "avg_error_risk":
+
+                    (
+
+                        round(
+
+                            float(
+                                avg_error_risk
+                            ),
+
+                            2
+
+                        )
+
+                        if pd.notna(
+                            avg_error_risk
+                        )
+
+                        else 0
+
                     )
-                    if pd.notna(avg_rating)
-                    else 0
-                ),
-                "avg_error_risk": (
-                    round(
-                        float(avg_error_risk),
-                        2
-                    )
-                    if pd.notna(avg_error_risk)
-                    else 0
-                )
+
             })
+
 
         except Exception as e:
 
             return jsonify({
+
                 "success": False,
-                "error": str(e)
+
+                "error":
+                    str(e)
+
             }), 500
 
 
@@ -2127,7 +2562,10 @@ def register_routes(app):
     def protected():
 
         return jsonify({
+
             "success": True,
+
             "message":
                 "Protected route accessed successfully"
+
         })
